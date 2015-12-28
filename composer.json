@@ -1,0 +1,15 @@
+{
+    "name": "mnabialek/laravel-simple-modules",
+    "description": "Allows creating Laravel modules for better project structure",
+    "require": {
+        "laravel/framework": "5.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mnabialek",
+            "email": "gitre@nabialek.org"
+        }
+    ],
+    "minimum-stability": "dev"
+}
