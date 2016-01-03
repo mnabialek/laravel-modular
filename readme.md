@@ -14,12 +14,12 @@ Now you can create for your Laravel 5 application multiple modules and each of t
    in console to install this module
    
 2. Open `config/app.php` and: 
-      * Comment line with  
-       ```php
-       Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class`
-        ```
+  * Comment line with  
+    ```php
+    Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class`
+     ```
     
-      * Add
+   * Add
     
        ```php
         Mnabialek\LaravelSimpleModules\Providers\SimpleModules::class,
@@ -28,7 +28,7 @@ Now you can create for your Laravel 5 application multiple modules and each of t
         
        in same section (`providers`)
     
-      * Add 
+   * Add 
     
         ```php
         'SimpleModule' => Mnabialek\LaravelSimpleModules\Facades\SimpleModule::class,
