@@ -8,61 +8,58 @@ Now you can create for your Laravel 5 application multiple modules and each of t
 ## Installation
 
 1. Run
-```php   
-   `composer require mnnabialek/laravel-simple-modules
-```   
+   ```php   
+       composer require mnnabialek/laravel-simple-modules
+   ```     
+   in console to install this module
    
-in console to install this module
-   
-2. Open `config/app.php` and:
-   
-* Comment line with  
-```php
-Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class`
-```
-
-* Add
-
-```php
-Mnabialek\LaravelSimpleModules\Providers\SimpleModules::class,
-Mnabialek\LaravelSimpleModules\Providers\ConsoleSupport::class,
-```
-
-in same section (`providers`)
-
-* Add 
-
-```php
-'SimpleModule' => Mnabialek\LaravelSimpleModules\Facades\SimpleModule::class`
-``` 
-
-into `aliases` section
-
+2. Open `config/app.php` and: 
+      * Comment line with  
+       ```php
+       Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class`
+        ```
+    
+      * Add
+    
+       ```php
+        Mnabialek\LaravelSimpleModules\Providers\SimpleModules::class,
+        Mnabialek\LaravelSimpleModules\Providers\ConsoleSupport::class,
+       ```
+        
+       in same section (`providers`)
+    
+      * Add 
+    
+        ```php
+        'SimpleModule' => Mnabialek\LaravelSimpleModules\Facades\SimpleModule::class,
+        ``` 
+    
+        into `aliases` section
 3. Run
 
-```php
-php artisan vendor:publish --provider="Mnabialek\LaravelSimpleModules\Providers\SimpleModules"
-```
-
-in your console to publish default configuration files, sample app files (published in `app/Core`) and sample stubs files
+    ```php
+    php artisan vendor:publish --provider="Mnabialek\LaravelSimpleModules\Providers\SimpleModules"
+    ```
+    
+    in your console to publish default configuration files, sample app files (published in `app/Core`) and sample stubs files
 
 4. In default seeder `database/seeds/DatabaseSeeder` at the end of `run` method add:
 
-```php
- SimpleModule::seed($this);
-``` 
+    ```php
+     SimpleModule::seed($this);
+    ``` 
 
 5. In `app/Providers/RouteServiceProvider.php` at the end of `map` add
 
-```php
-\SimpleModule::loadRoutes($router);
-```
+    ```php
+    \SimpleModule::loadRoutes($router);
+    ```
 
 6. In `database/factories/ModelFactory.php` (this step applies only to Laravel 5.1+) add at the end of file:
 
-```php
-SimpleModule::loadFactories($factory);
-```
+    ```php
+    SimpleModule::loadFactories($factory);
+    ```
 
 ## Getting started
 
