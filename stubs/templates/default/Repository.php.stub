@@ -1,0 +1,18 @@
+<?php
+
+namespace {namespace}\{moduleNamespace}\Repositories;
+
+use App\Core\AbstractRepository;
+use Illuminate\Contracts\Container\Container;
+use {namespace}\{moduleNamespace}\Models\{class};
+
+class {class}Repository extends AbstractRepository
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(Container $app, {class} $model)
+    {
+        parent::__construct($app, $model);
+    }
+}

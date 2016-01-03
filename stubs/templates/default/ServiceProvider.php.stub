@@ -1,0 +1,16 @@
+<?php
+
+namespace {namespace}\{moduleNamespace}\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class {class}ServiceProvider extends ServiceProvider
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function register()
+    {
+        // 
+    }
+}

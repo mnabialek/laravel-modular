@@ -11,5 +11,10 @@
             "email": "gitre@nabialek.org"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Mnabialek\\LaravelSimpleModules\\": "src/"
+        }
+    },    
     "minimum-stability": "dev"
 }

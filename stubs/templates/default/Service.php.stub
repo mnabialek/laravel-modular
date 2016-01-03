@@ -1,0 +1,18 @@
+<?php
+
+namespace {namespace}\{moduleNamespace}\Services;
+
+use Illuminate\Contracts\Container\Container;
+use App\Core\Service;
+use {namespace}\{moduleNamespace}\Repositories\{class}Repository;
+
+class {class}Service extends Service
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(Container $app, {class}Repository $repo)
+    {
+        parent::__construct($app, $repo);
+    }
+}

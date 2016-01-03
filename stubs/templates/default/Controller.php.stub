@@ -1,0 +1,116 @@
+<?php
+
+namespace {namespace}\{moduleNamespace}\Http\Controllers;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
+use {namespace}\{moduleNamespace}\Http\Requests\{class}Request;
+use {namespace}\{moduleNamespace}\Repositories\{class}Repository;
+use {namespace}\{moduleNamespace}\Services\{class}Service;
+
+class {class}Controller extends Controller
+{
+    /**
+     * @var {class}Repository
+     */
+    protected $repo;
+
+    /**
+     * @var {class}Service
+     */
+    protected $service;
+
+    /**
+     * {class}Controller constructor.
+     *
+     * @param {class}Repository $repo
+     * @param {class}Service $service
+     */
+    public function __construct({class}Repository $repo, {class}Service $service)
+    {
+        $this->repo = $repo;
+        $this->service = $service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param {class}Request $request
+     *
+     * @return Response
+     */
+    public function store({class}Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param {class}Request $request
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function update({class}Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}
