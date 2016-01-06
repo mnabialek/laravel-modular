@@ -16,7 +16,7 @@ Now you can create for your Laravel 5 application multiple modules and each of t
 2. Open `config/app.php` and: 
   * Comment line with  
     ```php
-    Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class`
+    Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
      ```
     
    * Add
@@ -49,7 +49,7 @@ Now you can create for your Laravel 5 application multiple modules and each of t
      SimpleModule::seed($this);
     ``` 
 
-5. In `app/Providers/RouteServiceProvider.php` at the end of `map` add
+5. In `app/Providers/RouteServiceProvider.php` at the end of `map` function add
 
     ```php
     \SimpleModule::loadRoutes($router);
