@@ -175,6 +175,7 @@ return [
                 'Models',
                 'Repositories',
                 'Services',
+                'Exceptions',
                 'Http/Controllers',
                 'Http/Requests',
                 'Database/Migrations',
@@ -185,6 +186,7 @@ return [
                 'Models/.gitkeep' => '.gitkeep.stub',
                 'Repositories/.gitkeep' => '.gitkeep.stub',
                 'Services/.gitkeep' => '.gitkeep.stub',
+                'Exceptions/.gitkeep' => '.gitkeep.stub',
                 'Http/Controllers/.gitkeep' => '.gitkeep.stub',
                 'Http/Requests/.gitkeep' => '.gitkeep.stub',
                 'Database/Migrations/.gitkeep' => '.gitkeep.stub',
@@ -244,6 +246,12 @@ return [
             'stub_directory' => 'default',
             'files' => [
                 'Providers/{class}ServiceProvider.php' => 'ServiceProvider.php.stub',
+            ],
+        ],
+        'exception' => [
+            'stub_directory' => 'default',
+            'files' => [
+                'Exceptions/{class}Exception.php' => 'Exception.php.stub',
             ],
         ],
     ],
