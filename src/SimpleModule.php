@@ -407,7 +407,6 @@ class SimpleModule
      */
     protected function hasServiceProvider($module, $options = null)
     {
-        echo $this->getModuleServiceProviderFilePath($module) . "\n";
         if (is_array($options)) {
             return array_key_exists('provider', $options) ?
                 (bool)$options['provider'] :
