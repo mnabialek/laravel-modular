@@ -123,10 +123,8 @@ class Migrator extends BaseMigrator
      *
      * @return array
      */
-    public function getMigrationFiles(
-        $path,
-        $reverse = false
-    ) {
+    public function getMigrationFiles($path, $reverse = false)
+    {
         return array_keys($this->getMigrationFilesWithPaths($path, $reverse));
     }
 
@@ -147,7 +145,7 @@ class Migrator extends BaseMigrator
         // default Laravel path. Otherwise it means user wants to run migration
         // from custom location and we don't want to add other modules in that
         // case
-        if (($path == $defaultPath) || !$path) {
+        if ((realpath($path) == realpath($defaultPath)) || !$path) {
             // get active modules list
             $modules = SimpleModule::active();
 
