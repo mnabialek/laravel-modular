@@ -9,7 +9,7 @@ Now you can create for your Laravel 5 application multiple modules and each of t
 
 1. Run
    ```php   
-       composer require mnabialek/laravel-simple-modules
+   composer require mnabialek/laravel-simple-modules 0.1.*
    ```     
    in console to install this module
    
