@@ -3,7 +3,6 @@
 namespace Mnabialek\LaravelSimpleModules\Providers;
 
 use Illuminate\Foundation\Providers\ConsoleSupportServiceProvider;
-use Mnabialek\LaravelSimpleModules\SimpleModule;
 
 class ConsoleSupport extends ConsoleSupportServiceProvider
 {
@@ -26,13 +25,12 @@ class ConsoleSupport extends ConsoleSupportServiceProvider
      */
     protected function getCustomProviders()
     {
-        /** @var SimpleModule $modules */
-        $modules = $this->app->make(SimpleModule::class);
+        $customProviders = $this->app['simplemodule']->config('providers');
 
-        $providers = $modules->config('providers');
-
-        return array_map(function ($v) use ($providers) {
-            return isset($providers[$v]) ? $providers[$v] : $v;
-        }, $this->providers);
+        return collect($this->providers)->map(
+            function ($provider) use ($customProviders) {
+                return isset($customProviders[$provider])
+                    ? $customProviders[$provider] : $provider;
+            })->all();
     }
 }
