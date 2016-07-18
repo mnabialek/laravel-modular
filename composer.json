@@ -2,13 +2,13 @@
     "name": "mnabialek/laravel-simple-modules",
     "description": "Allows creating Laravel modules for better project structure",
     "require": {
-        "laravel/framework": "5.*"
+        "laravel/framework": "5.3.*"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": "mnabialek",
-            "email": "gitre@nabialek.org"
+            "name": "Marcin Nabiałek",
+            "email": "developer@nabialek.org"
         }
     ],
     "autoload": {
