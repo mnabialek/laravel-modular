@@ -7,14 +7,24 @@ Now you can create for your Laravel 5 application multiple modules and each of t
 
 ## Installation
 
-1. Run
+1. For Laravel 5.3+ run
+
    ```php   
-       composer require mnabialek/laravel-simple-modules
+   composer require mnabialek/laravel-simple-modules 0.2.*
+   ```
+        
+   and for Laravel < 5.3
+   
+   ```php   
+   composer require mnabialek/laravel-simple-modules 0.1.*
    ```     
-   in console to install this module
+   
+   in console to install this module.   
    
 2. Open `config/app.php` and: 
-  * Comment line with  
+
+  * Comment line with
+
     ```php
     Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
      ```
