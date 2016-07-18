@@ -1,4 +1,0 @@
-<?php
-
-Route::resource('{plural_lower}', '{module}Controller');
-

@@ -83,18 +83,8 @@ class SimpleModules extends ServiceProvider
 
         $publishedStubsPath = $simpleModule->config('stubs.path');
         foreach ($files as $file) {
-            // for Laravel < 5.2 we want to get valid routes.php stub
-            if (basename($file) == 'routes.php.stub' &&
-                $this->app->version() < '5.2'
-            ) {
-                $publishes[realpath($templatesPath .
-                    '/../legacy/routes-5.1.php.stub')] =
-                    $publishedStubsPath . DIRECTORY_SEPARATOR .
-                    mb_substr($file, $pathLength + 1);
-            } else {
-                $publishes[$file] = $publishedStubsPath . DIRECTORY_SEPARATOR .
-                    mb_substr($file, $pathLength + 1);
-            }
+            $publishes[$file] = $publishedStubsPath . DIRECTORY_SEPARATOR .
+                mb_substr($file, $pathLength + 1);
         }
 
         // sample app files
