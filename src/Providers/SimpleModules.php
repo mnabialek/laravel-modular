@@ -2,6 +2,7 @@
 
 namespace Mnabialek\LaravelSimpleModules\Providers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleFiles;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMake;
@@ -12,6 +13,11 @@ use Mnabialek\LaravelSimpleModules\SimpleModule;
 
 class SimpleModules extends ServiceProvider
 {
+    /**
+     * @var Collection|array
+     */
+    protected $filesToPublish = [];
+
     /**
      * Register the service provider.
      *
@@ -24,7 +30,7 @@ class SimpleModules extends ServiceProvider
             return new SimpleModule($app);
         }, true);
 
-        // register new artisan commands
+        // register new Artisan commands
         $this->commands([
             ModuleMake::class,
             ModuleMigrate::class,
@@ -34,10 +40,10 @@ class SimpleModules extends ServiceProvider
         ]);
 
         // register files to be published
-        $this->publishes($this->getFilesToPublish());
+        $this->publishes($this->getFilesToPublish()->all());
 
-        // register module providers
-        $this->registerModulesProviders();
+        // register modules providers
+        $this->app['simplemodule']->loadServiceProviders();
     }
 
     /**
@@ -49,53 +55,72 @@ class SimpleModules extends ServiceProvider
     }
 
     /**
-     * Register service providers for modules
-     */
-    protected function registerModulesProviders()
-    {
-        /** @var SimpleModule $simpleModule */
-        $simpleModule = $this->app['simplemodule'];
-        $simpleModule->loadServiceProviders();
-    }
-
-    /**
      * Get files that should be published
      *
-     * @return array
+     * @return Collection
      */
     protected function getFilesToPublish()
     {
-        /** @var SimpleModule $simpleModule */
-        $simpleModule = $this->app['simplemodule'];
-        $configName = $simpleModule->getConfigName();
+        $this->filesToPublish = collect();
 
-        $publishes = [
-            // configuration file
-            $this->getDefaultConfigFilePath($configName)
-            => $simpleModule->getConfigFilePath(),
-        ];
+        $this->addConfigurationToPublished()
+            ->addStubsTemplatesToPublished()
+            ->addAppFilesToPublished();
 
-        // stubs files
+        return $this->filesToPublish;
+    }
+
+    /**
+     * Add configuration file to published files
+     *
+     * @return $this
+     */
+    protected function addConfigurationToPublished()
+    {
+        $configName = $this->app['simplemodule']->getConfigName();
+        $this->filesToPublish->put($this->getDefaultConfigFilePath($configName),
+            $this->app['simplemodule']->getConfigFilePath());
+
+        return $this;
+    }
+
+    /**
+     * Add stubs templates to published files
+     *
+     * @return $this
+     */
+    protected function addStubsTemplatesToPublished()
+    {
         $templatesPath = $this->getTemplatesStubsPath();
         $pathLength = mb_strlen($templatesPath);
+
         // here we get all stubs files from stubs templates directory
-        $files = glob($templatesPath . '/*/{,.}*.stub', GLOB_BRACE);
+        $publishedStubsPath = $this->app['simplemodule']->config('stubs.path');
+        collect(glob($templatesPath . '/*/{,.}*.stub', GLOB_BRACE))
+            ->each(function ($file) use ($publishedStubsPath, $pathLength) {
+                $this->filesToPublish->put($file,
+                    $publishedStubsPath . DIRECTORY_SEPARATOR .
+                    mb_substr($file, $pathLength + 1));
+            });
 
-        $publishedStubsPath = $simpleModule->config('stubs.path');
-        foreach ($files as $file) {
-            $publishes[$file] = $publishedStubsPath . DIRECTORY_SEPARATOR .
-                mb_substr($file, $pathLength + 1);
-        }
+        return $this;
+    }
 
-        // sample app files
+    /**
+     * Add app files to published files
+     *
+     * @return $this
+     */
+    protected function addAppFilesToPublished()
+    {
         $appPath = $this->getAppSamplePath();
-        $files = glob($appPath . '/*/*');
-        foreach ($files as $file) {
-            $publishes[$file] =
-                app_path(mb_substr($file, mb_strlen($appPath) + 1));
-        }
+        collect(glob($appPath . '/*/*'))->each(function ($file) use ($appPath) {
+            $this->filesToPublish->put($file,
+                $this->app['path'] . mb_substr($file, mb_strlen($appPath) + 1));
 
-        return $publishes;
+        });
+
+        return $this;
     }
 
     /**
