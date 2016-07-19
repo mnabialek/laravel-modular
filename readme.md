@@ -153,16 +153,6 @@ php artisan module:make-migration Product create_camera_table --table=cameras --
 
 it will create migration that is of type `create` - so in `up` method there will be creating `cameras` table and in `down` method deleting `cameras` table
  
-### module:migrate
-
-Runs migration for given modules. This command runs all migration files that are located in migrations directory of given module
-
-Example usage:
-
-```php
-php artisan module:migrate Product Order
-```
-
 ### module:seed
 
 Runs main seeder for given modules. You need to remember that only main seeder will be launched. In case you have multiple seeders in single module, you should manually run extra seeders in main module seeder.

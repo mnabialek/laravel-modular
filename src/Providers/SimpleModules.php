@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleFiles;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMake;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMakeMigration;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMigrate;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleSeed;
 use Mnabialek\LaravelSimpleModules\SimpleModule;
 
@@ -33,7 +32,6 @@ class SimpleModules extends ServiceProvider
         // register new Artisan commands
         $this->commands([
             ModuleMake::class,
-            ModuleMigrate::class,
             ModuleSeed::class,
             ModuleMakeMigration::class,
             ModuleFiles::class,

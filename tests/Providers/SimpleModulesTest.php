@@ -4,9 +4,7 @@ use Illuminate\Foundation\Application;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleFiles;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMake;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMakeMigration;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMigrate;
 use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleSeed;
-use Mnabialek\LaravelSimpleModules\Providers\ConsoleSupport;
 use Mnabialek\LaravelSimpleModules\Providers\SimpleModules;
 use Mockery as m;
 
@@ -42,7 +40,6 @@ class SimpleModulesTest extends UnitTestCase
         // Artisan commands
         $simpleModules->shouldReceive('commands')->once()->with([
             ModuleMake::class,
-            ModuleMigrate::class,
             ModuleSeed::class,
             ModuleMakeMigration::class,
             ModuleFiles::class,
