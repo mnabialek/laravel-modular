@@ -49,13 +49,13 @@ class SimpleModulesTest extends UnitTestCase
         ]);
 
         // files to be published
-        $stubsTemplatesPath = realpath(__DIR__ . '/../stubs/templates/default');
-        $stubsAppPath = realpath(__DIR__ . '/../stubs/app/Core');
+        $stubsTemplatesPath = realpath(__DIR__ . '/../../stubs/templates/default');
+        $stubsAppPath = realpath(__DIR__ . '/../../stubs/app/Core');
         $publishedStubsTemplatesPath = 'stubs/path';
         $publishedAppPath = 'app/path/';
 
         $from = [
-            realpath(__DIR__ . '/../config/simplemodules.php'),
+            realpath(__DIR__ . '/../../config/simplemodules.php'),
             $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'Controller.php.stub',
             $stubsTemplatesPath . DIRECTORY_SEPARATOR .
             'DatabaseSeeder.php.stub',
