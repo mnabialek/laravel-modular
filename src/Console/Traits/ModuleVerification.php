@@ -2,6 +2,8 @@
 
 namespace Mnabialek\LaravelSimpleModules\Console\Traits;
 
+use Illuminate\Support\Collection;
+
 trait ModuleVerification
 {
     /**
@@ -11,7 +13,7 @@ trait ModuleVerification
      *
      * @return array|bool
      */
-    protected function verifyActive(array $modules)
+    protected function verifyActive(Collection $modules)
     {
         $result = $this->verifyModules($modules, true);
         if (!$result) {
@@ -24,11 +26,11 @@ trait ModuleVerification
     /**
      * Verify whether given modules exist
      *
-     * @param array $modules
+     * @param Collection $modules
      *
      * @return array|bool
      */
-    protected function verifyExisting(array $modules)
+    protected function verifyExisting(Collection $modules)
     {
         $result = $this->verifyModules($modules, false);
         if (!$result) {
@@ -41,31 +43,31 @@ trait ModuleVerification
     /**
      * Verifies whether given modules exist and whether they are active
      *
-     * @param array $modules
+     * @param Collection $modules
      * @param bool $verifyActive
      *
      * @return array|bool
      */
-    private function verifyModules(array $modules, $verifyActive)
+    private function verifyModules(Collection $modules, $verifyActive)
     {
         $errors = false;
-
-        $active = $this->module->active();
+        
         $all = $this->module->all();
-
-        foreach ($modules as $key => $module) {
-            $moduleName = $this->module->getModuleName($module);
-
-            if (!in_array($moduleName, $all)) {
+        
+        $modules->each(function ($name) use ($all, $verifyActive, &$errors) {
+            $found = $all->first(function ($module) use ($name) {
+                return $module->getName() == $name;
+            });
+            
+            if (!$found) {
                 $errors = true;
-                $this->error("Module {$moduleName} does not exist");
-            } elseif ($verifyActive && !in_array($moduleName, $active)) {
+                $this->error("Module {$name} does not exist");
+            } elseif ($verifyActive && !$found->isActive()) {
                 $errors = true;
-                $this->error("Module {$moduleName} is not active");
-            }
-            $modules[$key] = $moduleName;
-        }
+                $this->error("Module {$name} is not active");
+            };
+        });
 
-        return ($errors) ? false : $modules;
+        return $errors ? false : $modules;
     }
 }

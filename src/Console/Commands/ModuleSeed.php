@@ -31,24 +31,20 @@ class ModuleSeed extends BaseCommand
      */
     public function proceed()
     {
-        $modules = array_unique($this->argument('module'));
-        $env = $this->option('env');
-
-        $settings = [];
-        if ($env) {
-            $settings['--env'] = $env;
-        }
+        $modules = collect(array_unique($this->argument('module')));
 
         $modules = $this->verifyActive($modules);
         if ($modules === false) {
             return;
         }
 
-        foreach ($modules as $module) {
-            $class =
-                $this->module->getSeederClass($module, $this->option('class'));
+        $options = $this->getOptions();
+
+        $modules->each(function ($module) use ($options) {
+            $class = $module->getSeederClass($this->option('class'));
+
             $result = $this->call('db:seed',
-                array_merge($settings, ['--class' => $class]));
+                array_merge($options, ['--class' => $class]));
 
             if ($result != 0) {
                 $this->error("[Module {$module}] There was a problem with running seeder {$class}");
@@ -56,6 +52,6 @@ class ModuleSeed extends BaseCommand
                 return;
             }
             $this->info("[Module {$module}] Seeded: {$class}");
-        }
+        });
     }
 }
