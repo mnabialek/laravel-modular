@@ -40,6 +40,9 @@ class SimpleModules extends ServiceProvider
         // register files to be published
         $this->publishes($this->getFilesToPublish()->all());
 
+        // set migrations paths
+        $this->setModulesMigrationPaths();
+
         // register modules providers
         $this->app['simplemodule']->loadServiceProviders();
     }
@@ -149,5 +152,21 @@ class SimpleModules extends ServiceProvider
     protected function getAppSamplePath()
     {
         return realpath(__DIR__ . '/../../stubs/app');
+    }
+
+    /**
+     * Set migrations paths for all active modules
+     */
+    protected function setModulesMigrationPaths()
+    {
+        $paths = collect();
+
+        // add to paths all migration directories from modules
+        collect($this->app['simplemodule']->active())
+            ->each(function ($module) use ($paths) {
+                $paths->push($module->getMigrationsPath());
+            });
+
+        $this->loadMigrationsFrom($paths->all());
     }
 }
