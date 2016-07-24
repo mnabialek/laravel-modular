@@ -1,31 +1,40 @@
 <?php
 
-use Illuminate\Foundation\Application;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleFiles;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMake;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMakeMigration;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleSeed;
-use Mnabialek\LaravelSimpleModules\Providers\SimpleModules;
-use Mockery as m;
+namespace Tests\Providers;
 
-class SimpleModulesTest extends UnitTestCase
+use Illuminate\Foundation\Application;
+use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
+use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Providers\ModularServiceProvider;
+use Mnabialek\LaravelModular\Services\Config;
+use Mockery as m;
+use Tests\UnitTestCase;
+
+class ModularServiceProviderTest extends UnitTestCase
 {
     /** @test */
     public function it_returns_valid_provides()
     {
-        $simpleModule = m::mock(SimpleModules::class)->makePartial()
+        $modularProvider = m::mock(ModularServiceProvider::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->assertEquals(['simplemodule'], $simpleModule->provides());
+        $this->assertEquals(['modular'], $modularProvider->provides());
     }
 
     /** @test */
     public function it_does_all_required_things_when_registering()
     {
         $app = m::mock(Application::class);
+        $config = m::mock(Config::class);
 
-        $simpleModules = m::mock(SimpleModules::class, [$app])->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $app->shouldReceive('make')->once()->with(Config::class)
+            ->andReturn($config);
+
+        $modularProvider = m::mock(ModularServiceProvider::class, [$app])
+            ->makePartial()->shouldAllowMockingProtectedMethods();
 
         // module bindings
         $closure = m::on(function ($callback) use ($app) {
@@ -34,11 +43,10 @@ class SimpleModulesTest extends UnitTestCase
             return true;
         });
 
-        $app->shouldReceive('bind')->with('simplemodule', $closure, true)
-            ->once();
+        $app->shouldReceive('bind')->with('modular', $closure, true)->once();
 
         // Artisan commands
-        $simpleModules->shouldReceive('commands')->once()->with([
+        $modularProvider->shouldReceive('commands')->once()->with([
             ModuleMake::class,
             ModuleSeed::class,
             ModuleMakeMigration::class,
@@ -46,13 +54,14 @@ class SimpleModulesTest extends UnitTestCase
         ]);
 
         // files to be published
-        $stubsTemplatesPath = realpath(__DIR__ . '/../../stubs/templates/default');
+        $stubsTemplatesPath =
+            realpath(__DIR__ . '/../../stubs/templates/default');
         $stubsAppPath = realpath(__DIR__ . '/../../stubs/app/Core');
         $publishedStubsTemplatesPath = 'stubs/path';
         $publishedAppPath = 'app/path/';
 
         $from = [
-            realpath(__DIR__ . '/../../config/simplemodules.php'),
+            realpath(__DIR__ . '/../../config/modular.php'),
             $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'Controller.php.stub',
             $stubsTemplatesPath . DIRECTORY_SEPARATOR .
             'DatabaseSeeder.php.stub',
@@ -76,7 +85,7 @@ class SimpleModulesTest extends UnitTestCase
 
         ];
         $to = [
-            'config/dir/simplemodules.php',
+            'config/dir/modular.php',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
             'Controller.php.stub',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
@@ -110,39 +119,54 @@ class SimpleModulesTest extends UnitTestCase
 
         ];
 
-        $simpleModules->shouldReceive('getFilesToPublish')->once()->passthru();
-        $simpleModules->shouldReceive('publishes')->once()
+        $modularProvider->shouldReceive('getFilesToPublish')->once()
+            ->passthru();
+        $modularProvider->shouldReceive('publishes')->once()
             ->with(array_combine($from, $to));
 
-        $simpleModule = m::mock('stdClass');
+        $modular = m::mock('stdClass');
 
         // configuration file
-        $simpleModule->shouldReceive('getConfigName')->once()
-            ->andReturn('simplemodules');
-
-        $simpleModule->shouldReceive('getConfigFilePath')->once()
+        $config->shouldReceive('configName')->once()
+            ->andReturn('modular');
+        $config->shouldReceive('getConfigFilePath')->once()
             ->andReturn($to[0]);
 
         // stubs files
-        $simpleModules->shouldReceive('getTemplatesStubsPath')->once()
+        $modularProvider->shouldReceive('getTemplatesStubsPath')->once()
             ->passthru();
-        $simpleModule->shouldReceive('config')->once()->with('stubs.path')
+        $config->shouldReceive('stubsPath')->once()
             ->andReturn($publishedStubsTemplatesPath);
 
         // app files
-        $simpleModules->shouldReceive('getAppSamplePath')->once()
+        $modularProvider->shouldReceive('getAppSamplePath')->once()
             ->passthru();
         $app->shouldReceive('offsetGet')->times(2)->with('path')
             ->andReturn($publishedAppPath);
 
+        // load migrations path
+        $modules = [];
+        $modules[] = m::mock(Module::class);
+        $modules[0]->shouldReceive('getMigrationsPath')->once()
+            ->andReturn('sample/module1/path');
+        $modules[] = m::mock(Module::class);
+        $modules[1]->shouldReceive('getMigrationsPath')->once()
+            ->andReturn('sample/module2/path');
+
+        $modularProvider->shouldReceive('setModulesMigrationPaths')->once()
+            ->passthru();
+        $modular->shouldReceive('active')->once()->andReturn(collect($modules));
+        $modularProvider->shouldReceive('loadMigrationsFrom')
+            ->with(['sample/module1/path', 'sample/module2/path']);
+
         // register modules providers
-        $simpleModule->shouldReceive('loadServiceProviders')->once();
+        $modular->shouldReceive('loadServiceProviders')->once();
 
-        // usages of $this->app['simplemodule']
-        $app->shouldReceive('offsetGet')->times(4)->with('simplemodule')
-            ->andReturn($simpleModule);
+        // usages of $this->app['modular']
+        $app->shouldReceive('offsetGet')->times(2)->with('modular')
+            ->andReturn($modular);
 
-        $simpleModules->register();
+        $modularProvider->register();
     }
 }
 

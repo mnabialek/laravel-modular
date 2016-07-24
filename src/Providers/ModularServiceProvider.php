@@ -8,14 +8,32 @@ use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
-use Mnabialek\LaravelModular\SimpleModule;
+use Mnabialek\LaravelModular\Services\Config;
+use Mnabialek\LaravelModular\Services\Modular;
 
-class Modular extends ServiceProvider
+class ModularServiceProvider extends ServiceProvider
 {
     /**
      * @var Collection|array
      */
     protected $filesToPublish = [];
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
+     */
+    public function __construct($app)
+    {
+        parent::__construct($app);
+        $this->config = $app->make(Config::class);
+    }
 
     /**
      * Register the service provider.
@@ -25,8 +43,8 @@ class Modular extends ServiceProvider
     public function register()
     {
         // register module binding
-        $this->app->bind('simplemodule', function ($app) {
-            return new SimpleModule($app);
+        $this->app->bind('modular', function ($app) {
+            return new Modular($app, $this->config);
         }, true);
 
         // register new Artisan commands
@@ -78,9 +96,9 @@ class Modular extends ServiceProvider
      */
     protected function addConfigurationToPublished()
     {
-        $configName = $this->app['modular']->getConfigName();
+        $configName = $this->config->configName();
         $this->filesToPublish->put($this->getDefaultConfigFilePath($configName),
-            $this->app['modular']->getConfigFilePath());
+            $this->config->getConfigFilePath());
 
         return $this;
     }
@@ -96,7 +114,7 @@ class Modular extends ServiceProvider
         $pathLength = mb_strlen($templatesPath);
 
         // here we get all stubs files from stubs templates directory
-        $publishedStubsPath = $this->app['modular']->config('stubs.path');
+        $publishedStubsPath = $this->config->stubsPath();
         collect(glob($templatesPath . '/*/{,.}*.stub', GLOB_BRACE))
             ->each(function ($file) use ($publishedStubsPath, $pathLength) {
                 $this->filesToPublish->put($file,

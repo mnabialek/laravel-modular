@@ -1,12 +1,11 @@
 <?php
 
-namespace Mnabialek\LaravelModular;
+namespace Mnabialek\LaravelModular\Services;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
-use Mnabialek\LaravelModular\Models\Config;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Traits\Normalizer;
 use Mnabialek\LaravelModular\Traits\Replacer;
@@ -25,16 +24,16 @@ class Modular
      * @var Collection|null
      */
     protected $modules = null;
+    
     /**
      * @var Config
      */
-    private $config;
+    protected $config;
 
     /**
      * SimpleModule constructor.
      *
      * @param Application $app
-     * @param Config $config
      */
     public function __construct(Application $app, Config $config)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mnabialek\LaravelModular\Models;
+namespace Mnabialek\LaravelModular\Services;
 
 use Illuminate\Contracts\Foundation\Application;
 
@@ -45,7 +45,8 @@ class Config
      */
     public function getConfigFilePath()
     {
-        return config_path("{$this->getConfigName()}.php");
+        return $this->app['config.path'] . DIRECTORY_SEPARATOR .
+        "{$this->getConfigName()}.php";
     }
 
     /**
@@ -56,7 +57,7 @@ class Config
      *
      * @return mixed
      */
-    public function get($key = null, $default = null)
+    protected function get($key = null, $default = null)
     {
         return $this->app['config']->get("{$this->getConfigName()}.{$key}",
             $default);
@@ -67,93 +68,93 @@ class Config
      *
      * @return array
      */
-    public function getModules()
+    public function modules()
     {
         return (array)$this->get('modules');
     }
 
-    public function getDirectory()
+    public function directory()
     {
         return $this->get('directory');
     }
 
-    public function getNamespace()
+    public function modulesNamespace()
     {
         return $this->get('namespace');
     }
 
-    public function getSeederNamespace()
+    public function seederNamespace()
     {
         return $this->get('module_seeding.namespace');
     }
 
-    public function getSeederFilename()
+    public function seederFilename()
     {
         return $this->get('module_seeding.filename');
     }
 
-    public function getStartSeparator()
+    public function startSeparator()
     {
         return $this->get('separators.start');
     }
 
-    public function getEndSeparator()
+    public function endSeparator()
     {
         return $this->get('separators.end');
     }
 
-    public function getStubsDefaultGroup()
+    public function stubsDefaultGroup()
     {
         return $this->get('stubs.module_default_group');
     }
 
-    public function getFilesStubsDefaultGroup()
+    public function filesStubsDefaultGroup()
     {
         return $this->get('stubs.files_default_group');
-    }    
+    }
 
-    public function getMigrationDefaultType()
+    public function migrationDefaultType()
     {
         return $this->get('module_migrations.default_type');
     }
 
-    public function getMigrationStubFileName($type)
+    public function migrationStubFileName($type)
     {
         return $this->get("module_migrations.types.{$type}");
     }
 
-    public function getStubsPath()
+    public function stubsPath()
     {
         return $this->get('stubs.path');
     }
 
-    public function getStubGroupDirectory($group)
+    public function stubGroupDirectory($group)
     {
         return $this->get("stubs_groups.{$group}.stub_directory", $group);
     }
 
-    public function getStubGroupDirectories($group)
+    public function stubGroupDirectories($group)
     {
         return $this->get("stubs_groups.{$group}.directories", []);
     }
 
-    public function getStubGroupFiles($group)
+    public function stubGroupFiles($group)
     {
         return $this->get("stubs_groups.{$group}.files", []);
     }
 
     public function autoAdd()
     {
-        return $this->get("module_make.auto_add", false);
+        return $this->get('module_make.auto_add', false);
     }
 
     public function autoAddPattern()
     {
-        return $this->get("module_make.pattern");
+        return $this->get('module_make.pattern');
     }
 
     public function autoAddTemplate()
     {
-        return $this->get("module_make.module_template");
-    }    
+        return $this->get('module_make.module_template');
+    }
 }
