@@ -1,16 +1,16 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Providers;
+namespace Mnabialek\LaravelModular\Providers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleFiles;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMake;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleMakeMigration;
-use Mnabialek\LaravelSimpleModules\Console\Commands\ModuleSeed;
-use Mnabialek\LaravelSimpleModules\SimpleModule;
+use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
+use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
+use Mnabialek\LaravelModular\SimpleModule;
 
-class SimpleModules extends ServiceProvider
+class Modular extends ServiceProvider
 {
     /**
      * @var Collection|array
@@ -44,7 +44,7 @@ class SimpleModules extends ServiceProvider
         $this->setModulesMigrationPaths();
 
         // register modules providers
-        $this->app['simplemodule']->loadServiceProviders();
+        $this->app['modular']->loadServiceProviders();
     }
 
     /**
@@ -52,7 +52,7 @@ class SimpleModules extends ServiceProvider
      */
     public function provides()
     {
-        return ['simplemodule'];
+        return ['modular'];
     }
 
     /**
@@ -78,9 +78,9 @@ class SimpleModules extends ServiceProvider
      */
     protected function addConfigurationToPublished()
     {
-        $configName = $this->app['simplemodule']->getConfigName();
+        $configName = $this->app['modular']->getConfigName();
         $this->filesToPublish->put($this->getDefaultConfigFilePath($configName),
-            $this->app['simplemodule']->getConfigFilePath());
+            $this->app['modular']->getConfigFilePath());
 
         return $this;
     }
@@ -96,7 +96,7 @@ class SimpleModules extends ServiceProvider
         $pathLength = mb_strlen($templatesPath);
 
         // here we get all stubs files from stubs templates directory
-        $publishedStubsPath = $this->app['simplemodule']->config('stubs.path');
+        $publishedStubsPath = $this->app['modular']->config('stubs.path');
         collect(glob($templatesPath . '/*/{,.}*.stub', GLOB_BRACE))
             ->each(function ($file) use ($publishedStubsPath, $pathLength) {
                 $this->filesToPublish->put($file,
@@ -162,7 +162,7 @@ class SimpleModules extends ServiceProvider
         $paths = collect();
 
         // add to paths all migration directories from modules
-        collect($this->app['simplemodule']->active())
+        collect($this->app['modular']->active())
             ->each(function ($module) use ($paths) {
                 $paths->push($module->getMigrationsPath());
             });

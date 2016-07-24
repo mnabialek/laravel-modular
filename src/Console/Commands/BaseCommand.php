@@ -1,13 +1,13 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Console\Commands;
+namespace Mnabialek\LaravelModular\Console\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Container\Container;
-use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
-use Mnabialek\LaravelSimpleModules\Models\Config;
-use Mnabialek\LaravelSimpleModules\SimpleModule;
+use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
+use Mnabialek\LaravelModular\Models\Config;
+use Mnabialek\LaravelModular\SimpleModule;
 
 abstract class BaseCommand extends Command
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Models;
+namespace Mnabialek\LaravelModular\Models;
 
-use Mnabialek\LaravelSimpleModules\SimpleModule;
-use Mnabialek\LaravelSimpleModules\Traits\Normalizer;
-use Mnabialek\LaravelSimpleModules\Traits\Replacer;
+use Mnabialek\LaravelModular\SimpleModule;
+use Mnabialek\LaravelModular\Traits\Normalizer;
+use Mnabialek\LaravelModular\Traits\Replacer;
 
 class Module
 {

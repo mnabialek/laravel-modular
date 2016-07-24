@@ -1,6 +1,6 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Traits;
+namespace Mnabialek\LaravelModular\Traits;
 
 trait Normalizer
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Console\Traits;
+namespace Mnabialek\LaravelModular\Console\Traits;
 
 use Illuminate\Support\Collection;
 

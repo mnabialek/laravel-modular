@@ -1,11 +1,11 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Console\Commands;
+namespace Mnabialek\LaravelModular\Console\Commands;
 
 use Exception;
-use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
-use Mnabialek\LaravelSimpleModules\Models\Module;
-use Mnabialek\LaravelSimpleModules\Traits\Replacer;
+use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Traits\Replacer;
 
 class ModuleMake extends BaseCommand
 {

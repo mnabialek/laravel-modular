@@ -1,6 +1,6 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Models;
+namespace Mnabialek\LaravelModular\Models;
 
 use Illuminate\Contracts\Foundation\Application;
 
@@ -11,7 +11,7 @@ class Config
      *
      * @var string
      */
-    protected $configName = 'simplemodules';
+    protected $configName = 'modular';
 
     /**
      * @var Application

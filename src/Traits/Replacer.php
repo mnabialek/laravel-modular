@@ -1,9 +1,9 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Traits;
+namespace Mnabialek\LaravelModular\Traits;
 
 use Illuminate\Support\Collection;
-use Mnabialek\LaravelSimpleModules\Models\Module;
+use Mnabialek\LaravelModular\Models\Module;
 
 trait Replacer
 {

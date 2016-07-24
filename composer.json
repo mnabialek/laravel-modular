@@ -1,5 +1,5 @@
 {
-    "name": "mnabialek/laravel-simple-modules",
+    "name": "mnabialek/laravel-modular",
     "description": "Allows creating Laravel modules for better project structure",
     "require": {
         "laravel/framework": "5.3.*"
@@ -13,7 +13,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Mnabialek\\LaravelSimpleModules\\": "src/"
+            "Mnabialek\\LaravelModular\\": "src/"
         }
     },
     "autoload-dev": {

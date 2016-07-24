@@ -1,19 +1,17 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules;
+namespace Mnabialek\LaravelModular;
 
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Database\Seeder;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
-use Mnabialek\LaravelSimpleModules\Models\Config;
-use Mnabialek\LaravelSimpleModules\Models\Module;
-use Mnabialek\LaravelSimpleModules\Traits\Normalizer;
-use Mnabialek\LaravelSimpleModules\Traits\Replacer;
+use Mnabialek\LaravelModular\Models\Config;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Traits\Normalizer;
+use Mnabialek\LaravelModular\Traits\Replacer;
 
-class SimpleModule
+class Modular
 {
     use Replacer;
     use Normalizer;
@@ -154,16 +152,16 @@ class SimpleModule
         if ($this->modules === null) {
             $this->loadModules();
         }
-        
+
         return $this->modules();
     }
 
     protected function loadModules()
     {
         $this->modules = collect();
-        
+
         collect($this->config->getModules())->each(function ($options, $name) {
-           $this->modules->push(new Module($name, $options, $this->config));
+            $this->modules->push(new Module($name, $options, $this->config));
         });
     }
 
@@ -198,8 +196,6 @@ class SimpleModule
             $module->isActive();
         });
     }
-
-
 
     /**
      * Verifies whether given module exists

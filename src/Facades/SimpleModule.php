@@ -1,6 +1,6 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Facades;
+namespace Mnabialek\LaravelModular\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

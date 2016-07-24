@@ -1,10 +1,10 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Console\Commands;
+namespace Mnabialek\LaravelModular\Console\Commands;
 
-use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
-use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleVerification;
-use Mnabialek\LaravelSimpleModules\Models\Module;
+use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
+use Mnabialek\LaravelModular\Console\Traits\ModuleVerification;
+use Mnabialek\LaravelModular\Models\Module;
 
 class ModuleSeed extends BaseCommand
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Mnabialek\LaravelSimpleModules\Console\Traits;
+namespace Mnabialek\LaravelModular\Console\Traits;
 
-use Mnabialek\LaravelSimpleModules\Models\Module;
-use Mnabialek\LaravelSimpleModules\Traits\Normalizer;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Traits\Normalizer;
 use Exception;
 
 trait ModuleCreator
