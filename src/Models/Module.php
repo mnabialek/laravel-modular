@@ -4,29 +4,71 @@ namespace Mnabialek\LaravelSimpleModules\Models;
 
 use Mnabialek\LaravelSimpleModules\SimpleModule;
 use Mnabialek\LaravelSimpleModules\Traits\Normalizer;
+use Mnabialek\LaravelSimpleModules\Traits\Replacer;
 
 class Module
 {
-    use Normalizer;
+    use Normalizer, Replacer;
 
     /**
-     * @var SimpleModule
+     * @var
      */
-    protected $modules;
-
     protected $name;
 
+    /**
+     * @var array
+     */
     protected $options;
 
-    public function __construct(SimpleModule $modules)
+    /**
+     * @var
+     */
+    protected $config;
+
+    /**
+     * Module constructor.
+     *
+     * @param string $name
+     * @param array $options
+     * @param Config $config
+     */
+    public function __construct($name, array $options, Config $config)
     {
-        $this->modules = $modules;
+        $this->name = $name;
+        $this->options = collect($options);
+        $this->config = $config;
     }
 
+    /**
+     * Get module name
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
+
+
+    /**
+     * Get module seeder class name (with namespace)
+     *
+     * @param string|null $class
+     *
+     * @return string
+     */
+    public function getSeederClass($class = null)
+    {
+        $name = $this->getName();
+
+        $class = $class ?: basename($this->config->getSeederFilename(), '.php');
+
+        return $this->replace($this->config->getNamespace() . '\\' . $name .
+            '\\' . $this->config->getSeederNamespace() . '\\' . $class, $name);
+    }
+    
+    
+    
 
     public function getDirectory()
     {
@@ -82,9 +124,10 @@ class Module
      *
      * @return string
      */
-    protected function getRouteControllerNamespace($module)
+    public function getRouteControllerNamespace()
     {
-        return $this->modeuls->config('namespace', '') . '\\' . $module . '\\' .
+        return $this->modules->config('namespace', '') . '\\' .
+        $this->getName() . '\\' .
         $this->modules->config('module_routing.route_group_namespace', '');
     }
 
@@ -95,7 +138,7 @@ class Module
      *
      * @return string
      */
-    protected function getModuleRoutesFilePath()
+    public function getRoutesFilePath()
     {
         return $this->getDirectory() .
         DIRECTORY_SEPARATOR . $this->modules->config('module_routing.file');
@@ -108,7 +151,7 @@ class Module
      *
      * @return string
      */
-    protected function getModuleFactoryFilePath()
+    public function getFactoryFilePath()
     {
         return $this->getDirectory() . DIRECTORY_SEPARATOR .
         $this->replace($this->modules->config('module_factories.file'),
@@ -122,7 +165,7 @@ class Module
      *
      * @return string
      */
-    protected function getModuleServiceProviderFilePath()
+    public function getServiceProviderFilePath()
     {
         return $this->getDirectory() . DIRECTORY_SEPARATOR .
         $this->normalizePath($this->modules->config('module_service_providers.path')) .
@@ -131,25 +174,7 @@ class Module
             $this->getName());
     }
 
-    /**
-     * Get module seeder class name (with namespace)
-     *
-     * @param string $module
-     * @param string|null $class
-     *
-     * @return string
-     */
-    public function getSeederClass($module, $class = null)
-    {
-        $module = $this->getModuleName($module);
 
-        $class = $class ?: basename($this->config('module_seeding.filename'),
-            '.php');
-
-        return $this->replace($this->config('namespace') . '\\' . $module .
-            '\\' . $this->config('module_seeding.namespace') . '\\' .
-            $class, $module);
-    }
 
     /**
      * Get seeder filename (with path) for module

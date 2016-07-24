@@ -3,6 +3,7 @@
 namespace Mnabialek\LaravelSimpleModules\Console\Commands;
 
 use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
+use Mnabialek\LaravelSimpleModules\Models\Module;
 use Mnabialek\LaravelSimpleModules\Traits\Replacer;
 
 class ModuleFiles extends BaseCommand
@@ -32,13 +33,11 @@ class ModuleFiles extends BaseCommand
     public function proceed()
     {
         $module = $this->argument('module');
-        $subModules = array_unique($this->argument('name'));
-        $stubGroup = $this->getStubGroup('files_default_group');
+        $subModules = collect($this->argument('name'))->unique();
+        $stubGroup = $this->getFilesStubGroup();
 
         // verify whether stub directory exists
         $this->verifyStubGroup($stubGroup);
-
-        $module = $this->module->getModuleName($module);
 
         if (!($this->module->exists($module))) {
             $this->error("Module {$module} does not exist. Run <comment>module:make {$module}</comment> command first to create it");
@@ -46,11 +45,16 @@ class ModuleFiles extends BaseCommand
             return;
         }
 
+        $module = new Module($module, [], $this->config);
+
+        $subModules->each(function ($subModule) use ($module, $stubGroup) {
+            $this->createSubModule($module, $subModule, $stubGroup);
+        });
+
         foreach ($subModules as $subModule) {
             // get submodule name (normalized or not)
             $subModule = $this->module->getModuleName($subModule);
 
-            $this->createSubModule($module, $subModule, $stubGroup);
         }
     }
 
@@ -61,18 +65,15 @@ class ModuleFiles extends BaseCommand
      * @param string $subModule
      * @param string $stubGroup
      */
-    protected function createSubModule($module, $subModule, $stubGroup)
+    protected function createSubModule(Module $module, $subModule, $stubGroup)
     {
         $module = $this->module->getModuleName($module);
 
-        $moduleDir = $this->module->getModuleDirectory($module);
-
         // first create directories
-        $this->createModuleDirectories($module, $moduleDir, $stubGroup);
+        $this->createModuleDirectories($module, $stubGroup);
 
         // now create files
-        $status = $this->createSubModuleFiles($module, $moduleDir, $stubGroup,
-            $subModule);
+        $status = $this->createSubModuleFiles($module, $subModule, $stubGroup);
 
         if ($status) {
             $this->info("[Module {$module}] Submodule {$subModule} created.");

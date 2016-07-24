@@ -158,7 +158,7 @@ return [
      *
      * If you fill them manually extra checks won't be done. So for example if
      * you set `provider` => false and this module has service provider, it
-     * won't be loaded unless you change it to  `provider` => true
+     * won't be loaded unless you change it to `provider` => true
      */
     'modules' => [
         // end of modules (don't remove this comment)

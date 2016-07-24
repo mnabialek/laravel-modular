@@ -28,13 +28,14 @@ trait ModuleVerification
      *
      * @param Collection $modules
      *
-     * @return array|bool
+     * @return bool|Collection
+     * @throws \Exception
      */
     protected function verifyExisting(Collection $modules)
     {
         $result = $this->verifyModules($modules, false);
         if (!$result) {
-            $this->error("\nThere were errors. You need to pass only valid module names");
+            throw new \Exception("There were errors. You need to pass only valid module names");
         }
 
         return $result;
@@ -43,18 +44,20 @@ trait ModuleVerification
     /**
      * Verifies whether given modules exist and whether they are active
      *
-     * @param Collection $modules
+     * @param Collection $moduleNames
      * @param bool $verifyActive
      *
-     * @return array|bool
+     * @return Collection|bool
      */
-    private function verifyModules(Collection $modules, $verifyActive)
+    private function verifyModules(Collection $moduleNames, $verifyActive)
     {
         $errors = false;
         
         $all = $this->module->all();
         
-        $modules->each(function ($name) use ($all, $verifyActive, &$errors) {
+        $modules = collect();
+        
+        $moduleNames->each(function ($name) use ($all, $verifyActive, &$errors, $modules) {
             $found = $all->first(function ($module) use ($name) {
                 return $module->getName() == $name;
             });
@@ -66,6 +69,10 @@ trait ModuleVerification
                 $errors = true;
                 $this->error("Module {$name} is not active");
             };
+            
+            if (!$errors) {
+                $modules->push($found);
+            }
         });
 
         return $errors ? false : $modules;

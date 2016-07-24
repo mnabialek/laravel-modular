@@ -2,7 +2,8 @@
 
 namespace Mnabialek\LaravelSimpleModules\Traits;
 
-use Mnabialek\LaravelSimpleModules\SimpleModule;
+use Illuminate\Support\Collection;
+use Mnabialek\LaravelSimpleModules\Models\Module;
 
 trait Replacer
 {
@@ -10,64 +11,42 @@ trait Replacer
      * Replace given string with default replacements and optionally user given
      *
      * @param string $string
-     * @param string $module
+     * @param Module $module
      * @param array $replacements
      *
      * @return string
      */
-    public function replace($string, $module, array $replacements = [])
+    public function replace($string, Module $module, array $replacements = [])
     {
         $replacements = $this->getReplacements($module, $replacements);
 
-        return str_replace(array_keys($replacements),
-            array_values($replacements),
+        return str_replace($replacements->keys(), $replacements->values(),
             $string);
     }
 
     /**
      * Get replacement array that will be used for replace in string
      *
-     * @param string $module
+     * @param Module $module
      * @param array $definedReplacements
      *
-     * @return array
+     * @return Collection
      */
-    protected function getReplacements($module, array $definedReplacements)
+    protected function getReplacements(Module $module, array $definedReplacements)
     {
-        $replacements = [];
-        $simpleModule = $this->getSimpleModuleInstance();
+        $replacements = collect();
 
-        $definedReplacements = array_merge([
-            'module' => $module,
-            'class' => $module,
-            'moduleNamespace' => $module,
-            'namespace' => rtrim($simpleModule->config('namespace'), '\\'),
-            'plural|lower' => mb_strtolower(str_plural($module)),
-        ], $definedReplacements);
-
-        foreach ($definedReplacements as $key => $val) {
-            $replacements[$simpleModule->config('separators.start') . $key .
-            $simpleModule->config('separators.end')] = $val;
-        }
+        collect($definedReplacements)->merge([
+            'module' => $module->getName(),
+            'class' => $module->getName(),
+            'moduleNamespace' => $module->getName(),
+            'namespace' => rtrim($this->config->getNamespace(), '\\'),
+            'plural|lower' => mb_strtolower(str_plural($module->getName())),
+        ])->each(function ($value, $key) use ($replacements) {
+            $replacements->put($this->config->getStartSeparator() . $key .
+                $this->config->getEndSeparator(), $value);
+        });
 
         return $replacements;
-    }
-
-    /**
-     * Get SimpleModule instance
-     *
-     * @return SimpleModule
-     * @throws \Exception
-     */
-    private function getSimpleModuleInstance()
-    {
-        if ($this instanceof SimpleModule) {
-            return $this;
-        }
-        if (isset($this->module) && $this->module instanceof SimpleModule) {
-            return $this->module;
-        }
-
-        throw new \Exception('Cannot resolve Module class');
     }
 }

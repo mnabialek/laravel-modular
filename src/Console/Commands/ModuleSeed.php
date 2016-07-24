@@ -4,6 +4,7 @@ namespace Mnabialek\LaravelSimpleModules\Console\Commands;
 
 use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
 use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleVerification;
+use Mnabialek\LaravelSimpleModules\Models\Module;
 
 class ModuleSeed extends BaseCommand
 {
@@ -41,6 +42,7 @@ class ModuleSeed extends BaseCommand
         $options = $this->getOptions();
 
         $modules->each(function ($module) use ($options) {
+            /** @var Module $module */
             $class = $module->getSeederClass($this->option('class'));
 
             $result = $this->call('db:seed',

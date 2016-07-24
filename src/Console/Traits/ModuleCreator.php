@@ -2,7 +2,9 @@
 
 namespace Mnabialek\LaravelSimpleModules\Console\Traits;
 
+use Mnabialek\LaravelSimpleModules\Models\Module;
 use Mnabialek\LaravelSimpleModules\Traits\Normalizer;
+use Exception;
 
 trait ModuleCreator
 {
@@ -17,9 +19,8 @@ trait ModuleCreator
      */
     protected function getStubGroupDirectory($group)
     {
-        return $this->normalizePath($this->module->config('stubs.path')) .
-        DIRECTORY_SEPARATOR .
-        $this->module->config("stubs_groups.{$group}.stub_directory", $group);
+        return $this->normalizePath($this->config->getStubsPath() .
+            DIRECTORY_SEPARATOR . $this->config->getStubGroupDirectory($group));
     }
 
     /**
@@ -34,13 +35,13 @@ trait ModuleCreator
         // first verify whether this group is in config file
         $stubGroups = $this->module->config('stubs_groups', []);
         if (!array_key_exists($stubGroup, $stubGroups)) {
-            throw new \Exception("Stub group {$stubGroup} does not exist. You need to add this to stubs_groups");
+            throw new Exception("Stub group {$stubGroup} does not exist. You need to add this to stubs_groups");
         }
 
         // then verify whether this stub group exists
         $directory = $this->getStubGroupDirectory($stubGroup);
         if (!$this->exists($directory)) {
-            throw new \Exception("Stub group directory {$directory} does not exist");
+            throw new Exception("Stub group directory {$directory} does not exist");
         }
     }
 
@@ -52,7 +53,7 @@ trait ModuleCreator
     protected function verifyConfigExistence()
     {
         if (!$this->exists($this->module->getConfigFilePath())) {
-            throw new \Exception('Config file does not exists. Please run php artisan vendor:publish (see docs for details)');
+            throw new Exception('Config file does not exists. Please run php artisan vendor:publish (see docs for details)');
         }
     }
 
@@ -71,70 +72,70 @@ trait ModuleCreator
     /**
      * Get stub group - either from input of default one
      *
-     * @param string $defaultKey
-     *
      * @return mixed
      */
-    protected function getStubGroup($defaultKey = 'module_default_group')
+    protected function getStubGroup()
     {
-        return $this->option('group') ?: $this->module->config('stubs.' .
-            $defaultKey);
+        return $this->option('group') ?: $this->config->getStubsDefaultGroup();
     }
+
+    protected function getFilesStubGroup()
+    {
+        return $this->option('group') ?: $this->config->getFilesStubsDefaultGroup();
+    }    
 
     /**
      * Creates module directories
      *
-     * @param string $module
-     * @param string $moduleDirectory
+     * @param Module $module
      * @param string $stubGroup
      */
     protected function createModuleDirectories(
-        $module,
-        $moduleDirectory,
+        Module $module,
         $stubGroup
     ) {
-        $stubConfig = $this->module->config("stubs_groups.{$stubGroup}", []);
 
-        if (array_key_exists('directories', $stubConfig)) {
-            $dirs = $stubConfig['directories'];
+        $directories = collect($this->config
+            ->getStubGroupDirectories($stubGroup))->unique();
 
-            foreach ($dirs as $dir) {
-                $dirToCreate = $moduleDirectory . DIRECTORY_SEPARATOR . $dir;
-                $this->createDirectory($dirToCreate, $module);
-            }
-        } else {
-            $this->warn("[Module {$module}] No explicit directories created");
+        if ($directories->isEmpty()) {
+            $this->warn("[Module {$module->getName()}] No explicit directories created");
+
+            return;
         }
+
+        $directories->each(function ($directory) use ($module) {
+            $this->createDirectory($module, $module->getDirectory() .
+                DIRECTORY_SEPARATOR . $directory);
+        });
     }
 
     /**
      * Creates directory
      *
-     * @param string $dirToCreate
-     * @param string $module
+     * @param Module $module
+     * @param string $directory
      */
-    protected function createDirectory($dirToCreate, $module)
+    protected function createDirectory(Module $module, $directory)
     {
-        if (!$this->exists($dirToCreate)) {
-            $this->line("[Module {$module}] Creating directory {$dirToCreate}");
-            mkdir($dirToCreate, 0777, true);
-        } else {
-            $this->comment("[Module {$module}] Directory {$dirToCreate} already exists");
+        if (!$this->exists($directory)) {
+            mkdir($directory, 0777, true);
+            $this->line("[Module {$module->getName()}] Created directory {$directory}");
         }
     }
 
     /**
      * Create module files
      *
-     * @param string $module
+     * @param Module $module
      * @param string $moduleDirectory
      * @param string $stubGroup
      *
      * @return bool
      */
-    protected function createModuleFiles($module, $moduleDirectory, $stubGroup)
+    protected function createModuleFiles($module, $stubGroup)
     {
-        return $this->copyModuleFiles($module, $moduleDirectory, $stubGroup);
+        return $this->copyModuleFiles($module, $stubGroup);
     }
 
     /**
@@ -149,12 +150,10 @@ trait ModuleCreator
      */
     protected function createSubModuleFiles(
         $module,
-        $moduleDirectory,
-        $stubGroup,
-        $subModule
+        $subModule,     
+        $stubGroup
     ) {
-        return $this->copyModuleFiles($module, $moduleDirectory, $stubGroup,
-            $subModule);
+        return $this->copyModuleFiles($module, $stubGroup, $subModule);
     }
 
     /**
@@ -169,59 +168,38 @@ trait ModuleCreator
      */
     protected function copyModuleFiles(
         $module,
-        $moduleDirectory,
         $stubGroup,
         $subModule = null
     ) {
-        $checkExistence = false;
         $replacements = [];
         if ($subModule !== null) {
-            $checkExistence = true;
             $replacements = ['class' => $subModule];
         }
 
-        $stubDirectory = $this->getStubGroupDirectory($stubGroup);
-        $stubConfig = $this->module->config("stubs_groups.{$stubGroup}", []);
+        $files = $this->config->getStubGroupFiles($stubGroup);
 
-        if (array_key_exists('files', $stubConfig)) {
-            $files = $stubConfig['files'];
-            $toCopy = count($files);
-
-            foreach ($files as $moduleFile => $stubFile) {
-                $copied =
-                    $this->copyStubFileIntoModule($stubFile, $stubDirectory,
-                        $moduleFile, $moduleDirectory, $module, $checkExistence,
-                        $replacements);
-
-                if ($copied) {
-                    --$toCopy;
-                }
-            }
-
-            // no files copied - return false
-            if ($toCopy == count($files)) {
-                return false;
-            }
-        } else {
+        if ($files->isEmpty()) {
             $this->warn("[Module {$module}] No files created");
+
+            return;
         }
 
-        return true;
+        $files->each(function ($stubFile, $moduleFile) use ($module, $stubGroup, $replacements) {
+            $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
+                $moduleFile, $replacements);
+        });
     }
 
     /**
      * Creates directory for given file (if it doesn't exist)
      *
+     * @param Module $module 
      * @param string $file
-     * @param string $moduleDirectory
-     * @param string $module
      */
-    protected function createMissingDirectory($file, $moduleDirectory, $module)
+    protected function createMissingDirectory(Module $module, $file)
     {
-        $newDir = $moduleDirectory . DIRECTORY_SEPARATOR . dirname($file);
-
-        if (!$this->exists($newDir)) {
-            $this->createDirectory($newDir, $module);
+        if (!$this->exists($dir = dirname($file))) {
+            $this->createDirectory($module, $dir);
         }
     }
 
@@ -240,39 +218,28 @@ trait ModuleCreator
      * @return bool
      */
     protected function copyStubFileIntoModule(
+        Module $module,
         $stubFile,
-        $stubDirectory,
-        $moduleFile,
-        $moduleDirectory,
-        $module,
-        $checkExistence,
-        array $replacements = [],
-        $final = false
+        $stubGroup,
+        $moduleFile, 
+        array $replacements = []
     ) {
-        $stubPath = $stubDirectory . DIRECTORY_SEPARATOR . $stubFile;
+        $stubPath =
+            $this->getStubGroupDirectory($stubGroup) . DIRECTORY_SEPARATOR .
+            $stubFile;
 
         if ($this->exists($stubPath)) {
             $moduleFile = $this->replace($moduleFile, $module, $replacements);
-            $modulePath = $moduleDirectory . DIRECTORY_SEPARATOR . $moduleFile;
 
-            if ($checkExistence && $this->exists($modulePath)) {
-                $this->warn("[Module $module] File {$modulePath} already exists");
-
-                return false;
+            if ($this->exists($moduleFile)) {
+                throw new Exception("[Module $module] File {$moduleFile} already exists");
             }
 
-            $this->createMissingDirectory($moduleFile, $moduleDirectory,
-                $module);
-            $this->createFile($stubPath, $modulePath, $module, $replacements);
+            $this->createMissingDirectory($module, $moduleFile);
+            $this->createFile($module, $stubPath, $moduleFile, $replacements);
         } else {
-            $this->warn("Stub file {$stubPath} does NOT exist");
-
-            if ($final) {
-                return false;
-            }
+            throw new Exception("Stub file {$stubPath} does NOT exist");
         }
-
-        return true;
     }
 
     /**
@@ -280,13 +247,13 @@ trait ModuleCreator
      *
      * @param string $sourceFile
      * @param string $destinationFile
-     * @param string $module
+     * @param Module $module
      * @param array $replacements
      */
     protected function createFile(
+        $module,
         $sourceFile,
         $destinationFile,
-        $module,
         array $replacements = []
     ) {
         file_put_contents($destinationFile,
@@ -294,6 +261,6 @@ trait ModuleCreator
                 $replacements)
         );
 
-        $this->line("[Module {$module}] Creating file {$destinationFile}");
+        $this->line("[Module {$module}] Created file {$destinationFile}");
     }
 }

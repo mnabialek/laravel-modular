@@ -4,6 +4,7 @@ namespace Mnabialek\LaravelSimpleModules\Console\Commands;
 
 use Exception;
 use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
+use Mnabialek\LaravelSimpleModules\Models\Module;
 use Mnabialek\LaravelSimpleModules\Traits\Replacer;
 
 class ModuleMake extends BaseCommand
@@ -31,47 +32,49 @@ class ModuleMake extends BaseCommand
      */
     public function proceed()
     {
-        $modules = array_unique($this->argument('module'));
+        $moduleNames = collect($this->argument('module'))->unique();
 
         $stubGroup = $this->getStubGroup();
 
         // verify whether stub directory exists
         $this->verifyStubGroup($stubGroup);
 
-        foreach ($modules as $module) {
-            // get module name (normalized or not)
-            $module = $this->module->getModuleName($module);
-
+        $moduleNames->each(function ($moduleName) use ($stubGroup) {
+            $this->module->find($moduleName);
             // module added to configuration or module directory exists
-            if ($this->module->exists($module) ||
-                $this->exists($this->module->getModuleDirectory($module))
+
+            $module = new Module($moduleName, [], $this->config);
+
+            if ($this->module->exists($moduleName) ||
+                $this->exists($module->getDirectory())
             ) {
-                $this->warn("[Module {$module}] already exists - ignoring");
+                $this->warn("[Module {$moduleName}] already exists - ignoring");
+                //throw new Exc
             } else {
                 // module does not exist - let's create it
                 $this->createModule($module, $stubGroup);
                 $this->info("[Module {$module}] Generated");
             }
-        }
+        });
     }
 
     /**
      * Create module
      *
-     * @param string $module
+     * @param Module $module
      * @param string $stubGroup
      */
-    protected function createModule($module, $stubGroup)
+    protected function createModule(Module $module, $stubGroup)
     {
-        $module = $this->module->getModuleName($module);
+        //$name = $module->getName();
 
-        $moduleDir = $this->module->getModuleDirectory($module);
+        //$moduleDir = $module->getDirectory();
 
         // first create directories
-        $this->createModuleDirectories($module, $moduleDir, $stubGroup);
+        $this->createModuleDirectories($module, $stubGroup);
 
         // now create files
-        $this->createModuleFiles($module, $moduleDir, $stubGroup);
+        $this->createModuleFiles($module, $stubGroup);
 
         // finally add module to configuration (if not disabled in config) 
         $this->addModuleToConfigurationFile($module);
@@ -82,40 +85,36 @@ class ModuleMake extends BaseCommand
      *
      * @param $module
      */
-    protected function addModuleToConfigurationFile($module)
+    protected function addModuleToConfigurationFile(Module $module)
     {
-        if (!$this->module->config('module_make.auto_add')) {
-            $this->info("[Module {$module}] - auto-adding to config file turned off\nPlease add this module manually into " .
-                $this->module->getConfigFilePath() .
+        if (!$this->config->autoAdd()) {
+            $this->info("[Module {$module->getName()}] - auto-adding to config file turned off\nPlease add this module manually into " .
+                $this->config->getConfigFilePath() .
                 ' file if you want to use it');
 
             return;
         }
 
+        $configFile = $this->config->getConfigFilePath();
+        
         // getting modified content of config file
-        $result =
-            preg_replace_callback($this->module->config('module_make.pattern'),
-                function ($matches) use ($module) {
-                    $return = $matches[1] . $matches[2];
-
-                    return $return .
-                    $this->replace($this->module->config('module_make.module_template'),
-                        $module) .
-                    $matches[3];
-                },
-                file_get_contents($this->module->getConfigFilePath()), -1,
-                $count);
+        $result = preg_replace_callback($this->config->autoAddPattern(),
+            function ($matches) use ($module, $configFile) {
+                return $matches[1] . $matches[2] .
+                $this->replace($this->config->autoAddTemplate(), $module) .
+                $matches[3];
+            },
+            file_get_contents($configFile), -1, $count);
 
         if ($count) {
             // found place where new module should be added into config file
-            file_put_contents($this->module->getConfigFilePath(), $result);
-            $this->comment("[Module {$module}] Added into config file " .
-                $this->module->getConfigFilePath());
+            file_put_contents($configFile, $result);
+            $this->comment("[Module {$module->getName()}] Added into config file {$configFile}");
         } else {
             // cannot add module to config file automatically
-            $this->warn("[Module {$module}] It was impossible to add module {$module} into " .
-                $this->module->getConfigFilePath() .
-                " file.\n Please make sure you haven't changed structure of this file. At the moment add <info>{$module}</info> to this file manually");
+            $this->warn("[Module {$module->getaName()}] It was impossible to add module into {$configFile}" .
+                " file.\n Please make sure you haven't changed structure of this file. " .
+                "At the moment add <info>{$module->getName()}</info> to this file manually");
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Mnabialek\LaravelSimpleModules\Console\Commands;
 use Exception;
 use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleCreator;
 use Mnabialek\LaravelSimpleModules\Console\Traits\ModuleVerification;
+use Mnabialek\LaravelSimpleModules\Models\Module;
 use Mnabialek\LaravelSimpleModules\Traits\Replacer;
 
 class ModuleMakeMigration extends BaseCommand
@@ -44,47 +45,31 @@ class ModuleMakeMigration extends BaseCommand
 
         // verify whether both type and table used
         if ($type && !$table || $table && !$type) {
-            $this->error('You need to use both options --type and --table when using any of them');
-
-            return;
+            throw new Exception('You need to use both options --type and --table when using any of them');
         }
 
         // verify whether module exists
-        $modules = $this->verifyExisting((array)$module);
-        if ($modules === false) {
-            return;
-        }
+        $modules = $this->verifyExisting(collect((array)$module));
 
-        $stubGroup = $this->getStubGroup();
-
-        $this->createMigrationFile($module, $name, $stubGroup, $type, $table);
+        $this->createMigrationFile($modules->first(), $name, $type, $table);
     }
 
     /**
      * Create migration file
      *
-     * @param string $module
+     * @param Module $module
      * @param string $name
-     * @param string $stubGroup
      * @param string $type
      * @param string $table
      */
-    protected function createMigrationFile(
-        $module,
-        $name,
-        $stubGroup,
-        $type,
-        $table
-    ) {
-        $type = $type ?:
-            $this->module->config('module_migrations.default_type');
-
-        $stubFile = $this->module->config("module_migrations.types.{$type}");
+    protected function createMigrationFile(Module $module, $name, $type, $table)
+    {
+        $stubGroup = $this->getStubGroup();
+        $type = $type ?: $this->config->getMigrationDefaultType();
+        $stubFile = $this->config->getMigrationStubFileName($type);
 
         if (!$stubFile) {
-            $this->error("There is no {$type} in module_migrations.types registered in configuration file");
-
-            return;
+            throw new Exception("There is no {$type} in module_migrations.types registered in configuration file");
         }
 
         // migration file name
@@ -93,19 +78,11 @@ class ModuleMakeMigration extends BaseCommand
         // migration class name
         $migrationClass = studly_case($name);
 
-        $created = $this->copyStubFileIntoModule(
-            $stubFile,
-            $this->getStubGroupDirectory($stubGroup),
-            $filename,
-            $this->module->getMigrationsPath($module),
-            $module,
-            true,
-            ['migrationClass' => $migrationClass, 'table' => $table],
-            true
+        $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
+            $module->getMigrationsPath() .  DIRECTORY_SEPARATOR . $filename ,
+            ['migrationClass' => $migrationClass, 'table' => $table]
         );
 
-        if ($created) {
-            $this->info("[Module {$module}] Migration file created: {$filename}");
-        }
+        $this->info("[Module {$module}] Created migration file: {$filename}");
     }
 }

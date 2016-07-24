@@ -8,6 +8,8 @@ use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
+use Mnabialek\LaravelSimpleModules\Models\Config;
+use Mnabialek\LaravelSimpleModules\Models\Module;
 use Mnabialek\LaravelSimpleModules\Traits\Normalizer;
 use Mnabialek\LaravelSimpleModules\Traits\Replacer;
 
@@ -21,16 +23,25 @@ class SimpleModule
      */
     protected $app;
 
+    /**
+     * @var Collection|null
+     */
     protected $modules = null;
+    /**
+     * @var Config
+     */
+    private $config;
 
     /**
      * SimpleModule constructor.
      *
      * @param Application $app
+     * @param Config $config
      */
-    public function __construct(Application $app)
+    public function __construct(Application $app, Config $config)
     {
         $this->app = $app;
+        $this->config = $config;
     }
 
     /**
@@ -41,6 +52,7 @@ class SimpleModule
     public function seed(Seeder $seeder)
     {
         $this->withSeeders()->each(function ($module) use ($seeder) {
+            /** @var Module $module */
             $seeder->call($module->getSeederClass());
         });
     }
@@ -53,6 +65,7 @@ class SimpleModule
     public function loadRoutes(Registrar $router)
     {
         $this->withRoutes()->each(function ($module) use ($router) {
+            /** @var Module $module */
             $router->group(['namespace' => $module->getRouteControllerNamespace()],
                 function ($router) use ($module) {
                     require($this->app->basePath() . DIRECTORY_SEPARATOR .
@@ -64,10 +77,11 @@ class SimpleModule
     /**
      * Load factories for active modules
      */
-    public function loadFactories($factory)
+    public function loadFactories()
     {
         $this->withFactories()->each(function ($module) {
-            require($module->getModuleFactoryFilePath());
+            /** @var Module $module */
+            require($module->getFactoryFilePath());
         });
     }
 
@@ -77,6 +91,7 @@ class SimpleModule
     public function loadServiceProviders()
     {
         $this->withServiceProviders()->each(function ($module) {
+            /** @var Module $module */
             $this->app->register($module->getServiceProviderClass());
         });
     }
@@ -145,6 +160,11 @@ class SimpleModule
 
     protected function loadModules()
     {
+        $this->modules = collect();
+        
+        collect($this->config->getModules())->each(function ($options, $name) {
+           $this->modules->push(new Module($name, $options, $this->config));
+        });
     }
 
     /**

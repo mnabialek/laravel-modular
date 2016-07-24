@@ -101,5 +101,59 @@ class Config
     {
         return $this->get('separators.end');
     }
-    
+
+    public function getStubsDefaultGroup()
+    {
+        return $this->get('stubs.module_default_group');
+    }
+
+    public function getFilesStubsDefaultGroup()
+    {
+        return $this->get('stubs.files_default_group');
+    }    
+
+    public function getMigrationDefaultType()
+    {
+        return $this->get('module_migrations.default_type');
+    }
+
+    public function getMigrationStubFileName($type)
+    {
+        return $this->get("module_migrations.types.{$type}");
+    }
+
+    public function getStubsPath()
+    {
+        return $this->get('stubs.path');
+    }
+
+    public function getStubGroupDirectory($group)
+    {
+        return $this->get("stubs_groups.{$group}.stub_directory", $group);
+    }
+
+    public function getStubGroupDirectories($group)
+    {
+        return $this->get("stubs_groups.{$group}.directories", []);
+    }
+
+    public function getStubGroupFiles($group)
+    {
+        return $this->get("stubs_groups.{$group}.files", []);
+    }
+
+    public function autoAdd()
+    {
+        return $this->get("module_make.auto_add", false);
+    }
+
+    public function autoAddPattern()
+    {
+        return $this->get("module_make.pattern");
+    }
+
+    public function autoAddTemplate()
+    {
+        return $this->get("module_make.module_template");
+    }    
 }
