@@ -263,13 +263,4 @@ return [
         'start' => '{',
         'end' => '}',
     ],
-
-    /**
-     * Providers that will be overridden by custom ones (you should not change
-     * them unless you have very good reason to do that)
-     */
-    'providers' => [
-        'Illuminate\Database\MigrationServiceProvider' =>
-            'Mnabialek\LaravelSimpleModules\Providers\Migration',
-    ],
 ];
