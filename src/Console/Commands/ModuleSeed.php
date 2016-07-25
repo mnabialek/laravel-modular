@@ -32,10 +32,9 @@ class ModuleSeed extends BaseCommand
      */
     public function proceed()
     {
-        $modules = collect(array_unique($this->argument('module')));
-
+        $modules = collect($this->argument('module'))->unique();
         $modules = $this->verifyActive($modules);
-        if ($modules === false) {
+        if ($modules === false || $modules->isEmpty()) {
             return;
         }
 
@@ -49,11 +48,11 @@ class ModuleSeed extends BaseCommand
                 array_merge($options, ['--class' => $class]));
 
             if ($result != 0) {
-                $this->error("[Module {$module}] There was a problem with running seeder {$class}");
+                $this->error("[Module {$module->getName()}] There was a problem with running seeder {$class}");
 
                 return;
             }
-            $this->info("[Module {$module}] Seeded: {$class}");
+            $this->info("[Module {$module->getName()}] Seeded: {$class}");
         });
     }
 }
