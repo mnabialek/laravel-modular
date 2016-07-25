@@ -61,12 +61,16 @@ class ModuleMakeMigration extends BaseCommand
      * @param string $name
      * @param string $type
      * @param string $table
+     *
+     * @throws Exception
      */
     protected function createMigrationFile(Module $module, $name, $type, $table)
     {
         $stubGroup = $this->getStubGroup();
-        $type = $type ?: $this->config->getMigrationDefaultType();
-        $stubFile = $this->config->getMigrationStubFileName($type);
+        $type =
+            $type ?: $this->laravel['modular.config']->getMigrationDefaultType();
+        $stubFile =
+            $this->laravel['modular.config']->getMigrationStubFileName($type);
 
         if (!$stubFile) {
             throw new Exception("There is no {$type} in module_migrations.types registered in configuration file");
@@ -79,7 +83,7 @@ class ModuleMakeMigration extends BaseCommand
         $migrationClass = studly_case($name);
 
         $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
-            $module->getMigrationsPath() .  DIRECTORY_SEPARATOR . $filename ,
+            $module->getMigrationsPath() . DIRECTORY_SEPARATOR . $filename,
             ['migrationClass' => $migrationClass, 'table' => $table]
         );
 
