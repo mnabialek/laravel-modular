@@ -77,7 +77,7 @@ class ModuleMakeMigration extends BaseCommand
         }
 
         // migration file name
-        $filename = date('Y_m_d_His') . '_' . snake_case($name) . '.php';
+        $filename = $this->getMigrationFileName($name);
 
         // migration class name
         $migrationClass = studly_case($name);
@@ -87,6 +87,18 @@ class ModuleMakeMigration extends BaseCommand
             ['migrationClass' => $migrationClass, 'table' => $table]
         );
 
-        $this->info("[Module {$module}] Created migration file: {$filename}");
+        $this->info("[Module {$module->getName()}] Created migration file: {$filename}");
+    }
+
+    /**
+     * Get migration file name based on user given migration name
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function getMigrationFileName($name)
+    {
+        return date('Y_m_d_His') . '_' . snake_case($name) . '.php';
     }
 }
