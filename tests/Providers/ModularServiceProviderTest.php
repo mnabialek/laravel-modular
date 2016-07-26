@@ -10,6 +10,7 @@ use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Providers\ModularServiceProvider;
 use Mnabialek\LaravelModular\Services\Config;
+use Mnabialek\LaravelModular\Services\Modular;
 use Mockery as m;
 use Tests\UnitTestCase;
 
@@ -21,7 +22,8 @@ class ModularServiceProviderTest extends UnitTestCase
         $modularProvider = m::mock(ModularServiceProvider::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->assertEquals(['modular'], $modularProvider->provides());
+        $this->assertEquals(['modular', 'modular.config'],
+            $modularProvider->provides());
     }
 
     /** @test */
@@ -38,12 +40,19 @@ class ModularServiceProviderTest extends UnitTestCase
 
         // module bindings
         $closure = m::on(function ($callback) use ($app) {
-            call_user_func($callback, $app);
+            $result = call_user_func($callback, $app);
 
-            return true;
+            return $result instanceof Modular;
         });
+        $app->shouldReceive('singleton')->with('modular', $closure)->once();
 
-        $app->shouldReceive('bind')->with('modular', $closure, true)->once();
+        $closure2 = m::on(function ($callback) use ($app) {
+            $result = call_user_func($callback, $app);
+
+            return $result instanceof Config;
+        });
+        $app->shouldReceive('singleton')->with('modular.config', $closure2)
+            ->once();
 
         // Artisan commands
         $modularProvider->shouldReceive('commands')->once()->with([

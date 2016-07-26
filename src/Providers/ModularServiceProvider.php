@@ -26,8 +26,7 @@ class ModularServiceProvider extends ServiceProvider
     /**
      * Create a new service provider instance.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
+     * @param  \Illuminate\Contracts\Foundation\Application $app
      */
     public function __construct($app)
     {
@@ -43,9 +42,13 @@ class ModularServiceProvider extends ServiceProvider
     public function register()
     {
         // register module binding
-        $this->app->bind('modular', function ($app) {
+        $this->app->singleton('modular', function ($app) {
             return new Modular($app, $this->config);
-        }, true);
+        });
+
+        $this->app->singleton('modular.config', function ($app) {
+            return new Config($app);
+        });
 
         // register new Artisan commands
         $this->commands([
@@ -70,7 +73,7 @@ class ModularServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['modular'];
+        return ['modular', 'modular.config'];
     }
 
     /**
