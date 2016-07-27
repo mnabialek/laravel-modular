@@ -40,22 +40,31 @@ class ModuleMake extends BaseCommand
         $this->verifyStubGroup($stubGroup);
 
         $moduleNames->each(function ($moduleName) use ($stubGroup) {
-            $this->module->find($moduleName);
+            $module = $this->createModuleObject($moduleName);
+
             // module added to configuration or module directory exists
-
-            $module = new Module($moduleName, [], $this->config);
-
-            if ($this->module->exists($moduleName) ||
-                $this->exists($module->getDirectory())
+            if ($this->laravel['modular']->exists($module->getName())
+                || $this->exists($module->getDirectory())
             ) {
-                $this->warn("[Module {$moduleName}] already exists - ignoring");
-                //throw new Exc
+                $this->warn("[Module {$module->getName()}] Module already exists - ignoring");
             } else {
                 // module does not exist - let's create it
                 $this->createModule($module, $stubGroup);
-                $this->info("[Module {$module}] Generated");
+                $this->info("[Module {$module->getName()}] Module was generated");
             }
         });
+    }
+
+    /**
+     * Create module object (it does not mean module exists)
+     *
+     * @param string $moduleName
+     *
+     * @return Module
+     */
+    protected function createModuleObject($moduleName)
+    {
+        return new Module($moduleName, $this->laravel['modular.config']);
     }
 
     /**
@@ -66,10 +75,6 @@ class ModuleMake extends BaseCommand
      */
     protected function createModule(Module $module, $stubGroup)
     {
-        //$name = $module->getName();
-
-        //$moduleDir = $module->getDirectory();
-
         // first create directories
         $this->createModuleDirectories($module, $stubGroup);
 
@@ -87,32 +92,33 @@ class ModuleMake extends BaseCommand
      */
     protected function addModuleToConfigurationFile(Module $module)
     {
-        if (!$this->config->autoAdd()) {
-            $this->info("[Module {$module->getName()}] - auto-adding to config file turned off\nPlease add this module manually into " .
-                $this->config->getConfigFilePath() .
-                ' file if you want to use it');
+        $configFile = $this->laravel['modular.config']->getConfigFilePath();
+
+        if (!$this->laravel['modular.config']->autoAdd()) {
+            $this->info("[Module {$module->getName()}] - auto-adding to config file turned off\n" .
+                "Please add this module manually into {$configFile} file if you want to use it");
 
             return;
         }
 
-        $configFile = $this->config->getConfigFilePath();
-        
         // getting modified content of config file
-        $result = preg_replace_callback($this->config->autoAddPattern(),
-            function ($matches) use ($module, $configFile) {
-                return $matches[1] . $matches[2] .
-                $this->replace($this->config->autoAddTemplate(), $module) .
-                $matches[3];
-            },
-            file_get_contents($configFile), -1, $count);
+        $result =
+            preg_replace_callback($this->laravel['modular.config']->autoAddPattern(),
+                function ($matches) use ($module, $configFile) {
+                    return $matches[1] . $matches[2] .
+                    $this->replace($this->laravel['modular.config']->autoAddTemplate(),
+                        $module) .
+                    $matches[3];
+                },
+                $this->laravel['files']->get($configFile), -1, $count);
 
         if ($count) {
             // found place where new module should be added into config file
-            file_put_contents($configFile, $result);
+            $this->laravel['files']->put($configFile, $result);
             $this->comment("[Module {$module->getName()}] Added into config file {$configFile}");
         } else {
             // cannot add module to config file automatically
-            $this->warn("[Module {$module->getaName()}] It was impossible to add module into {$configFile}" .
+            $this->warn("[Module {$module->getName()}] It was impossible to add module into {$configFile}" .
                 " file.\n Please make sure you haven't changed structure of this file. " .
                 "At the moment add <info>{$module->getName()}</info> to this file manually");
         }

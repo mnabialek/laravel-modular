@@ -2,6 +2,7 @@
 
 namespace Mnabialek\LaravelModular\Models;
 
+use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\SimpleModule;
 use Mnabialek\LaravelModular\Traits\Normalizer;
 use Mnabialek\LaravelModular\Traits\Replacer;
@@ -32,7 +33,7 @@ class Module
      * @param array $options
      * @param Config $config
      */
-    public function __construct($name, array $options, Config $config)
+    public function __construct($name, Config $config, array $options = [])
     {
         $this->name = $name;
         $this->options = collect($options);
