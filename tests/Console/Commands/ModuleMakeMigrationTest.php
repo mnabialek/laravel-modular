@@ -2,12 +2,11 @@
 
 namespace Tests\Console\Commands;
 
-use ArrayAccess;
 use Carbon\Carbon;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
-
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
+use Tests\Helpers\ApplicationClass;
 use Tests\UnitTestCase;
 use Mockery as m;
 
@@ -160,7 +159,6 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $stubGroupName = 'sample stub group';
         $migrationStubFileName = 'sample stub file';
-        $migrationName = 'sample_migration.php';
         $modulePath = 'sample A path';
 
         $command->shouldReceive('getStubGroup')->once()
@@ -219,25 +217,5 @@ class ModuleMakeMigrationTest extends UnitTestCase
             ->with($expectedInfo);
 
         $command->handle();
-    }
-}
-
-class ApplicationClass implements ArrayAccess
-{
-
-    public function offsetExists($offset)
-    {
-    }
-
-    public function offsetGet($offset)
-    {
-    }
-
-    public function offsetSet($offset, $value)
-    {
-    }
-
-    public function offsetUnset($offset)
-    {
     }
 }
