@@ -3,6 +3,7 @@
 namespace Tests\Console\Commands;
 
 use ArrayAccess;
+use Carbon\Carbon;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 
 use Mnabialek\LaravelModular\Models\Module;
@@ -173,8 +174,27 @@ class ModuleMakeMigrationTest extends UnitTestCase
         $config->shouldReceive('getMigrationStubFileName')->once()
             ->with($migrationType)->andReturn($migrationStubFileName);
 
+        $now = Carbon::now();
+
+        $expectedMigrationFileNames = [
+            $now->format('Y_m_d_His') . '_' . snake_case($userMigrationName) .
+            '.php',
+            (clone $now)->subSecond(1)->format('Y_m_d_His') . '_' .
+            snake_case($userMigrationName) . '.php',
+            (clone $now)->addSecond(1)->format('Y_m_d_His') . '_' .
+            snake_case($userMigrationName) . '.php',
+        ];
+
+        $fullMigrationName = m::anyOf(
+            $modulePath . DIRECTORY_SEPARATOR .
+            $expectedMigrationFileNames[0],
+            $modulePath . DIRECTORY_SEPARATOR .
+            $expectedMigrationFileNames[1],
+            $modulePath . DIRECTORY_SEPARATOR .
+            $expectedMigrationFileNames[2]
+        );
         $command->shouldReceive('getMigrationFileName')->once()
-            ->with($userMigrationName)->andReturn($migrationName);
+            ->with($userMigrationName)->passthru();
 
         $migrationClass = studly_case($userMigrationName);
 
@@ -183,12 +203,20 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $command->shouldReceive('copyStubFileIntoModule')->once()
             ->with($moduleAMock, $migrationStubFileName, $stubGroupName,
-                $modulePath . DIRECTORY_SEPARATOR . $migrationName,
+                $fullMigrationName,
                 ['migrationClass' => $migrationClass, 'table' => $tableName]);
 
+        $expectedInfo = m::anyOf(
+            '[Module ' . $moduleName . '] Created migration file: ' .
+            $expectedMigrationFileNames[0],
+            '[Module ' . $moduleName . '] Created migration file: ' .
+            $expectedMigrationFileNames[1],
+            '[Module ' . $moduleName . '] Created migration file: ' .
+            $expectedMigrationFileNames[2]
+        );
+
         $command->shouldReceive('info')->once()
-            ->with('[Module ' . $moduleName . '] Created migration file: ' .
-                $migrationName);
+            ->with($expectedInfo);
 
         $command->handle();
     }
