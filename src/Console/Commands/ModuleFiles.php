@@ -32,54 +32,43 @@ class ModuleFiles extends BaseCommand
      */
     public function proceed()
     {
-        $module = $this->argument('module');
+        $moduleName = $this->argument('module');
         $subModules = collect($this->argument('name'))->unique();
         $stubGroup = $this->getFilesStubGroup();
 
-        // verify whether stub directory exists
         $this->verifyStubGroup($stubGroup);
 
-        if (!($this->module->exists($module))) {
-            $this->error("Module {$module} does not exist. Run <comment>module:make {$module}</comment> command first to create it");
+        if (!($module = $this->laravel['modular']->find($moduleName))) {
+            $this->error("[Module {$moduleName}] This module does not exist. Run <comment>module:make {$moduleName}</comment> command first to create it");
 
             return;
         }
 
-        $module = new Module($module, [], $this->config);
-
         $subModules->each(function ($subModule) use ($module, $stubGroup) {
             $this->createSubModule($module, $subModule, $stubGroup);
         });
-
-        foreach ($subModules as $subModule) {
-            // get submodule name (normalized or not)
-            $subModule = $this->module->getModuleName($subModule);
-
-        }
     }
 
     /**
-     * Create submodule
+     * Create submodule for given module
      *
-     * @param string $module
+     * @param Module $module
      * @param string $subModule
      * @param string $stubGroup
      */
     protected function createSubModule(Module $module, $subModule, $stubGroup)
     {
-        $module = $this->module->getModuleName($module);
-
         // first create directories
         $this->createModuleDirectories($module, $stubGroup);
 
         // now create files
-        $status = $this->createSubModuleFiles($module, $subModule, $stubGroup);
+        $status = $this->createModuleFiles($module, $subModule, $stubGroup);
 
         if ($status) {
-            $this->info("[Module {$module}] Submodule {$subModule} created.");
-            $this->comment("You should register submodule routes (if any) into routes file for module {$module}");
+            $this->info("[Module {$module->getName()}] Submodule {$subModule} was created.");
+            $this->comment("You should register submodule routes (if any) into routes file for module {$module->getName()}");
         } else {
-            $this->warn("[Module {$module}] Submodule {$subModule} NOT created (all files already exist).");
+            $this->warn("[Module {$module->getName()}] Submodule {$subModule} NOT created (all files already exist).");
         }
     }
 }
