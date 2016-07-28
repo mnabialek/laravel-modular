@@ -143,6 +143,11 @@ class Config
         return $this->get("stubs_groups.{$group}.files", []);
     }
 
+    public function stubGroups()
+    {
+        return array_keys((array)$this->get('stubs_groups', []));
+    }
+
     public function autoAdd()
     {
         return $this->get('module_make.auto_add', false);

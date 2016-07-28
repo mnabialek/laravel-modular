@@ -199,12 +199,18 @@ class Modular
     /**
      * Verifies whether given module exists
      *
-     * @param string $module
+     * @param string $moduleName
      *
      * @return bool
      */
-    public function exists($module)
+    public function find($moduleName)
     {
-        return in_array($this->getModuleName($module), $this->all());
+        return in_array($this->getModuleName($moduleName), $this->all());
+    }
+
+    public function exists($moduleName)
+    {
+        // @todo
+        //return $this->find($moduleName);
     }
 }

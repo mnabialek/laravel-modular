@@ -211,7 +211,7 @@ class Module
      *
      * @return bool
      */
-    protected function isActive($options = null)
+    public function isActive($options = null)
     {
         if (is_array($options)) {
             return array_key_exists('active', $options) ?
