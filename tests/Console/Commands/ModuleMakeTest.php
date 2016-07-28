@@ -6,6 +6,7 @@ use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\Services\Modular;
+use stdClass;
 use Tests\Helpers\Application;
 use Tests\UnitTestCase;
 use Mockery as m;
@@ -32,7 +33,7 @@ class ModuleMakeTest extends UnitTestCase
 
         $moduleAName = 'module A';
 
-        $moduleA = m::mock('stdClass');
+        $moduleA = m::mock(stdClass::class);
         $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleAName);
 
         $this->command->shouldReceive('createModuleObject')->with('A')->once()
@@ -40,7 +41,6 @@ class ModuleMakeTest extends UnitTestCase
 
         $modular->shouldReceive('exists')->once()->with($moduleAName)
             ->andReturn(true);
-        $this->command->shouldNotReceive('exists');
         $this->command->shouldReceive('warn')->once()
             ->with("[Module {$moduleAName}] Module already exists - ignoring");
         $this->command->shouldNotReceive('createModule');
@@ -60,7 +60,7 @@ class ModuleMakeTest extends UnitTestCase
 
         $moduleAName = 'module A';
 
-        $moduleA = m::mock('stdClass');
+        $moduleA = m::mock(stdClass::class);
         $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleAName);
         $moduleA->shouldReceive('getDirectory')->once()
             ->andReturn('module A directory');
@@ -70,8 +70,12 @@ class ModuleMakeTest extends UnitTestCase
 
         $modular->shouldReceive('exists')->once()->with($moduleAName)
             ->andReturn(false);
-        $this->command->shouldReceive('exists')->once()
-            ->with('module A directory')->andReturn(true);
+
+        $file = m::mock(stdClass::class);
+        $this->app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $file->shouldReceive('exists')->once()->with('module A directory')
+            ->andReturn(true);
         $this->command->shouldReceive('warn')->once()
             ->with("[Module {$moduleAName}] Module already exists - ignoring");
         $this->command->shouldNotReceive('createModule');
@@ -91,7 +95,7 @@ class ModuleMakeTest extends UnitTestCase
 
         $moduleAName = 'module A name';
 
-        $moduleA = m::mock('stdClass');
+        $moduleA = m::mock(stdClass::class);
         $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleAName);
 
         $this->command->shouldReceive('createModuleObject')->with('A')->once()
@@ -99,11 +103,11 @@ class ModuleMakeTest extends UnitTestCase
 
         $modular->shouldReceive('exists')->once()->with($moduleAName)
             ->andReturn(true);
-        $this->command->shouldNotReceive('exists')->with('module A directory');
+
         $this->command->shouldReceive('warn')->once()
             ->with("[Module {$moduleAName}] Module already exists - ignoring");
 
-        $moduleB = m::mock('stdClass');
+        $moduleB = m::mock(stdClass::class);
         $moduleBName = 'module B name';
 
         $moduleB->shouldReceive('getName')->times(2)->andReturn($moduleBName);
@@ -115,8 +119,13 @@ class ModuleMakeTest extends UnitTestCase
 
         $modular->shouldReceive('exists')->once()->with($moduleBName)
             ->andReturn(false);
-        $this->command->shouldReceive('exists')->once()
-            ->with('module B directory')->andReturn(true);
+
+        $file = m::mock(stdClass::class);
+        $this->app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $file->shouldReceive('exists')->once()->with('module B directory')
+            ->andReturn(true);
+
         $this->command->shouldReceive('warn')->once()
             ->with("[Module {$moduleBName}] Module already exists - ignoring");
 
@@ -174,7 +183,7 @@ class ModuleMakeTest extends UnitTestCase
         $config->shouldReceive('autoAddPattern')->once()
             ->andReturn('#(START)(.*)(END)#sm');
 
-        $file = m::mock('stdClass');
+        $file = m::mock(stdClass::class);
 
         $autoAddTemplate = 'module => [xxx]';
 
@@ -218,7 +227,7 @@ class ModuleMakeTest extends UnitTestCase
         $config->shouldReceive('autoAddPattern')->once()
             ->andReturn('#(START)(.*)(END)#sm');
 
-        $file = m::mock('stdClass');
+        $file = m::mock(stdClass::class);
 
         $autoAddTemplate = 'module => [xxx]';
 
@@ -259,8 +268,12 @@ class ModuleMakeTest extends UnitTestCase
 
         $modular->shouldReceive('exists')->once()->with($moduleAName)
             ->andReturn(false);
-        $this->command->shouldReceive('exists')->once()
-            ->with('module A directory')->andReturn(false);
+
+        $file = m::mock(stdClass::class);
+        $this->app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $file->shouldReceive('exists')->once()->with('module A directory')
+            ->andReturn(false);
 
         $this->command->shouldReceive('createModule')->once()
             ->with($moduleA, $this->stubGroupName)->passthru();
