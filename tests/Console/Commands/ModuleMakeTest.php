@@ -6,7 +6,7 @@ use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\Services\Modular;
-use Tests\Helpers\ApplicationClass;
+use Tests\Helpers\Application;
 use Tests\UnitTestCase;
 use Mockery as m;
 
@@ -279,7 +279,7 @@ class ModuleMakeTest extends UnitTestCase
 
     protected function arrange(array $modules)
     {
-        $this->app = m::mock(ApplicationClass::class);
+        $this->app = m::mock(Application::class);
 
         $this->command = m::mock(ModuleMake::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();

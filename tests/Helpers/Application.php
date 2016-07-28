@@ -4,7 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayAccess;
 
-class ApplicationClass implements ArrayAccess
+class Application implements ArrayAccess
 {
 
     public function offsetExists($offset)

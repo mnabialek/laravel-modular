@@ -5,7 +5,7 @@ namespace Tests\Console\Commands;
 use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Modular;
-use Tests\Helpers\ApplicationClass;
+use Tests\Helpers\Application;
 use Tests\UnitTestCase;
 use Mockery as m;
 
@@ -146,7 +146,7 @@ class ModuleFilesTest extends UnitTestCase
 
     protected function arrange($module, array $subModules)
     {
-        $this->app = m::mock(ApplicationClass::class);
+        $this->app = m::mock(Application::class);
 
         $this->command = m::mock(ModuleFiles::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();

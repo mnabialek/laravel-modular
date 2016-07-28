@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
-use Tests\Helpers\ApplicationClass;
+use Tests\Helpers\Application;
 use Tests\UnitTestCase;
 use Mockery as m;
 
@@ -65,7 +65,7 @@ class ModuleMakeMigrationTest extends UnitTestCase
     /** @test */
     public function it_displays_error_when_no_stub_file_in_config()
     {
-        $app = m::mock(ApplicationClass::class);
+        $app = m::mock(Application::class);
 
         $command = m::mock(ModuleMakeMigration::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -116,7 +116,7 @@ class ModuleMakeMigrationTest extends UnitTestCase
     /** @test */
     public function it_generates_migration_when_no_errors()
     {
-        $app = m::mock(ApplicationClass::class);
+        $app = m::mock(Application::class);
 
         $command = m::mock(ModuleMakeMigration::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();
