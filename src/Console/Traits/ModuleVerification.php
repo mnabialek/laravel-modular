@@ -2,6 +2,7 @@
 
 namespace Mnabialek\LaravelModular\Console\Traits;
 
+use Exception;
 use Illuminate\Support\Collection;
 
 trait ModuleVerification
@@ -9,36 +10,37 @@ trait ModuleVerification
     /**
      * Verify whether given modules exist and are active
      *
-     * @param array $modules
+     * @param Collection $moduleNames
      *
-     * @return array|bool
+     * @return Collection
+     * @throws Exception
      */
-    protected function verifyActive(Collection $modules)
+    protected function verifyActive(Collection $moduleNames)
     {
-        $result = $this->verifyModules($modules, true);
-        if (!$result) {
-            $this->error("\nThere were errors. You need to pass only valid active module names");
+        $modules = $this->verifyModules($moduleNames, true);
+        if ($modules->count() != $moduleNames->count()) {
+            throw new Exception('There were errors. You need to pass only valid active module names');
         }
 
-        return $result;
+        return $modules;
     }
 
     /**
      * Verify whether given modules exist
      *
-     * @param Collection $modules
+     * @param Collection $moduleNames
      *
-     * @return bool|Collection
-     * @throws \Exception
+     * @return Collection
+     * @throws Exception
      */
-    protected function verifyExisting(Collection $modules)
+    protected function verifyExisting(Collection $moduleNames)
     {
-        $result = $this->verifyModules($modules, false);
-        if (!$result) {
-            throw new \Exception("There were errors. You need to pass only valid module names");
+        $modules = $this->verifyModules($moduleNames, false);
+        if ($modules->count() != $moduleNames->count()) {
+            throw new Exception('There were errors. You need to pass only valid module names');
         }
 
-        return $result;
+        return $modules;
     }
 
     /**
@@ -51,30 +53,26 @@ trait ModuleVerification
      */
     private function verifyModules(Collection $moduleNames, $verifyActive)
     {
-        $errors = false;
-        
-        $all = $this->module->all();
-        
         $modules = collect();
-        
-        $moduleNames->each(function ($name) use ($all, $verifyActive, &$errors, $modules) {
-            $found = $all->first(function ($module) use ($name) {
-                return $module->getName() == $name;
-            });
-            
-            if (!$found) {
-                $errors = true;
+
+        $moduleNames->each(function ($name) use ($verifyActive, $modules) {
+            $module = $this->laravel['modular']->find($name);
+
+            if (!$module) {
                 $this->error("Module {$name} does not exist");
-            } elseif ($verifyActive && !$found->isActive()) {
-                $errors = true;
-                $this->error("Module {$name} is not active");
-            };
-            
-            if (!$errors) {
-                $modules->push($found);
+
+                return;
             }
+
+            if ($verifyActive && !$module->isActive()) {
+                $this->error("Module {$name} is not active");
+
+                return;
+            };
+
+            $modules->push($module);
         });
 
-        return $errors ? false : $modules;
+        return $modules;
     }
 }
