@@ -11,19 +11,6 @@ trait ModuleCreator
     use Normalizer;
 
     /**
-     * Get directory for given stub group
-     *
-     * @param string $group
-     *
-     * @return string
-     */
-    protected function getStubGroupDirectory($group)
-    {
-        return $this->normalizePath($this->config->getStubsPath() .
-            DIRECTORY_SEPARATOR . $this->config->getStubGroupDirectory($group));
-    }
-
-    /**
      * Verify stub group
      *
      * @param string $stubGroup
@@ -33,16 +20,30 @@ trait ModuleCreator
     protected function verifyStubGroup($stubGroup)
     {
         // first verify whether this group is in config file
-        $stubGroups = $this->module->config('stubs_groups', []);
-        if (!array_key_exists($stubGroup, $stubGroups)) {
-            throw new Exception("Stub group {$stubGroup} does not exist. You need to add this to stubs_groups");
+
+        if (!collect($this->laravel['modular.config']->stubGroups())->contains($stubGroup)) {
+            throw new Exception("Stub group {$stubGroup} does not exist. You need to add it to stubs_groups");
         }
 
-        // then verify whether this stub group exists
+        // then verify whether this stub group directory exists
         $directory = $this->getStubGroupDirectory($stubGroup);
         if (!$this->exists($directory)) {
             throw new Exception("Stub group directory {$directory} does not exist");
         }
+    }
+
+    /**
+     * Get directory for given stub group
+     *
+     * @param string $group
+     *
+     * @return string
+     */
+    private function getStubGroupDirectory($group)
+    {
+        return $this->normalizePath($this->laravel['modular.config']->stubsPath() .
+            DIRECTORY_SEPARATOR .
+            $this->laravel['modular.config']->stubGroupDirectory($group));
     }
 
     /**
@@ -52,7 +53,7 @@ trait ModuleCreator
      */
     protected function verifyConfigExistence()
     {
-        if (!$this->exists($this->module->getConfigFilePath())) {
+        if (!$this->exists($this->laravel['modular.config']->configFilePath())) {
             throw new Exception('Config file does not exists. Please run php artisan vendor:publish (see docs for details)');
         }
     }
@@ -64,9 +65,9 @@ trait ModuleCreator
      *
      * @return bool
      */
-    protected function exists($path)
+    private function exists($path)
     {
-        return file_exists($path);
+        return $this->laravel['files']->exists($path);
     }
 
     /**
@@ -82,7 +83,7 @@ trait ModuleCreator
     protected function getFilesStubGroup()
     {
         return $this->option('group') ?: $this->config->getFilesStubsDefaultGroup();
-    }    
+    }
 
     /**
      * Creates module directories
@@ -94,7 +95,6 @@ trait ModuleCreator
         Module $module,
         $stubGroup
     ) {
-
         $directories = collect($this->config
             ->getStubGroupDirectories($stubGroup))->unique();
 
@@ -133,10 +133,10 @@ trait ModuleCreator
      *
      * @return bool
      */
-    protected function createModuleFiles($module, $stubGroup)
-    {
-        return $this->copyModuleFiles($module, $stubGroup);
-    }
+//    protected function createModuleFiles($module, $stubGroup)
+//    {
+//        return $this->copyModuleFiles($module, $stubGroup);
+//    }
 
     /**
      * Create submodule files inside given module
@@ -148,10 +148,10 @@ trait ModuleCreator
      *
      * @return bool
      */
-    protected function createSubModuleFiles(
+    protected function createModuleFiles(
         $module,
-        $subModule,     
-        $stubGroup
+        $stubGroup,
+        $subModule = null
     ) {
         return $this->copyModuleFiles($module, $stubGroup, $subModule);
     }
@@ -193,7 +193,7 @@ trait ModuleCreator
     /**
      * Creates directory for given file (if it doesn't exist)
      *
-     * @param Module $module 
+     * @param Module $module
      * @param string $file
      */
     protected function createMissingDirectory(Module $module, $file)
@@ -221,7 +221,7 @@ trait ModuleCreator
         Module $module,
         $stubFile,
         $stubGroup,
-        $moduleFile, 
+        $moduleFile,
         array $replacements = []
     ) {
         $stubPath =
