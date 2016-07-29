@@ -77,12 +77,12 @@ trait ModuleCreator
      */
     protected function getStubGroup()
     {
-        return $this->option('group') ?: $this->config->getStubsDefaultGroup();
+        return $this->option('group') ?: $this->laravel['modular.config']->stubsDefaultGroup();
     }
 
     protected function getFilesStubGroup()
     {
-        return $this->option('group') ?: $this->config->getFilesStubsDefaultGroup();
+        return $this->option('group') ?: $this->laravel['modular.config']->filesStubsDefaultGroup();
     }
 
     /**
@@ -91,23 +91,18 @@ trait ModuleCreator
      * @param Module $module
      * @param string $stubGroup
      */
-    protected function createModuleDirectories(
-        Module $module,
-        $stubGroup
-    ) {
-        $directories = collect($this->config
-            ->getStubGroupDirectories($stubGroup))->unique();
+    protected function createModuleDirectories(Module $module, $stubGroup)
+    {
+        $directories = collect($this->laravel['modular.config']
+            ->stubGroupDirectories($stubGroup))->unique();
 
         if ($directories->isEmpty()) {
             $this->warn("[Module {$module->getName()}] No explicit directories created");
-
-            return;
+        } else {
+            $directories->each(function ($directory) use ($module) {
+                $this->createDirectory($module, $directory);
+            });
         }
-
-        $directories->each(function ($directory) use ($module) {
-            $this->createDirectory($module, $module->getDirectory() .
-                DIRECTORY_SEPARATOR . $directory);
-        });
     }
 
     /**
@@ -116,58 +111,31 @@ trait ModuleCreator
      * @param Module $module
      * @param string $directory
      */
-    protected function createDirectory(Module $module, $directory)
+    private function createDirectory(Module $module, $directory)
     {
         if (!$this->exists($directory)) {
-            mkdir($directory, 0777, true);
-            $this->line("[Module {$module->getName()}] Created directory {$directory}");
+            $result =
+                $this->laravel['files']->makeDirectory($module->getDirectory() .
+                    DIRECTORY_SEPARATOR . $directory, 0755, true);
+            if ($result) {
+                $this->line("[Module {$module->getName()}] Created directory {$directory}");
+            } else {
+                $this->warn("[Module {$module->getName()}] Cannot create directory {$directory}");
+            }
         }
     }
 
     /**
-     * Create module files
-     *
-     * @param Module $module
-     * @param string $moduleDirectory
-     * @param string $stubGroup
-     *
-     * @return bool
-     */
-//    protected function createModuleFiles($module, $stubGroup)
-//    {
-//        return $this->copyModuleFiles($module, $stubGroup);
-//    }
-
-    /**
      * Create submodule files inside given module
      *
-     * @param string $module
-     * @param string $moduleDirectory
+     * @param Module $module
      * @param string $stubGroup
      * @param string $subModule
      *
      * @return bool
      */
     protected function createModuleFiles(
-        $module,
-        $stubGroup,
-        $subModule = null
-    ) {
-        return $this->copyModuleFiles($module, $stubGroup, $subModule);
-    }
-
-    /**
-     * Copy stub files into given module
-     *
-     * @param string $module
-     * @param string $moduleDirectory
-     * @param string $stubGroup
-     * @param null $subModule
-     *
-     * @return bool
-     */
-    protected function copyModuleFiles(
-        $module,
+        Module $module,
         $stubGroup,
         $subModule = null
     ) {
