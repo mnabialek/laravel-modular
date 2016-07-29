@@ -62,7 +62,7 @@ class ModuleFiles extends BaseCommand
         $this->createModuleDirectories($module, $stubGroup);
 
         // now create files
-        $status = $this->createModuleFiles($module, $subModule, $stubGroup);
+        $status = $this->createModuleFiles($module, $stubGroup, $subModule);
 
         if ($status) {
             $this->info("[Module {$module->getName()}] Submodule {$subModule} was created.");

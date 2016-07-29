@@ -67,7 +67,7 @@ class ModuleFilesTest extends UnitTestCase
             ->with($moduleArgument, $this->stubGroupName);
 
         $this->command->shouldReceive('createModuleFiles')->once()
-            ->with($moduleArgument, $subModules[0], $this->stubGroupName)
+            ->with($moduleArgument, $this->stubGroupName, $subModules[0])
             ->andReturn(false);
 
         $this->command->shouldReceive('warn')->once()
@@ -105,7 +105,7 @@ class ModuleFilesTest extends UnitTestCase
             ->with($moduleArgument, $this->stubGroupName);
 
         $this->command->shouldReceive('createModuleFiles')->once()
-            ->with($moduleArgument, $subModules[0], $this->stubGroupName)
+            ->with($moduleArgument, $this->stubGroupName, $subModules[0])
             ->andReturn(true);
 
         $this->command->shouldReceive('info')->once()
@@ -140,7 +140,7 @@ class ModuleFilesTest extends UnitTestCase
             ->with($moduleArgumentA, $subModules[0], $this->stubGroupName);
         $this->command->shouldReceive('createSubModule')->once()
             ->with($moduleArgumentA, $subModules[1], $this->stubGroupName);
-        
+
         $this->command->handle();
     }
 
