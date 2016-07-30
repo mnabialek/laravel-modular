@@ -45,8 +45,8 @@ class ModuleCreator extends Command
         $stubFile,
         $stubGroup,
         $moduleFile,
-        array $replacements)
-    {
+        array $replacements
+    ) {
         return $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
             $moduleFile, $replacements);
     }
@@ -56,11 +56,28 @@ class ModuleCreator extends Command
         return $this->createMissingDirectory($module, $file);
     }
 
-    public function runCreateFile(Module $module,
+    public function runCreateFile(
+        Module $module,
         $sourceFile,
         $destinationFile,
-        array $replacements = [])
+        array $replacements = []
+    ) {
+        return $this->createFile($module, $sourceFile, $destinationFile,
+            $replacements);
+    }
+
+    public function runGetStubGroupDirectory($stubGroup)
     {
-        return $this->createFile($module, $sourceFile, $destinationFile, $replacements);
+        return $this->getStubGroupDirectory($stubGroup);
+    }
+
+    public function runExists($path)
+    {
+        return $this->exists($path);
+    }
+
+    public function runCreateDirectory(Module $module, $directory)
+    {
+        return $this->createDirectory($module, $directory);
     }
 }

@@ -248,12 +248,15 @@ class ModuleCreatorTest extends UnitTestCase
             return $arg instanceof Module && $arg->foo() == 'bar';
         });
 
-        $creator->shouldReceive('createDirectory')->once()->with($moduleArgument,'foo');
-        $creator->shouldReceive('createDirectory')->once()->with($moduleArgument,'bar');
-        $creator->shouldReceive('createDirectory')->once()->with($moduleArgument,'baz/foo');
+        $creator->shouldReceive('createDirectory')->once()
+            ->with($moduleArgument, 'foo');
+        $creator->shouldReceive('createDirectory')->once()
+            ->with($moduleArgument, 'bar');
+        $creator->shouldReceive('createDirectory')->once()
+            ->with($moduleArgument, 'baz/foo');
 
         $result = $creator->runCreateModuleDirectories($moduleA, $stubGroup);
-        
+
         $this->assertEquals(null, $result);
     }
 
@@ -590,7 +593,159 @@ class ModuleCreatorTest extends UnitTestCase
             $creator->runCreateFile($moduleA, $sourceFile, $destinationFile,
                 $replacements);
 
-        $this->assertEquals(null, $result);
+        $this->assertSame(null, $result);
+    }
+
+    /** @test */
+    public function it_gets_stub_group_directory()
+    {
+        $app = m::mock(Application::class);
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $modularConfig = m::mock(Config::class);
+        $creator->setLaravel($app);
+        $stubGroup = 'stub group';
+
+        $app->shouldReceive('offsetGet')->times(2)->with('modular.config')
+            ->andReturn($modularConfig);
+
+        $modularConfig->shouldReceive('stubsPath')->once()->withNoArgs()
+            ->andReturn('stubs/path');
+
+        $modularConfig->shouldReceive('stubGroupDirectory')->once()
+            ->with($stubGroup)
+            ->andReturn('group-sample-path');
+
+        $creator->shouldReceive('normalizePath')->with('stubs/path' .
+            DIRECTORY_SEPARATOR . 'group-sample-path')
+            ->andReturn('normalized-directory');
+
+        $result = $creator->runGetStubGroupDirectory($stubGroup);
+
+        $this->assertSame('normalized-directory', $result);
+    }
+
+    /** @test */
+    public function it_returns_true_if_file_exists()
+    {
+        $app = m::mock(Application::class);
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $file = m::mock(stdClass::class);
+        $creator->setLaravel($app);
+        $path = 'sample-path';
+
+        $app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+
+        $file->shouldReceive('exists')->once()->with($path)->andReturn(true);
+
+        $result = $creator->runExists($path);
+
+        $this->assertSame(true, $result);
+    }
+
+    /** @test */
+    public function it_returns_false_if_file_doesnt_exist()
+    {
+        $app = m::mock(Application::class);
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $file = m::mock(stdClass::class);
+        $creator->setLaravel($app);
+        $path = 'sample-path';
+
+        $app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+
+        $file->shouldReceive('exists')->once()->with($path)->andReturn(false);
+
+        $result = $creator->runExists($path);
+
+        $this->assertSame(false, $result);
+    }
+
+    /** @test */
+    public function it_creates_directory_when_no_issues_found()
+    {
+        $app = m::mock(Application::class);
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $file = m::mock(stdClass::class);
+        $creator->setLaravel($app);
+        $path = 'sample-path';
+
+        $moduleName = 'main module';
+
+        $moduleA = m::mock(Module::class);
+        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('getDirectory')->once()
+            ->andReturn('module/dir');
+
+        $creator->shouldReceive('exists')->once()->with($path)
+            ->andReturn(false);
+
+        $app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $file->shouldReceive('makeDirectory')->once()->with('module/dir' .
+            DIRECTORY_SEPARATOR . $path, 0755, true)->andReturn(true);
+
+        $creator->shouldReceive('line')->once()
+            ->with("[Module {$moduleName}] Created directory {$path}");
+
+        $result = $creator->runCreateDirectory($moduleA, $path);
+
+        $this->assertSame(null, $result);
+    }
+
+    /** @test */
+    public function it_throws_exception_when_cannot_create_directory()
+    {
+        $app = m::mock(Application::class);
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $file = m::mock(stdClass::class);
+        $creator->setLaravel($app);
+        $path = 'sample-path';
+
+        $moduleName = 'main module';
+
+        $moduleA = m::mock(Module::class);
+        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('getDirectory')->once()
+            ->andReturn('module/dir');
+
+        $creator->shouldReceive('exists')->once()->with($path)
+            ->andReturn(false);
+
+        $app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $file->shouldReceive('makeDirectory')->once()->with('module/dir' .
+            DIRECTORY_SEPARATOR . $path, 0755, true)->andReturn(false);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("[Module {$moduleName}] Cannot create directory {$path}");
+
+        $creator->runCreateDirectory($moduleA, $path);
+    }
+
+    /** @test */
+    public function it_does_nothing_when_directory_already_exists()
+    {
+        $app = m::mock(Application::class);
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $creator->setLaravel($app);
+        $path = 'sample-path';
+
+        $moduleA = m::mock(Module::class);
+
+        $creator->shouldReceive('exists')->once()->with($path)
+            ->andReturn(true);
+
+        $result = $creator->runCreateDirectory($moduleA, $path);
+
+        $this->assertSame(null, $result);
     }
 
     protected function verifyWarningDisplayedForModule($subModule)
@@ -619,4 +774,5 @@ class ModuleCreatorTest extends UnitTestCase
 
         $this->assertEquals(false, $result);
     }
+
 }
