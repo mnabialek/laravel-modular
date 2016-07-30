@@ -39,7 +39,7 @@ trait ModuleCreator
      *
      * @return string
      */
-    private function getStubGroupDirectory($group)
+    protected function getStubGroupDirectory($group)
     {
         return $this->normalizePath($this->laravel['modular.config']->stubsPath() .
             DIRECTORY_SEPARATOR .
@@ -65,7 +65,7 @@ trait ModuleCreator
      *
      * @return bool
      */
-    private function exists($path)
+    protected function exists($path)
     {
         return $this->laravel['files']->exists($path);
     }
@@ -110,8 +110,10 @@ trait ModuleCreator
      *
      * @param Module $module
      * @param string $directory
+     *
+     * @throws Exception
      */
-    private function createDirectory(Module $module, $directory)
+    protected function createDirectory(Module $module, $directory)
     {
         if (!$this->exists($directory)) {
             $result =
@@ -120,13 +122,13 @@ trait ModuleCreator
             if ($result) {
                 $this->line("[Module {$module->getName()}] Created directory {$directory}");
             } else {
-                $this->warn("[Module {$module->getName()}] Cannot create directory {$directory}");
+                throw new Exception("[Module {$module->getName()}] Cannot create directory {$directory}");
             }
         }
     }
 
     /**
-     * Create submodule files inside given module
+     * Create files inside given module
      *
      * @param Module $module
      * @param string $stubGroup
@@ -139,23 +141,57 @@ trait ModuleCreator
         $stubGroup,
         $subModule = null
     ) {
-        $replacements = [];
-        if ($subModule !== null) {
-            $replacements = ['class' => $subModule];
-        }
-
-        $files = $this->config->getStubGroupFiles($stubGroup);
+        $files = collect($this->laravel['modular.config']
+            ->stubGroupFiles($stubGroup));
 
         if ($files->isEmpty()) {
-            $this->warn("[Module {$module}] No files created");
+            $this->warn("[Module {$module->getName()}] No files created");
 
-            return;
+            return false;
         }
+
+        $replacements = $subModule ? ['class' => $subModule] : [];
 
         $files->each(function ($stubFile, $moduleFile) use ($module, $stubGroup, $replacements) {
             $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
                 $moduleFile, $replacements);
         });
+
+        return true;
+    }
+
+    /**
+     * Copy single stub file into module
+     *
+     * @param Module $module
+     * @param $stubFile
+     * @param $stubGroup
+     * @param $moduleFile
+     * @param array $replacements
+     *
+     * @throws Exception
+     */
+    protected function copyStubFileIntoModule(
+        Module $module,
+        $stubFile,
+        $stubGroup,
+        $moduleFile,
+        array $replacements = []
+    ) {
+        $stubPath = $this->getStubGroupDirectory($stubGroup) .
+            DIRECTORY_SEPARATOR . $stubFile;
+
+        if (!$this->exists($stubPath)) {
+            throw new Exception("Stub file {$stubPath} does NOT exist");
+        }
+        $moduleFile = $this->replace($moduleFile, $module, $replacements);
+
+        if ($this->exists($moduleFile)) {
+            throw new Exception("[Module {$module->getName()}] File {$moduleFile} already exists");
+        }
+
+        $this->createMissingDirectory($module, $moduleFile);
+        $this->createFile($module, $stubPath, $moduleFile, $replacements);
     }
 
     /**
@@ -172,63 +208,31 @@ trait ModuleCreator
     }
 
     /**
-     * Copy single stub file into module
-     *
-     * @param string $stubFile
-     * @param string $stubDirectory
-     * @param string $moduleFile
-     * @param string $moduleDirectory
-     * @param string $module
-     * @param bool $checkExistence
-     * @param array $replacements
-     * @param bool $final
-     *
-     * @return bool
-     */
-    protected function copyStubFileIntoModule(
-        Module $module,
-        $stubFile,
-        $stubGroup,
-        $moduleFile,
-        array $replacements = []
-    ) {
-        $stubPath =
-            $this->getStubGroupDirectory($stubGroup) . DIRECTORY_SEPARATOR .
-            $stubFile;
-
-        if ($this->exists($stubPath)) {
-            $moduleFile = $this->replace($moduleFile, $module, $replacements);
-
-            if ($this->exists($moduleFile)) {
-                throw new Exception("[Module $module] File {$moduleFile} already exists");
-            }
-
-            $this->createMissingDirectory($module, $moduleFile);
-            $this->createFile($module, $stubPath, $moduleFile, $replacements);
-        } else {
-            throw new Exception("Stub file {$stubPath} does NOT exist");
-        }
-    }
-
-    /**
      * Creates single file
      *
+     * @param Module $module
      * @param string $sourceFile
      * @param string $destinationFile
-     * @param Module $module
      * @param array $replacements
+     *
+     * @throws Exception
      */
     protected function createFile(
-        $module,
+        Module $module,
         $sourceFile,
         $destinationFile,
         array $replacements = []
     ) {
-        file_put_contents($destinationFile,
-            $this->replace(file_get_contents($sourceFile), $module,
+        $result = $this->laravel['files']->put($module->getDirectory() .
+            DIRECTORY_SEPARATOR . $destinationFile,
+            $this->replace($this->laravel['files']->get($sourceFile), $module,
                 $replacements)
         );
 
-        $this->line("[Module {$module}] Created file {$destinationFile}");
+        if (!$result) {
+            throw new Exception("[Module {$module->getName()}] Cannot create file {$destinationFile}");
+        }
+
+        $this->line("[Module {$module->getName()}] Created file {$destinationFile}");
     }
 }

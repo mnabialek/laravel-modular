@@ -34,4 +34,33 @@ class ModuleCreator extends Command
     {
         return $this->createModuleDirectories($module, $stubGroup);
     }
+
+    public function runCreateModuleFiles(Module $module, $stubGroup, $subModule)
+    {
+        return $this->createModuleFiles($module, $stubGroup, $subModule);
+    }
+
+    public function runCopyStubFileIntoModule(
+        Module $module,
+        $stubFile,
+        $stubGroup,
+        $moduleFile,
+        array $replacements)
+    {
+        return $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
+            $moduleFile, $replacements);
+    }
+
+    public function runCreateMissingDirectory(Module $module, $file)
+    {
+        return $this->createMissingDirectory($module, $file);
+    }
+
+    public function runCreateFile(Module $module,
+        $sourceFile,
+        $destinationFile,
+        array $replacements = [])
+    {
+        return $this->createFile($module, $sourceFile, $destinationFile, $replacements);
+    }
 }
