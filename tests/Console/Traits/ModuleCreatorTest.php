@@ -37,35 +37,26 @@ class ModuleCreatorTest extends UnitTestCase
     public function it_throws_exception_when_given_stub_group_directory_does_not_exist()
     {
         $app = m::mock(Application::class);
-        $creator = m::mock(ModuleCreator::class)->makePartial();
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $modularConfig = m::mock(Config::class);
         $stubGroup = 'foo';
         $creator->setLaravel($app);
+        $stubDirectory = 'stub/directory';
 
-        $app->shouldReceive('offsetGet')->times(3)->with('modular.config')
+        $app->shouldReceive('offsetGet')->once()->with('modular.config')
             ->andReturn($modularConfig);
         $modularConfig->shouldReceive('stubGroups')->once()->withNoArgs()
             ->andReturn(['foo', 'bar']);
 
-        $modularConfig->shouldReceive('stubsPath')->once()->withNoArgs()
-            ->andReturn('stubs/path');
+        $creator->shouldReceive('getStubGroupDirectory')->once()
+            ->with($stubGroup)->andReturn($stubDirectory);
 
-        $modularConfig->shouldReceive('stubGroupDirectory')->once()
-            ->with($stubGroup)
-            ->andReturn('group-sample-path');
-
-        $file = m::mock(stdClass::class);
-
-        $app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-
-        $expectedDir = 'stubs/path' . DIRECTORY_SEPARATOR . 'group-sample-path';
-
-        $file->shouldReceive('exists')->once()->with($expectedDir)
+        $creator->shouldReceive('exists')->once()->with($stubDirectory)
             ->andReturn(false);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Stub group directory {$expectedDir} does not exist");
+        $this->expectExceptionMessage("Stub group directory {$stubDirectory} does not exist");
 
         $creator->runVerifyStubGroup($stubGroup);
     }
@@ -74,31 +65,22 @@ class ModuleCreatorTest extends UnitTestCase
     public function it_doesnt_throw_exception_when_given_stub_group_is_fine()
     {
         $app = m::mock(Application::class);
-        $creator = m::mock(ModuleCreator::class)->makePartial();
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $modularConfig = m::mock(Config::class);
         $stubGroup = 'foo';
         $creator->setLaravel($app);
+        $stubDirectory = 'stub/directory';
 
-        $app->shouldReceive('offsetGet')->times(3)->with('modular.config')
+        $app->shouldReceive('offsetGet')->once()->with('modular.config')
             ->andReturn($modularConfig);
         $modularConfig->shouldReceive('stubGroups')->once()->withNoArgs()
             ->andReturn(['foo', 'bar']);
 
-        $modularConfig->shouldReceive('stubsPath')->once()->withNoArgs()
-            ->andReturn('stubs/path');
+        $creator->shouldReceive('getStubGroupDirectory')->once()
+            ->with($stubGroup)->andReturn($stubDirectory);
 
-        $modularConfig->shouldReceive('stubGroupDirectory')->once()
-            ->with($stubGroup)
-            ->andReturn('group-sample-path');
-
-        $file = m::mock(stdClass::class);
-
-        $app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-
-        $expectedDir = 'stubs/path' . DIRECTORY_SEPARATOR . 'group-sample-path';
-
-        $file->shouldReceive('exists')->once()->with($expectedDir)
+        $creator->shouldReceive('exists')->once()->with($stubDirectory)
             ->andReturn(true);
 
         $result = $creator->runVerifyStubGroup($stubGroup);
@@ -109,7 +91,8 @@ class ModuleCreatorTest extends UnitTestCase
     public function it_throws_exception_when_config_file_does_not_exist()
     {
         $app = m::mock(Application::class);
-        $creator = m::mock(ModuleCreator::class)->makePartial();
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $modularConfig = m::mock(Config::class);
         $creator->setLaravel($app);
 
@@ -118,10 +101,7 @@ class ModuleCreatorTest extends UnitTestCase
         $modularConfig->shouldReceive('configFilePath')->once()
             ->andReturn('foo');
 
-        $file = m::mock(stdClass::class);
-        $app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-        $file->shouldReceive('exists')->once()->with('foo')
+        $creator->shouldReceive('exists')->once()->with('foo')
             ->andReturn(false);
 
         $this->expectException(Exception::class);
@@ -134,7 +114,8 @@ class ModuleCreatorTest extends UnitTestCase
     public function it_doesnt_throw_exception_when_config_file_exist()
     {
         $app = m::mock(Application::class);
-        $creator = m::mock(ModuleCreator::class)->makePartial();
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $modularConfig = m::mock(Config::class);
         $creator->setLaravel($app);
 
@@ -143,10 +124,7 @@ class ModuleCreatorTest extends UnitTestCase
         $modularConfig->shouldReceive('configFilePath')->once()
             ->andReturn('foo');
 
-        $file = m::mock(stdClass::class);
-        $app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-        $file->shouldReceive('exists')->once()->with('foo')
+        $creator->shouldReceive('exists')->once()->with('foo')
             ->andReturn(true);
 
         $result = $creator->runVerifyConfigExistence();
@@ -251,44 +229,32 @@ class ModuleCreatorTest extends UnitTestCase
     public function it_creates_directories_when_selected_module_stub_group_has_directories()
     {
         $app = m::mock(Application::class);
-        $creator = m::mock(ModuleCreator::class)->makePartial();
+        $creator = m::mock(ModuleCreator::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $modularConfig = m::mock(Config::class);
         $creator->setLaravel($app);
 
-        $stubGroup = 'stub group';
-        $moduleName = 'main module';
+        $stubGroup = 'stub group';;
 
         $moduleA = m::mock(Module::class);
-        $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleName);
-        $moduleA->shouldReceive('getDirectory')->times(2)
-            ->andReturn('module/dir');
+        $moduleA->shouldReceive('foo')->andReturn('bar');
 
         $app->shouldReceive('offsetGet')->times(1)->with('modular.config')
             ->andReturn($modularConfig);
         $modularConfig->shouldReceive('stubGroupDirectories')->once()
             ->with($stubGroup)->andReturn(['foo', 'bar', 'baz/foo', 'foo']);
 
-        $file = m::mock(stdClass::class);
-        $app->shouldReceive('offsetGet')->times(5)->with('files')
-            ->andReturn($file);
-        $file->shouldReceive('exists')->once()->with('foo')
-            ->andReturn(false);
-        $file->shouldReceive('makeDirectory')->once()->with('module/dir' .
-            DIRECTORY_SEPARATOR . 'foo', 0755, true)->andReturn(true);
-        $creator->shouldReceive('line')->once()
-            ->with("[Module {$moduleName}] Created directory foo");
+        $moduleArgument = m::on(function ($arg) {
+            return $arg instanceof Module && $arg->foo() == 'bar';
+        });
 
-        $file->shouldReceive('exists')->once()->with('bar')
-            ->andReturn(true);
-        $file->shouldReceive('exists')->once()->with('baz/foo')
-            ->andReturn(false);
-        $file->shouldReceive('makeDirectory')->once()->with('module/dir' .
-            DIRECTORY_SEPARATOR . 'baz/foo', 0755, true)->andReturn(false);
+        $creator->shouldReceive('createDirectory')->once()->with($moduleArgument,'foo');
+        $creator->shouldReceive('createDirectory')->once()->with($moduleArgument,'bar');
+        $creator->shouldReceive('createDirectory')->once()->with($moduleArgument,'baz/foo');
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("[Module {$moduleName}] Cannot create directory baz/foo");
-
-        $creator->runCreateModuleDirectories($moduleA, $stubGroup);
+        $result = $creator->runCreateModuleDirectories($moduleA, $stubGroup);
+        
+        $this->assertEquals(null, $result);
     }
 
     /** @test */
@@ -617,13 +583,15 @@ class ModuleCreatorTest extends UnitTestCase
             ->with($moduleDirectory . DIRECTORY_SEPARATOR . $destinationFile,
                 $replacedFileContent)->andReturn(true);
 
-        $creator->shouldReceive('line')->once()->with("[Module {$moduleName}] Created file {$destinationFile}");
+        $creator->shouldReceive('line')->once()
+            ->with("[Module {$moduleName}] Created file {$destinationFile}");
 
-        $result = $creator->runCreateFile($moduleA, $sourceFile, $destinationFile,
-            $replacements);
-        
+        $result =
+            $creator->runCreateFile($moduleA, $sourceFile, $destinationFile,
+                $replacements);
+
         $this->assertEquals(null, $result);
-    }    
+    }
 
     protected function verifyWarningDisplayedForModule($subModule)
     {

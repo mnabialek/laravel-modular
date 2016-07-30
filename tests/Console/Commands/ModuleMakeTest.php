@@ -71,11 +71,10 @@ class ModuleMakeTest extends UnitTestCase
         $modular->shouldReceive('exists')->once()->with($moduleAName)
             ->andReturn(false);
 
-        $file = m::mock(stdClass::class);
-        $this->app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-        $file->shouldReceive('exists')->once()->with('module A directory')
+        $this->command->shouldReceive('exists')->once()
+            ->with('module A directory')
             ->andReturn(true);
+
         $this->command->shouldReceive('warn')->once()
             ->with("[Module {$moduleAName}] Module already exists - ignoring");
         $this->command->shouldNotReceive('createModule');
@@ -120,10 +119,8 @@ class ModuleMakeTest extends UnitTestCase
         $modular->shouldReceive('exists')->once()->with($moduleBName)
             ->andReturn(false);
 
-        $file = m::mock(stdClass::class);
-        $this->app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-        $file->shouldReceive('exists')->once()->with('module B directory')
+        $this->command->shouldReceive('exists')->once()
+            ->with('module B directory')
             ->andReturn(true);
 
         $this->command->shouldReceive('warn')->once()
@@ -229,8 +226,6 @@ class ModuleMakeTest extends UnitTestCase
 
         $file = m::mock(stdClass::class);
 
-        $autoAddTemplate = 'module => [xxx]';
-
         $this->app->shouldReceive('offsetGet')->times(1)->with('files')
             ->andReturn($file);
         $file->shouldReceive('get')->once()->with($configFile)
@@ -268,12 +263,8 @@ class ModuleMakeTest extends UnitTestCase
 
         $modular->shouldReceive('exists')->once()->with($moduleAName)
             ->andReturn(false);
-
-        $file = m::mock(stdClass::class);
-        $this->app->shouldReceive('offsetGet')->once()->with('files')
-            ->andReturn($file);
-        $file->shouldReceive('exists')->once()->with('module A directory')
-            ->andReturn(false);
+        $this->command->shouldReceive('exists')->once()
+            ->with('module A directory')->andReturn(false);
 
         $this->command->shouldReceive('createModule')->once()
             ->with($moduleA, $this->stubGroupName)->passthru();
