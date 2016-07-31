@@ -241,6 +241,22 @@ class ModuleMakeTest extends UnitTestCase
         $this->command->handle();
     }
 
+    /** @test */
+    public function it_creates_valid_module_object()
+    {
+        $app = m::mock(Application::class);
+        $config = m::mock(Config::class);
+        $app->shouldReceive('offsetGet')->with('modular.config')->once()
+            ->andReturn($config);
+        $command = m::mock(\Tests\Helpers\ModuleMake::class)->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+        $command->setLaravel($app);
+
+        $module = $command->runCreateModuleObject('A');
+        $this->assertTrue($module instanceof Module);
+        $this->assertSame('A', $module->name());
+    }
+
     protected function verifySuccessModuleCreationWithoutConfig(array $modules, $getNameTimes)
     {
         $this->arrange($modules);
