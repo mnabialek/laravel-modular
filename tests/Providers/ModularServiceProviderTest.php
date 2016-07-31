@@ -178,5 +178,3 @@ class ModularServiceProviderTest extends UnitTestCase
         $modularProvider->register();
     }
 }
-
-

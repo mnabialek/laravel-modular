@@ -134,6 +134,5 @@ class ModuleVerificationTest extends UnitTestCase
         $result = $verification->runVerifyExisting($modules);
 
         $this->assertEquals(collect([$moduleA, $moduleC]), $result);
-    }    
-    
+    }
 }

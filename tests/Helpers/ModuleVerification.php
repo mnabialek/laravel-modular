@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Mnabialek\LaravelModular\Console\Traits\ModuleVerification as ModuleVerificationTrait;
 
-class ModuleVerification extends Command 
+class ModuleVerification extends Command
 {
     use ModuleVerificationTrait;
 

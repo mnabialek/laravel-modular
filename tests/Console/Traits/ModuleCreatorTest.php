@@ -234,7 +234,7 @@ class ModuleCreatorTest extends UnitTestCase
         $modularConfig = m::mock(Config::class);
         $creator->setLaravel($app);
 
-        $stubGroup = 'stub group';;
+        $stubGroup = 'stub group';
 
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
@@ -498,7 +498,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $creator->shouldReceive('createDirectory')->once()
             ->with(m::on(function ($arg) {
-                return $arg instanceOf Module and $arg->foo() == 'bar';
+                return $arg instanceof Module and $arg->foo() == 'bar';
             }), 'foo/bar');
         $creator->runCreateMissingDirectory($moduleA, $file);
     }
@@ -774,5 +774,4 @@ class ModuleCreatorTest extends UnitTestCase
 
         $this->assertEquals(false, $result);
     }
-
 }

@@ -16,7 +16,6 @@ class NormalizerTest extends UnitTestCase
     /** @test */
     public function it_removes_slashes_from_end_of_path()
     {
-
         $this->assertEquals('foo/bar',
             $this->normalizer->runNormalizePath('foo/bar////'));
     }
@@ -39,5 +38,5 @@ class NormalizerTest extends UnitTestCase
     public function it_returns_original_path_when_no_slashes_or_backslaehs()
     {
         $this->assertEquals('foo/bar', $this->normalizer->runNormalizePath('foo/bar'));
-    }    
+    }
 }

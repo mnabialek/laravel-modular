@@ -168,6 +168,5 @@ class ModuleFilesTest extends UnitTestCase
 
         $this->command->shouldReceive('verifyStubGroup')->once()
             ->with($this->stubGroupName);
-
     }
 }
