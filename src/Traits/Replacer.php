@@ -16,12 +16,12 @@ trait Replacer
      *
      * @return string
      */
-    public function replace($string, Module $module, array $replacements = [])
+    protected function replace($string, Module $module, array $replacements = [])
     {
         $replacements = $this->getReplacements($module, $replacements);
 
-        return str_replace($replacements->keys(), $replacements->values(),
-            $string);
+        return str_replace($replacements->keys()->all(),
+            $replacements->values()->all(), $string);
     }
 
     /**
@@ -32,7 +32,7 @@ trait Replacer
      *
      * @return Collection
      */
-    protected function getReplacements(Module $module, array $definedReplacements)
+    private function getReplacements(Module $module, array $definedReplacements)
     {
         $replacements = collect();
 
@@ -40,11 +40,12 @@ trait Replacer
             'module' => $module->getName(),
             'class' => $module->getName(),
             'moduleNamespace' => $module->getName(),
-            'namespace' => rtrim($this->config->getNamespace(), '\\'),
+            'namespace' =>
+                rtrim($this->laravel['config']->modulesNamespace(), '\\'),
             'plural|lower' => mb_strtolower(str_plural($module->getName())),
         ])->each(function ($value, $key) use ($replacements) {
-            $replacements->put($this->config->getStartSeparator() . $key .
-                $this->config->getEndSeparator(), $value);
+            $replacements->put($this->laravel['config']->startSeparator() .
+                $key . $this->laravel['config']->endSeparator(), $value);
         });
 
         return $replacements;
