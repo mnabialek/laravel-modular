@@ -12,13 +12,6 @@ return [
     'namespace' => 'App\\Modules',
 
     /**
-     * If set to true, it will convert module name to studly caps case
-     * It's recommended setting otherwise you will need to be very careful
-     * what you are typing when generating new modules
-     */
-    'normalize_module_name' => true,
-
-    /**
      * Stubs settings
      */
     'stubs' => [
