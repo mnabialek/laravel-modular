@@ -40,16 +40,12 @@ class ModularServiceProviderTest extends UnitTestCase
 
         // module bindings
         $closure = m::on(function ($callback) use ($app) {
-            $result = call_user_func($callback, $app);
-
-            return $result instanceof Modular;
+            return call_user_func($callback, $app) instanceof Modular;
         });
         $app->shouldReceive('singleton')->with('modular', $closure)->once();
 
         $closure2 = m::on(function ($callback) use ($app) {
-            $result = call_user_func($callback, $app);
-
-            return $result instanceof Config;
+            return call_user_func($callback, $app) instanceof Config;
         });
         $app->shouldReceive('singleton')->with('modular.config', $closure2)
             ->once();
