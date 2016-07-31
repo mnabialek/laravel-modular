@@ -66,7 +66,7 @@ trait ModuleVerification
                 return;
             }
 
-            if ($verifyActive && !$module->isActive()) {
+            if ($verifyActive && !$module->active()) {
                 $this->error("Module {$name} is not active");
 
                 return;

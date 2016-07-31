@@ -32,9 +32,9 @@ class ModuleVerificationTest extends UnitTestCase
         $modular->shouldReceive('find')->with($modules[1])->andReturn(null);
         $modular->shouldReceive('find')->with($modules[2])->andReturn($moduleC);
 
-        $moduleA->shouldReceive('isActive')->once()->withNoArgs()
+        $moduleA->shouldReceive('active')->once()->withNoArgs()
             ->andReturn(true);
-        $moduleC->shouldReceive('isActive')->once()->withNoArgs()
+        $moduleC->shouldReceive('active')->once()->withNoArgs()
             ->andReturn(false);
         $verification->shouldReceive('error')->once()
             ->with('Module B does not exist');
@@ -66,9 +66,9 @@ class ModuleVerificationTest extends UnitTestCase
         $modular->shouldReceive('find')->with($modules[0])->andReturn($moduleA);
         $modular->shouldReceive('find')->with($modules[1])->andReturn($moduleC);
 
-        $moduleA->shouldReceive('isActive')->once()->withNoArgs()
+        $moduleA->shouldReceive('active')->once()->withNoArgs()
             ->andReturn(true);
-        $moduleC->shouldReceive('isActive')->once()->withNoArgs()
+        $moduleC->shouldReceive('active')->once()->withNoArgs()
             ->andReturn(true);
         $verification->shouldNotReceive('error');
 
@@ -97,8 +97,8 @@ class ModuleVerificationTest extends UnitTestCase
         $modular->shouldReceive('find')->with($modules[1])->andReturn(null);
         $modular->shouldReceive('find')->with($modules[2])->andReturn($moduleC);
 
-        $moduleA->shouldNotReceive('isActive');
-        $moduleC->shouldNotReceive('isActive');
+        $moduleA->shouldNotReceive('active');
+        $moduleC->shouldNotReceive('active');
         $verification->shouldReceive('error')->once()
             ->with('Module B does not exist');
 
@@ -127,8 +127,8 @@ class ModuleVerificationTest extends UnitTestCase
         $modular->shouldReceive('find')->with($modules[0])->andReturn($moduleA);
         $modular->shouldReceive('find')->with($modules[1])->andReturn($moduleC);
 
-        $moduleA->shouldNotReceive('isActive');
-        $moduleC->shouldNotReceive('isActive');
+        $moduleA->shouldNotReceive('active');
+        $moduleC->shouldNotReceive('active');
         $verification->shouldNotReceive('error');
 
         $result = $verification->runVerifyExisting($modules);

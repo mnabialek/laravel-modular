@@ -64,7 +64,7 @@ class Modular
     {
         $this->withRoutes()->each(function ($module) use ($router) {
             /** @var Module $module */
-            $router->group(['namespace' => $module->routeControllerNamespace()],
+            $router->group(['namespace' => $module->routingControllerNamespace()],
                 function ($router) use ($module) {
                     $this->app['files']->requireOnce($this->app->basePath() .
                         DIRECTORY_SEPARATOR . $module->routesFilePath());

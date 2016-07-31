@@ -59,7 +59,6 @@ trait Replacer
      */
     private function configClass()
     {
-        return property_exists($this, 'laravel') ? $this->laravel['config']
-            : $this->config;
+        return $this->laravel['config'];
     }
 }

@@ -91,7 +91,7 @@ return [
         /**
          * Routing group controller namespace (this namespace will be
          * automatically added to all controllers defined inside above routing
-         * file
+         * file)
          */
         'route_group_namespace' => 'Http\\Controllers',
     ],
@@ -110,15 +110,11 @@ return [
      * Settings for module service providers
      */
     'module_service_providers' => [
-        /**
-         * Path (inside module) where service provider file should be created
-         */
-        'path' => 'Providers',
 
         /**
-         * Service provider filename
+         * Service provider file path and name (inside module)
          */
-        'filename' => '{class}ServiceProvider.php',
+        'file' => 'Providers/{class}ServiceProvider.php',
 
         /**
          * Service provider namespace (it will be automatically prefixed with modules

@@ -114,6 +114,43 @@ class Config
     }
 
     /**
+     * Get service provider filename
+     *
+     * @return string
+     */
+    public function serviceProviderFilename()
+    {
+        return $this->get('module_service_providers.filename');
+    }
+
+    /**
+     * Get service provider filename
+     *
+     * @return string
+     */
+    public function serviceProviderNamespace()
+    {
+        return $this->get('module_service_providers.namespace');
+    }
+
+    public function routingControllerNamespace()
+    {
+        return $this->get('module_routing.route_group_namespace');
+    }
+
+
+    public function routingFile()
+    {
+        return $this->get('module_routing.file');
+    }
+
+
+    public function factoryFile()
+    {
+        return $this->get('module_factories.file');
+    }
+
+    /**
      * Get start separator for replacements
      *
      * @return string
@@ -173,6 +210,26 @@ class Config
     public function migrationStubFileName($type)
     {
         return $this->get("module_migrations.types.{$type}");
+    }
+
+    /**
+     * Get path where migrations are stored inside Module
+     *
+     * @return string
+     */
+    public function migrationsPath()
+    {
+        return $this->get('module_migrations.path');
+    }
+
+    /**
+     * Get service provider file
+     *
+     * @return string
+     */
+    public function serviceProviderFile()
+    {
+        return $this->get('module_service_providers.file');
     }
 
     /**

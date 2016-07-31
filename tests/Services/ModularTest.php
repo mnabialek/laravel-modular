@@ -60,10 +60,10 @@ class ModularTest extends UnitTestCase
         $router = m::mock(Router::class);
         $moduleA = m::mock(stdClass::class);
         $moduleB = m::mock(stdClass::class);
-        $moduleA->shouldReceive('routeControllerNamespace')->once()
+        $moduleA->shouldReceive('routingControllerNamespace')->once()
             ->withNoArgs()
             ->andReturn('moduleAControllerNamespace');
-        $moduleB->shouldReceive('routeControllerNamespace')->once()
+        $moduleB->shouldReceive('routingControllerNamespace')->once()
             ->withNoArgs()
             ->andReturn('moduleBControllerNamespace');
 
