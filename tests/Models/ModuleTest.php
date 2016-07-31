@@ -44,7 +44,7 @@ class ModuleTest extends UnitTestCase
         $this->createModuleMock();
 
         $this->module->shouldReceive('name')->once()->withNoArgs()->passthru();
-        $this->config->shouldReceive('seederFilename')->once()->withNoArgs()
+        $this->config->shouldReceive('seederFile')->once()->withNoArgs()
             ->andReturn('some/path/Seeder.php');
 
         $this->config->shouldReceive('modulesNamespace')->once()->withNoArgs()
@@ -121,7 +121,7 @@ class ModuleTest extends UnitTestCase
         $this->createModuleMock();
 
         $this->module->shouldReceive('name')->once()->withNoArgs()->passthru();
-        $this->config->shouldReceive('serviceProviderFilename')->once()
+        $this->config->shouldReceive('serviceProviderFile')->once()
             ->withNoArgs()
             ->andReturn('some/path/ServiceProvider.php');
 
@@ -276,6 +276,50 @@ class ModuleTest extends UnitTestCase
     }
 
     /** @test */
+    public function it_returns_true_when_checking_seeder_when_true_in_config()
+    {
+        $this->createModuleMock(['seeder' => true]);
+        $this->assertSame(true, $this->module->hasSeeder());
+    }
+
+    /** @test */
+    public function it_returns_false_when_checking_seeder_when_false_in_config()
+    {
+        $this->createModuleMock(['seeder' => false]);
+        $this->assertSame(false, $this->module->hasSeeder());
+    }
+
+    /** @test */
+    public function it_returns_true_when_checking_seeder_when_file_exists()
+    {
+        $this->createModuleMock([]);
+        $file = m::mock(stdClass::class);
+
+        $this->app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $this->module->shouldReceive('seederFilePath')->once()->withNoArgs()
+            ->andReturn('foo');
+        $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
+
+        $this->assertSame(true, $this->module->hasSeeder());
+    }
+
+    /** @test */
+    public function it_returns_false_when_checking_seeder_when_file_doesnt_exist()
+    {
+        $this->createModuleMock([]);
+        $file = m::mock(stdClass::class);
+
+        $this->app->shouldReceive('offsetGet')->once()->with('files')
+            ->andReturn($file);
+        $this->module->shouldReceive('seederFilePath')->once()->withNoArgs()
+            ->andReturn('foo');
+        $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
+
+        $this->assertSame(false, $this->module->hasSeeder());
+    }
+
+    /** @test */
     public function it_returns_valid_routing_controller_namespace()
     {
         $this->createModuleMock([]);
@@ -302,6 +346,12 @@ class ModuleTest extends UnitTestCase
     public function it_returns_valid_factory_file_path()
     {
         $this->verifyValidPath('factoryFilePath', 'factoryFile');
+    }
+
+    /** @test */
+    public function it_returns_valid_seeder_file_path()
+    {
+        $this->verifyValidPath('seederFilePath', 'seederFile');
     }
 
     /** @test */

@@ -91,7 +91,7 @@ class Module
      */
     protected function fileClass($type, $class = null)
     {
-        $filename = $type . 'Filename';
+        $filename = $type . 'File';
         $namespace = $type . 'Namespace';
 
         $class = $class ?: basename($this->config->$filename(), '.php');
@@ -152,6 +152,16 @@ class Module
     {
         return $this->hasFile('routes', 'routesPath');
     }
+    
+    /**
+     * Verifies whether module has seeder file
+     *
+     * @return bool
+     */
+    public function hasSeeder()
+    {
+        return $this->hasFile('seeder', 'seederFilePath');
+    }
 
     /**
      * Verifies whether module has file of given type either checking config
@@ -197,6 +207,16 @@ class Module
     public function factoryFilePath()
     {
         return $this->getPath('factoryFile');
+    }
+
+    /**
+     * Get module factory file path
+     *
+     * @return string
+     */
+    public function seederFilePath()
+    {
+        return $this->getPath('seederFile');
     }
 
     /**
