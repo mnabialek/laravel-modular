@@ -24,16 +24,17 @@ class Modular
      * @var Collection|null
      */
     protected $modules = null;
-    
+
     /**
      * @var Config
      */
     protected $config;
 
     /**
-     * SimpleModule constructor.
+     * Modular constructor.
      *
      * @param Application $app
+     * @param Config $config
      */
     public function __construct(Application $app, Config $config)
     {
@@ -50,7 +51,7 @@ class Modular
     {
         $this->withSeeders()->each(function ($module) use ($seeder) {
             /** @var Module $module */
-            $seeder->call($module->getSeederClass());
+            $seeder->call($module->seederClass());
         });
     }
 
@@ -63,10 +64,10 @@ class Modular
     {
         $this->withRoutes()->each(function ($module) use ($router) {
             /** @var Module $module */
-            $router->group(['namespace' => $module->getRouteControllerNamespace()],
+            $router->group(['namespace' => $module->routeControllerNamespace()],
                 function ($router) use ($module) {
-                    require($this->app->basePath() . DIRECTORY_SEPARATOR .
-                        $module->getRoutesFilePath());
+                    $this->app['files']->requireOnce($this->app->basePath() .
+                        DIRECTORY_SEPARATOR . $module->routesFilePath());
                 });
         });
     }
@@ -78,7 +79,7 @@ class Modular
     {
         $this->withFactories()->each(function ($module) {
             /** @var Module $module */
-            require($module->getFactoryFilePath());
+            $this->app['files']->requireOnce($module->factoryFilePath());
         });
     }
 
@@ -89,7 +90,7 @@ class Modular
     {
         $this->withServiceProviders()->each(function ($module) {
             /** @var Module $module */
-            $this->app->register($module->getServiceProviderClass());
+            $this->app->register($module->serviceProviderClass());
         });
     }
 
@@ -134,50 +135,24 @@ class Modular
         return $this->filterActiveByMethod('hasSeeder');
     }
 
-    protected function filterActiveByMethod($methodName)
-    {
-        return $this->modules()->filter(function ($module) use ($methodName) {
-            return $module->isActive() && $module->$methodName();
-        });
-    }
-
     /**
-     * Get all modules from configuration file
+     * Get active modules that also pass given requirement
      *
-     * @return array
-     */
-    protected function modules()
-    {
-        if ($this->modules === null) {
-            $this->loadModules();
-        }
-
-        return $this->modules();
-    }
-
-    protected function loadModules()
-    {
-        $this->modules = collect();
-
-        collect($this->config->getModules())->each(function ($options, $name) {
-            $this->modules->push(new Module($name, $options, $this->config));
-        });
-    }
-
-    /**
-     * Get active modules
+     * @param string $requirement
      *
      * @return Collection
      */
-    public function active(Collection $modules)
+    protected function filterActiveByMethod($requirement)
     {
-        return $this->filter($modules, 'isActive');
+        return $this->modules()->filter(function ($module) use ($requirement) {
+            return $module->active() && $module->$requirement();
+        })->values();
     }
 
     /**
      * Get all modules
      *
-     * @return array
+     * @return Collection
      */
     public function all()
     {
@@ -185,32 +160,67 @@ class Modular
     }
 
     /**
-     * Get disabled modules
+     * Get active modules
      *
-     * @return array
+     * @return Collection
      */
-    public function disabled()
+    public function active()
     {
-        return $this->all()->reject(function ($module) {
-            $module->isActive();
+        return $this->modules()->filter(function ($module) {
+            return $module->active();
+        })->values();
+    }
+
+    /**
+     * Load modules (if not loaded) and get modules
+     *
+     * @return Collection
+     */
+    protected function modules()
+    {
+        if ($this->modules === null) {
+            $this->loadModules();
+        }
+
+        return $this->modules;
+    }
+
+    /**
+     * Load modules from config
+     */
+    protected function loadModules()
+    {
+        $this->modules = collect();
+
+        collect($this->config->modules())->each(function ($options, $name) {
+            $this->modules->push(new Module($name, $this->config, $options));
         });
     }
 
     /**
-     * Verifies whether given module exists
+     * Find given module by name
      *
-     * @param string $moduleName
+     * @param string $name
+     *
+     * @return Module
+     */
+    public function find($name)
+    {
+        return $this->modules()->first(function ($module) use ($name) {
+            /** @var Module $module */
+            return $module->name() == $name;
+        });
+    }
+
+    /**
+     * Verify whether module with given name already exists
+     *
+     * @param $name
      *
      * @return bool
      */
-    public function find($moduleName)
+    public function exists($name)
     {
-        return in_array($this->getModuleName($moduleName), $this->all());
-    }
-
-    public function exists($moduleName)
-    {
-        // @todo
-        //return $this->find($moduleName);
+        return $this->find($name) !== null;
     }
 }
