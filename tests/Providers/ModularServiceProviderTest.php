@@ -138,7 +138,7 @@ class ModularServiceProviderTest extends UnitTestCase
         // configuration file
         $config->shouldReceive('configName')->once()
             ->andReturn('modular');
-        $config->shouldReceive('getConfigFilePath')->once()
+        $config->shouldReceive('configPath')->once()
             ->andReturn($to[0]);
 
         // stubs files

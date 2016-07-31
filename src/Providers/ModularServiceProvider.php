@@ -101,7 +101,7 @@ class ModularServiceProvider extends ServiceProvider
     {
         $configName = $this->config->configName();
         $this->filesToPublish->put($this->getDefaultConfigFilePath($configName),
-            $this->config->getConfigFilePath());
+            $this->config->configPath());
 
         return $this;
     }
