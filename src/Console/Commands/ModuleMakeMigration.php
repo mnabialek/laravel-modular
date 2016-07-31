@@ -68,9 +68,9 @@ class ModuleMakeMigration extends BaseCommand
     {
         $stubGroup = $this->getStubGroup();
         $type =
-            $type ?: $this->laravel['modular.config']->getMigrationDefaultType();
+            $type ?: $this->laravel['modular.config']->migrationDefaultType();
         $stubFile =
-            $this->laravel['modular.config']->getMigrationStubFileName($type);
+            $this->laravel['modular.config']->migrationStubFileName($type);
 
         if (!$stubFile) {
             throw new Exception("There is no {$type} in module_migrations.types registered in configuration file");

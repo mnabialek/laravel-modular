@@ -102,9 +102,9 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $app->shouldReceive('offsetGet')->times(2)->with('modular.config')
             ->andReturn($config);
-        $config->shouldReceive('getMigrationDefaultType')->once()
+        $config->shouldReceive('migrationDefaultType')->once()
             ->andReturn('sample type');
-        $config->shouldReceive('getMigrationStubFileName')->once()
+        $config->shouldReceive('migrationStubFileName')->once()
             ->with('sample type')->andReturn(null);
 
         $command->shouldReceive('error')->once()
@@ -168,8 +168,8 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $app->shouldReceive('offsetGet')->once()->with('modular.config')
             ->andReturn($config);
-        $config->shouldNotReceive('getMigrationDefaultType');
-        $config->shouldReceive('getMigrationStubFileName')->once()
+        $config->shouldNotReceive('migrationDefaultType');
+        $config->shouldReceive('migrationStubFileName')->once()
             ->with($migrationType)->andReturn($migrationStubFileName);
 
         $now = Carbon::now();
