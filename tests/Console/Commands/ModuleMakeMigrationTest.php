@@ -142,8 +142,9 @@ class ModuleMakeMigrationTest extends UnitTestCase
             ->andReturn($tableName);
 
         $moduleAMock = m::mock(Module::class);
-        $moduleAMock->shouldReceive('getName')->times(2)->withNoArgs()
+        $moduleAMock->shouldReceive('getName')->once()->withNoArgs()
             ->andReturn($moduleName);
+        $moduleAMock->shouldReceive('foo')->andReturn('bar');
 
         $modules = collect([$moduleAMock]);
 
@@ -154,7 +155,7 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $command->shouldReceive('createMigrationFile')->once()
             ->with(m::on(function ($arg) use ($moduleName) {
-                return $arg instanceof Module && $arg->getName() == $moduleName;
+                return $arg instanceof Module && $arg->foo() == 'bar';
             }), $userMigrationName, $migrationType, $tableName)->passthru();
 
         $stubGroupName = 'sample stub group';
