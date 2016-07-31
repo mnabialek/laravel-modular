@@ -4,6 +4,7 @@ namespace Mnabialek\LaravelModular\Traits;
 
 use Illuminate\Support\Collection;
 use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Services\Config;
 
 trait Replacer
 {
@@ -41,13 +42,24 @@ trait Replacer
             'class' => $module->name(),
             'moduleNamespace' => $module->name(),
             'namespace' =>
-                rtrim($this->laravel['config']->modulesNamespace(), '\\'),
+                rtrim($this->configClass()->modulesNamespace(), '\\'),
             'plural|lower' => mb_strtolower(str_plural($module->name())),
         ])->each(function ($value, $key) use ($replacements) {
-            $replacements->put($this->laravel['config']->startSeparator() .
-                $key . $this->laravel['config']->endSeparator(), $value);
+            $replacements->put($this->configClass()->startSeparator() .
+                $key . $this->configClass()->endSeparator(), $value);
         });
 
         return $replacements;
+    }
+
+    /**
+     * Get config class instance
+     *
+     * @return Config
+     */
+    private function configClass()
+    {
+        return property_exists($this, 'laravel') ? $this->laravel['config']
+            : $this->config;
     }
 }
