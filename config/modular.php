@@ -56,14 +56,9 @@ return [
      */
     'module_seeding' => [
         /**
-         * Path (inside module) where main seeder file should be created
-         */
-        'path' => 'Database/Seeds',
-
-        /**
          * Seeder filename
          */
-        'filename' => '{class}DatabaseSeeder.php',
+        'file' => 'Database/Seeds/{class}DatabaseSeeder.php',
 
         /**
          * Seeder namespace (it will be automatically prefixed with modules

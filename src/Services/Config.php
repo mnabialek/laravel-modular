@@ -104,23 +104,13 @@ class Config
     }
 
     /**
-     * Get seeder filename
+     * Get seeder file
      *
      * @return string
      */
-    public function seederFilename()
+    public function seederFile()
     {
-        return $this->get('module_seeding.filename');
-    }
-
-    /**
-     * Get service provider filename
-     *
-     * @return string
-     */
-    public function serviceProviderFilename()
-    {
-        return $this->get('module_service_providers.filename');
+        return $this->get('module_seeding.file');
     }
 
     /**
@@ -133,18 +123,31 @@ class Config
         return $this->get('module_service_providers.namespace');
     }
 
+    /**
+     * Get namespace for controllers when loading routes
+     *
+     * @return string
+     */
     public function routingControllerNamespace()
     {
         return $this->get('module_routing.route_group_namespace');
     }
 
-
+    /**
+     * Get routing file
+     *
+     * @return string
+     */
     public function routingFile()
     {
         return $this->get('module_routing.file');
     }
 
-
+    /**
+     * Get factory file
+     *
+     * @return string
+     */
     public function factoryFile()
     {
         return $this->get('module_factories.file');

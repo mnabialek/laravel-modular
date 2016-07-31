@@ -65,8 +65,8 @@ class ConfigTest extends UnitTestCase
     public function it_returns_valid_seeder_filename()
     {
         $value = '{class}A\B\C\\';
-        $config = $this->arrange('module_seeding.filename', $value);
-        $this->assertEquals($value, $config->seederFilename());
+        $config = $this->arrange('module_seeding.file', $value);
+        $this->assertEquals($value, $config->seederFile());
     }
 
     /** @test */
@@ -185,6 +185,55 @@ class ConfigTest extends UnitTestCase
         $value = 'auto-add-template';
         $config = $this->arrange('module_make.module_template', $value);
         $this->assertEquals($value, $config->autoAddTemplate());
+    }
+
+    /** @test */
+    public function it_returns_valid_service_provider_file()
+    {
+        $value = 'sample/service-provider/file.php';
+        $config = $this->arrange('module_service_providers.file', $value);
+        $this->assertEquals($value, $config->serviceProviderFile());
+    }
+
+    /** @test */
+    public function it_returns_valid_migrations_path()
+    {
+        $value = 'sample/migrations/path';
+        $config = $this->arrange('module_migrations.path', $value);
+        $this->assertEquals($value, $config->migrationsPath());
+    }
+
+    /** @test */
+    public function it_returns_valid_service_provider_namespace()
+    {
+        $value = 'ServiceProvider\\Namespace';
+        $config = $this->arrange('module_service_providers.namespace', $value);
+        $this->assertEquals($value, $config->serviceProviderNamespace());
+    }
+
+    /** @test */
+    public function it_returns_valid_routing_controller_namespace()
+    {
+        $value = 'Routing\\Namespace';
+        $config =
+            $this->arrange('module_routing.route_group_namespace', $value);
+        $this->assertEquals($value, $config->routingControllerNamespace());
+    }
+
+    /** @test */
+    public function it_returns_valid_routing_file()
+    {
+        $value = 'routing/file.php';
+        $config = $this->arrange('module_routing.file', $value);
+        $this->assertEquals($value, $config->routingFile());
+    }
+
+    /** @test */
+    public function it_returns_valid_factory_file()
+    {
+        $value = 'factory/file.php';
+        $config = $this->arrange('module_factories.file', $value);
+        $this->assertEquals($value, $config->factoryFile());
     }
 
     protected function arrange($configKey, $returnValue, $defaultConfigValue = null)
