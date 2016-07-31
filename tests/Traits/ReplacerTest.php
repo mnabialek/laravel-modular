@@ -29,7 +29,7 @@ class ReplacerTest extends UnitTestCase
 
         $this->replacer->setLaravel($this->app);
         $this->module = m::mock(Module::Class);
-        $this->module->shouldReceive('getName')->times(4)
+        $this->module->shouldReceive('name')->times(4)
             ->andReturn($this->moduleName);
 
         $this->config->shouldReceive('modulesNamespace')->once()

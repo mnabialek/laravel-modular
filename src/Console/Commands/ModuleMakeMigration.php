@@ -83,11 +83,11 @@ class ModuleMakeMigration extends BaseCommand
         $migrationClass = studly_case($name);
 
         $this->copyStubFileIntoModule($module, $stubFile, $stubGroup,
-            $module->getMigrationsPath() . DIRECTORY_SEPARATOR . $filename,
+            $module->migrationsPath() . DIRECTORY_SEPARATOR . $filename,
             ['migrationClass' => $migrationClass, 'table' => $table]
         );
 
-        $this->info("[Module {$module->getName()}] Created migration file: {$filename}");
+        $this->info("[Module {$module->name()}] Created migration file: {$filename}");
     }
 
     /**

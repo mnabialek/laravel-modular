@@ -97,7 +97,7 @@ trait ModuleCreator
             ->stubGroupDirectories($stubGroup))->unique();
 
         if ($directories->isEmpty()) {
-            $this->warn("[Module {$module->getName()}] No explicit directories created");
+            $this->warn("[Module {$module->name()}] No explicit directories created");
         } else {
             $directories->each(function ($directory) use ($module) {
                 $this->createDirectory($module, $directory);
@@ -117,12 +117,12 @@ trait ModuleCreator
     {
         if (!$this->exists($directory)) {
             $result =
-                $this->laravel['files']->makeDirectory($module->getDirectory() .
+                $this->laravel['files']->makeDirectory($module->directory() .
                     DIRECTORY_SEPARATOR . $directory, 0755, true);
             if ($result) {
-                $this->line("[Module {$module->getName()}] Created directory {$directory}");
+                $this->line("[Module {$module->name()}] Created directory {$directory}");
             } else {
-                throw new Exception("[Module {$module->getName()}] Cannot create directory {$directory}");
+                throw new Exception("[Module {$module->name()}] Cannot create directory {$directory}");
             }
         }
     }
@@ -145,7 +145,7 @@ trait ModuleCreator
             ->stubGroupFiles($stubGroup));
 
         if ($files->isEmpty()) {
-            $this->warn("[Module {$module->getName()}] No files created");
+            $this->warn("[Module {$module->name()}] No files created");
 
             return false;
         }
@@ -187,7 +187,7 @@ trait ModuleCreator
         $moduleFile = $this->replace($moduleFile, $module, $replacements);
 
         if ($this->exists($moduleFile)) {
-            throw new Exception("[Module {$module->getName()}] File {$moduleFile} already exists");
+            throw new Exception("[Module {$module->name()}] File {$moduleFile} already exists");
         }
 
         $this->createMissingDirectory($module, $moduleFile);
@@ -223,16 +223,16 @@ trait ModuleCreator
         $destinationFile,
         array $replacements = []
     ) {
-        $result = $this->laravel['files']->put($module->getDirectory() .
+        $result = $this->laravel['files']->put($module->directory() .
             DIRECTORY_SEPARATOR . $destinationFile,
             $this->replace($this->laravel['files']->get($sourceFile), $module,
                 $replacements)
         );
 
         if (!$result) {
-            throw new Exception("[Module {$module->getName()}] Cannot create file {$destinationFile}");
+            throw new Exception("[Module {$module->name()}] Cannot create file {$destinationFile}");
         }
 
-        $this->line("[Module {$module->getName()}] Created file {$destinationFile}");
+        $this->line("[Module {$module->name()}] Created file {$destinationFile}");
     }
 }

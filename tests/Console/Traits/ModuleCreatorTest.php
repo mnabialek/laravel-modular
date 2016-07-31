@@ -211,7 +211,7 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleName = 'main module';
 
         $moduleA = m::mock(Module::class);
-        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
 
         $app->shouldReceive('offsetGet')->times(1)->with('modular.config')
             ->andReturn($modularConfig);
@@ -398,7 +398,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
-        $moduleA->shouldReceive('getName')->once()->withNoArgs()
+        $moduleA->shouldReceive('name')->once()->withNoArgs()
             ->andReturn($moduleName);
 
         $creator->shouldReceive('getStubGroupDirectory')->once()
@@ -519,8 +519,8 @@ class ModuleCreatorTest extends UnitTestCase
 
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
-        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
-        $moduleA->shouldReceive('getDirectory')->once()
+        $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('directory')->once()
             ->andReturn($moduleDirectory);
 
         $file = m::mock(stdClass::class);
@@ -564,8 +564,8 @@ class ModuleCreatorTest extends UnitTestCase
 
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
-        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
-        $moduleA->shouldReceive('getDirectory')->once()
+        $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('directory')->once()
             ->andReturn($moduleDirectory);
 
         $file = m::mock(stdClass::class);
@@ -678,8 +678,8 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleName = 'main module';
 
         $moduleA = m::mock(Module::class);
-        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
-        $moduleA->shouldReceive('getDirectory')->once()
+        $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('directory')->once()
             ->andReturn('module/dir');
 
         $creator->shouldReceive('exists')->once()->with($path)
@@ -711,9 +711,8 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleName = 'main module';
 
         $moduleA = m::mock(Module::class);
-        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
-        $moduleA->shouldReceive('getDirectory')->once()
-            ->andReturn('module/dir');
+        $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('directory')->once()->andReturn('module/dir');
 
         $creator->shouldReceive('exists')->once()->with($path)
             ->andReturn(false);
@@ -759,7 +758,7 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleName = 'main module';
 
         $moduleA = m::mock(Module::class);
-        $moduleA->shouldReceive('getName')->once()->andReturn($moduleName);
+        $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
 
         $app->shouldReceive('offsetGet')->times(1)->with('modular.config')
             ->andReturn($modularConfig);

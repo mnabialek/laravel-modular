@@ -3,6 +3,7 @@
 namespace Tests\Console\Commands;
 
 use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
+use stdClass;
 use Tests\UnitTestCase;
 use Mockery as m;
 
@@ -57,7 +58,7 @@ class ModuleSeedTest extends UnitTestCase
     }
 
     /** @test */
-    public function it_runs_valid_seeders_when_acttive_modules_given()
+    public function it_runs_valid_seeders_when_active_modules_given()
     {
         $command = m::mock(ModuleSeed::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -72,9 +73,9 @@ class ModuleSeedTest extends UnitTestCase
         $command->shouldReceive('argument')->once()->with('module')
             ->andReturn($modules);
 
-        $moduleAMock = m::mock('stdClass');
-        $moduleBMock = m::mock('stdClass');
-        $moduleDMock = m::mock('stdClass');
+        $moduleAMock = m::mock(stdClass::class);
+        $moduleBMock = m::mock(stdClass::class);
+        $moduleDMock = m::mock(stdClass::class);
 
         $activeModules = collect([$moduleAMock, $moduleBMock, $moduleDMock]);
 
@@ -91,7 +92,7 @@ class ModuleSeedTest extends UnitTestCase
         $command->shouldReceive('option')->times(3)->with('class')
             ->andReturn('sampleClass');
 
-        $moduleAMock->shouldReceive('getSeederClass')->once()
+        $moduleAMock->shouldReceive('seederClass')->once()
             ->with('sampleClass')->andReturn('moduleAClass');
 
         $argOptions = $options;
@@ -99,12 +100,12 @@ class ModuleSeedTest extends UnitTestCase
 
         $command->shouldReceive('call')->once()->with('db:seed', $argOptions)
             ->andReturn(0);
-        $moduleAMock->shouldReceive('getName')->once()->andReturn('A');
+        $moduleAMock->shouldReceive('name')->once()->andReturn('A');
 
         $command->shouldReceive('info')->once()
             ->with('[Module A] Seeded: moduleAClass');
 
-        $moduleBMock->shouldReceive('getSeederClass')->once()
+        $moduleBMock->shouldReceive('seederClass')->once()
             ->with('sampleClass')->andReturn('moduleBClass');
 
         $argOptions = $options;
@@ -112,12 +113,12 @@ class ModuleSeedTest extends UnitTestCase
 
         $command->shouldReceive('call')->once()->with('db:seed', $argOptions)
             ->andReturn(2);
-        $moduleBMock->shouldReceive('getName')->once()->andReturn('B');
+        $moduleBMock->shouldReceive('name')->once()->andReturn('B');
 
         $command->shouldReceive('error')->once()
             ->with('[Module B] There was a problem with running seeder moduleBClass');
 
-        $moduleDMock->shouldReceive('getSeederClass')->once()
+        $moduleDMock->shouldReceive('seederClass')->once()
             ->with('sampleClass')->andReturn('moduleDClass');
 
         $argOptions = $options;
@@ -125,7 +126,7 @@ class ModuleSeedTest extends UnitTestCase
 
         $command->shouldReceive('call')->once()->with('db:seed', $argOptions)
             ->andReturn(0);
-        $moduleDMock->shouldReceive('getName')->once()->andReturn('D');
+        $moduleDMock->shouldReceive('name')->once()->andReturn('D');
 
         $command->shouldReceive('info')->once()
             ->with('[Module D] Seeded: moduleDClass');

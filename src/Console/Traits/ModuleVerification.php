@@ -4,6 +4,7 @@ namespace Mnabialek\LaravelModular\Console\Traits;
 
 use Exception;
 use Illuminate\Support\Collection;
+use Mnabialek\LaravelModular\Models\Module;
 
 trait ModuleVerification
 {
@@ -56,6 +57,7 @@ trait ModuleVerification
         $modules = collect();
 
         $moduleNames->each(function ($name) use ($verifyActive, $modules) {
+            /** @var Module $module */
             $module = $this->laravel['modular']->find($name);
 
             if (!$module) {

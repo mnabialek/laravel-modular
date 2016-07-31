@@ -37,12 +37,12 @@ trait Replacer
         $replacements = collect();
 
         collect($definedReplacements)->merge([
-            'module' => $module->getName(),
-            'class' => $module->getName(),
-            'moduleNamespace' => $module->getName(),
+            'module' => $module->name(),
+            'class' => $module->name(),
+            'moduleNamespace' => $module->name(),
             'namespace' =>
                 rtrim($this->laravel['config']->modulesNamespace(), '\\'),
-            'plural|lower' => mb_strtolower(str_plural($module->getName())),
+            'plural|lower' => mb_strtolower(str_plural($module->name())),
         ])->each(function ($value, $key) use ($replacements) {
             $replacements->put($this->laravel['config']->startSeparator() .
                 $key . $this->laravel['config']->endSeparator(), $value);

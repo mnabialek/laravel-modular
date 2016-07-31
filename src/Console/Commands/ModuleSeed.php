@@ -42,17 +42,17 @@ class ModuleSeed extends BaseCommand
 
         $modules->each(function ($module) use ($options) {
             /** @var Module $module */
-            $class = $module->getSeederClass($this->option('class'));
+            $class = $module->seederClass($this->option('class'));
 
             $result = $this->call('db:seed',
                 array_merge($options, ['--class' => $class]));
 
             if ($result != 0) {
-                $this->error("[Module {$module->getName()}] There was a problem with running seeder {$class}");
+                $this->error("[Module {$module->name()}] There was a problem with running seeder {$class}");
 
                 return;
             }
-            $this->info("[Module {$module->getName()}] Seeded: {$class}");
+            $this->info("[Module {$module->name()}] Seeded: {$class}");
         });
     }
 }

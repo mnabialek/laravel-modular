@@ -142,7 +142,7 @@ class ModuleMakeMigrationTest extends UnitTestCase
             ->andReturn($tableName);
 
         $moduleAMock = m::mock(Module::class);
-        $moduleAMock->shouldReceive('getName')->once()->withNoArgs()
+        $moduleAMock->shouldReceive('name')->once()->withNoArgs()
             ->andReturn($moduleName);
         $moduleAMock->shouldReceive('foo')->andReturn('bar');
 
@@ -197,7 +197,7 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $migrationClass = studly_case($userMigrationName);
 
-        $moduleAMock->shouldReceive('getMigrationsPath')->once()->withNoArgs()
+        $moduleAMock->shouldReceive('migrationsPath')->once()->withNoArgs()
             ->andReturn($modulePath);
 
         $command->shouldReceive('copyStubFileIntoModule')->once()

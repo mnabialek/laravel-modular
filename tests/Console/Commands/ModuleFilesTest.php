@@ -50,7 +50,7 @@ class ModuleFilesTest extends UnitTestCase
 
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
-        $moduleA->shouldReceive('getName')->once()->andReturn('A');
+        $moduleA->shouldReceive('name')->once()->andReturn('A');
 
         $modular->shouldReceive('find')->once()->with($moduleName)
             ->andReturn($moduleA);
@@ -88,7 +88,7 @@ class ModuleFilesTest extends UnitTestCase
 
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
-        $moduleA->shouldReceive('getName')->times(2)->andReturn('A');
+        $moduleA->shouldReceive('name')->times(2)->andReturn('A');
 
         $modular->shouldReceive('find')->once()->with($moduleName)
             ->andReturn($moduleA);

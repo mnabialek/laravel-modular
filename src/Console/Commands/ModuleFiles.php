@@ -65,10 +65,10 @@ class ModuleFiles extends BaseCommand
         $status = $this->createModuleFiles($module, $stubGroup, $subModule);
 
         if ($status) {
-            $this->info("[Module {$module->getName()}] Submodule {$subModule} was created.");
-            $this->comment("You should register submodule routes (if any) into routes file for module {$module->getName()}");
+            $this->info("[Module {$module->name()}] Submodule {$subModule} was created.");
+            $this->comment("You should register submodule routes (if any) into routes file for module {$module->name()}");
         } else {
-            $this->warn("[Module {$module->getName()}] Submodule {$subModule} NOT created (all files already exist).");
+            $this->warn("[Module {$module->name()}] Submodule {$subModule} NOT created (all files already exist).");
         }
     }
 }

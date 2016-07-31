@@ -34,7 +34,7 @@ class ModuleMakeTest extends UnitTestCase
         $moduleAName = 'module A';
 
         $moduleA = m::mock(stdClass::class);
-        $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleAName);
+        $moduleA->shouldReceive('name')->times(2)->andReturn($moduleAName);
 
         $this->command->shouldReceive('createModuleObject')->with('A')->once()
             ->andReturn($moduleA);
@@ -61,8 +61,8 @@ class ModuleMakeTest extends UnitTestCase
         $moduleAName = 'module A';
 
         $moduleA = m::mock(stdClass::class);
-        $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleAName);
-        $moduleA->shouldReceive('getDirectory')->once()
+        $moduleA->shouldReceive('name')->times(2)->andReturn($moduleAName);
+        $moduleA->shouldReceive('directory')->once()
             ->andReturn('module A directory');
 
         $this->command->shouldReceive('createModuleObject')->with('A')->once()
@@ -95,7 +95,7 @@ class ModuleMakeTest extends UnitTestCase
         $moduleAName = 'module A name';
 
         $moduleA = m::mock(stdClass::class);
-        $moduleA->shouldReceive('getName')->times(2)->andReturn($moduleAName);
+        $moduleA->shouldReceive('name')->times(2)->andReturn($moduleAName);
 
         $this->command->shouldReceive('createModuleObject')->with('A')->once()
             ->andReturn($moduleA);
@@ -109,8 +109,8 @@ class ModuleMakeTest extends UnitTestCase
         $moduleB = m::mock(stdClass::class);
         $moduleBName = 'module B name';
 
-        $moduleB->shouldReceive('getName')->times(2)->andReturn($moduleBName);
-        $moduleB->shouldReceive('getDirectory')->once()
+        $moduleB->shouldReceive('name')->times(2)->andReturn($moduleBName);
+        $moduleB->shouldReceive('directory')->once()
             ->andReturn('module B directory');
 
         $this->command->shouldReceive('createModuleObject')->with('B')->once()
@@ -253,9 +253,9 @@ class ModuleMakeTest extends UnitTestCase
         $moduleAName = 'Module A name';
 
         $moduleA = m::mock(Module::class);
-        $moduleA->shouldReceive('getName')->times($getNameTimes)
+        $moduleA->shouldReceive('name')->times($getNameTimes)
             ->andReturn($moduleAName);
-        $moduleA->shouldReceive('getDirectory')->once()
+        $moduleA->shouldReceive('directory')->once()
             ->andReturn('module A directory');
 
         $this->command->shouldReceive('createModuleObject')->with('A')->once()
