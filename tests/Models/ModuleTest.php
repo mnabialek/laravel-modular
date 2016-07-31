@@ -35,7 +35,7 @@ class ModuleTest extends UnitTestCase
     public function it_returns_valid_module_name()
     {
         $this->createModuleMock();
-        $this->assertEquals($this->name, $this->module->name());
+        $this->assertSame($this->name, $this->module->name());
     }
 
     /** @test */
@@ -60,7 +60,7 @@ class ModuleTest extends UnitTestCase
                     return $arg instanceof Module && $arg->foo() == 'bar';
                 }))->andReturn('result');
 
-        $this->assertEquals('result', $this->module->seederClass());
+        $this->assertSame('result', $this->module->seederClass());
     }
 
     /** @test */
@@ -84,7 +84,7 @@ class ModuleTest extends UnitTestCase
                     return $arg instanceof Module && $arg->foo() == 'bar';
                 }))->andReturn('result');
 
-        $this->assertEquals('result',
+        $this->assertSame('result',
             $this->module->seederClass('SampleClass'));
     }
 
@@ -97,7 +97,7 @@ class ModuleTest extends UnitTestCase
         $this->config->shouldReceive('directory')->once()->withNoArgs()
             ->andReturn('modules/namespace//');
 
-        $this->assertEquals('modules/namespace' . DIRECTORY_SEPARATOR .
+        $this->assertSame('modules/namespace' . DIRECTORY_SEPARATOR .
             $this->name, $this->module->directory());
     }
 
@@ -111,7 +111,7 @@ class ModuleTest extends UnitTestCase
         $this->config->shouldReceive('migrationsPath')->once()->withNoArgs()
             ->andReturn('db/migrations/path//');
 
-        $this->assertEquals('modules/namespace' . DIRECTORY_SEPARATOR .
+        $this->assertSame('modules/namespace' . DIRECTORY_SEPARATOR .
             'db/migrations/path', $this->module->migrationsPath());
     }
 
@@ -138,7 +138,7 @@ class ModuleTest extends UnitTestCase
                 return $arg instanceof Module && $arg->foo() == 'bar';
             }))->andReturn('result');
 
-        $this->assertEquals('result', $this->module->serviceProviderClass());
+        $this->assertSame('result', $this->module->serviceProviderClass());
     }
 
     /** @test */

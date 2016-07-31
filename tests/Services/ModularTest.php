@@ -47,7 +47,7 @@ class ModularTest extends UnitTestCase
         $seed->shouldReceive('call')->once()->with('seederAClass');
         $seed->shouldReceive('call')->once()->with('seederBClass');
 
-        $this->assertEquals(null, $this->modular->seed($seed));
+        $this->assertSame(null, $this->modular->seed($seed));
     }
 
     /** @test */
@@ -105,7 +105,7 @@ class ModularTest extends UnitTestCase
         $file->shouldReceive('requireOnce')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleBRouteFile);
 
-        $this->assertEquals(null, $this->modular->loadRoutes($router));
+        $this->assertSame(null, $this->modular->loadRoutes($router));
     }
 
     /** @test */
@@ -135,7 +135,7 @@ class ModularTest extends UnitTestCase
 
         $file->shouldReceive('requireOnce')->once()->with($moduleBFactoryFile);
 
-        $this->assertEquals(null, $this->modular->loadFactories());
+        $this->assertSame(null, $this->modular->loadFactories());
     }
 
     /** @test */
@@ -162,7 +162,7 @@ class ModularTest extends UnitTestCase
         $this->app->shouldReceive('register')->once()
             ->with($moduleBServiceProvider);
 
-        $this->assertEquals(null, $this->modular->loadServiceProviders());
+        $this->assertSame(null, $this->modular->loadServiceProviders());
     }
 
     /** @test */

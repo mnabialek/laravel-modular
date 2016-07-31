@@ -46,7 +46,7 @@ class ReplacerTest extends UnitTestCase
         $this->config->shouldReceive('endSeparator')->times(5)
             ->andReturn('}');
 
-        $this->assertEquals($this->moduleName . ' ' . $this->moduleName . ' ' .
+        $this->assertSame($this->moduleName . ' ' . $this->moduleName . ' ' .
             $this->moduleName . ' ' . 'SampleModules' . ' ' . 'cars' . ' ' .
             '{foo} {bar}',
             $this->replacer->replace($this->string, $this->module, []));
@@ -62,7 +62,7 @@ class ReplacerTest extends UnitTestCase
         $this->config->shouldReceive('endSeparator')->times(7)
             ->andReturn('}');
 
-        $this->assertEquals($this->moduleName . ' ' . $this->moduleName . ' ' .
+        $this->assertSame($this->moduleName . ' ' . $this->moduleName . ' ' .
             $this->moduleName . ' ' . 'SampleModules' . ' ' . 'cars' . ' ' .
             'baz foo', $this->replacer->replace($this->string, $this->module,
             ['foo' => 'baz', 'bar' => 'foo']));

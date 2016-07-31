@@ -14,7 +14,7 @@ class ConfigTest extends UnitTestCase
     public function it_returns_valid_config_file_name()
     {
         $config = m::mock(Config::class)->makePartial();
-        $this->assertEquals('modular', $config->configName());
+        $this->assertSame('modular', $config->configName());
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class ConfigTest extends UnitTestCase
             ->andReturn('sample/path');
         $config = m::mock(Config::class, [$app])->makePartial();
 
-        $this->assertEquals('sample/path' . DIRECTORY_SEPARATOR . 'modular.php',
+        $this->assertSame('sample/path' . DIRECTORY_SEPARATOR . 'modular.php',
             $config->configPath());
     }
 
@@ -34,7 +34,7 @@ class ConfigTest extends UnitTestCase
     {
         $values = ['A', 'B', 'C'];
         $config = $this->arrange('modules', $values);
-        $this->assertEquals($values, $config->modules());
+        $this->assertSame($values, $config->modules());
     }
 
     /** @test */
@@ -42,7 +42,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'some/dir';
         $config = $this->arrange('directory', $value);
-        $this->assertEquals($value, $config->directory());
+        $this->assertSame($value, $config->directory());
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'Some\\Namespace\\';
         $config = $this->arrange('namespace', $value);
-        $this->assertEquals($value, $config->modulesNamespace());
+        $this->assertSame($value, $config->modulesNamespace());
     }
 
     /** @test */
@@ -58,7 +58,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'Some\\Namespace\\';
         $config = $this->arrange('module_seeding.namespace', $value);
-        $this->assertEquals($value, $config->seederNamespace());
+        $this->assertSame($value, $config->seederNamespace());
     }
 
     /** @test */
@@ -66,7 +66,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = '{class}A\B\C\\';
         $config = $this->arrange('module_seeding.file', $value);
-        $this->assertEquals($value, $config->seederFile());
+        $this->assertSame($value, $config->seederFile());
     }
 
     /** @test */
@@ -74,7 +74,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = '{|';
         $config = $this->arrange('separators.start', $value);
-        $this->assertEquals($value, $config->startSeparator());
+        $this->assertSame($value, $config->startSeparator());
     }
 
     /** @test */
@@ -82,7 +82,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = '|}';
         $config = $this->arrange('separators.end', $value);
-        $this->assertEquals($value, $config->endSeparator());
+        $this->assertSame($value, $config->endSeparator());
     }
 
     /** @test */
@@ -90,7 +90,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'popular';
         $config = $this->arrange('stubs.module_default_group', $value);
-        $this->assertEquals($value, $config->stubsDefaultGroup());
+        $this->assertSame($value, $config->stubsDefaultGroup());
     }
 
     /** @test */
@@ -98,7 +98,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'interesting';
         $config = $this->arrange('stubs.files_default_group', $value);
-        $this->assertEquals($value, $config->filesStubsDefaultGroup());
+        $this->assertSame($value, $config->filesStubsDefaultGroup());
     }
 
     /** @test */
@@ -106,7 +106,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'foo';
         $config = $this->arrange('module_migrations.default_type', $value);
-        $this->assertEquals($value, $config->migrationDefaultType());
+        $this->assertSame($value, $config->migrationDefaultType());
     }
 
     /** @test */
@@ -115,7 +115,7 @@ class ConfigTest extends UnitTestCase
         $value = 'bar';
         $type = 'foo';
         $config = $this->arrange('module_migrations.types.' . $type, $value);
-        $this->assertEquals($value, $config->migrationStubFileName($type));
+        $this->assertSame($value, $config->migrationStubFileName($type));
     }
 
     /** @test */
@@ -123,7 +123,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'foo/bar/path';
         $config = $this->arrange('stubs.path', $value);
-        $this->assertEquals($value, $config->stubsPath());
+        $this->assertSame($value, $config->stubsPath());
     }
 
     /** @test */
@@ -133,7 +133,7 @@ class ConfigTest extends UnitTestCase
         $group = 'foo';
         $config = $this->arrange("stubs_groups.{$group}.stub_directory", $value,
             $group);
-        $this->assertEquals($value, $config->stubGroupDirectory($group));
+        $this->assertSame($value, $config->stubGroupDirectory($group));
     }
 
     /** @test */
@@ -143,7 +143,7 @@ class ConfigTest extends UnitTestCase
         $group = 'foo';
         $config =
             $this->arrange("stubs_groups.{$group}.directories", $values, []);
-        $this->assertEquals($values, $config->stubGroupDirectories($group));
+        $this->assertSame($values, $config->stubGroupDirectories($group));
     }
 
     /** @test */
@@ -152,7 +152,7 @@ class ConfigTest extends UnitTestCase
         $values = ['A/1.php', 'B/2.php', 'C/3.php'];
         $group = 'foo';
         $config = $this->arrange("stubs_groups.{$group}.files", $values, []);
-        $this->assertEquals($values, $config->stubGroupFiles($group));
+        $this->assertSame($values, $config->stubGroupFiles($group));
     }
 
     /** @test */
@@ -160,7 +160,7 @@ class ConfigTest extends UnitTestCase
     {
         $values = ['foo' => 'bar', 'baz' => 'foo'];
         $config = $this->arrange('stubs_groups', $values, []);
-        $this->assertEquals(['foo', 'baz'], $config->stubGroups());
+        $this->assertSame(['foo', 'baz'], $config->stubGroups());
     }
 
     /** @test */
@@ -168,7 +168,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = true;
         $config = $this->arrange('module_make.auto_add', $value, false);
-        $this->assertEquals($value, $config->autoAdd());
+        $this->assertSame($value, $config->autoAdd());
     }
 
     /** @test */
@@ -176,7 +176,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'some/pattern';
         $config = $this->arrange('module_make.pattern', $value);
-        $this->assertEquals($value, $config->autoAddPattern());
+        $this->assertSame($value, $config->autoAddPattern());
     }
 
     /** @test */
@@ -184,7 +184,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'auto-add-template';
         $config = $this->arrange('module_make.module_template', $value);
-        $this->assertEquals($value, $config->autoAddTemplate());
+        $this->assertSame($value, $config->autoAddTemplate());
     }
 
     /** @test */
@@ -192,7 +192,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'sample/service-provider/file.php';
         $config = $this->arrange('module_service_providers.file', $value);
-        $this->assertEquals($value, $config->serviceProviderFile());
+        $this->assertSame($value, $config->serviceProviderFile());
     }
 
     /** @test */
@@ -200,7 +200,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'sample/migrations/path';
         $config = $this->arrange('module_migrations.path', $value);
-        $this->assertEquals($value, $config->migrationsPath());
+        $this->assertSame($value, $config->migrationsPath());
     }
 
     /** @test */
@@ -208,7 +208,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'ServiceProvider\\Namespace';
         $config = $this->arrange('module_service_providers.namespace', $value);
-        $this->assertEquals($value, $config->serviceProviderNamespace());
+        $this->assertSame($value, $config->serviceProviderNamespace());
     }
 
     /** @test */
@@ -217,7 +217,7 @@ class ConfigTest extends UnitTestCase
         $value = 'Routing\\Namespace';
         $config =
             $this->arrange('module_routing.route_group_namespace', $value);
-        $this->assertEquals($value, $config->routingControllerNamespace());
+        $this->assertSame($value, $config->routingControllerNamespace());
     }
 
     /** @test */
@@ -225,7 +225,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'routing/file.php';
         $config = $this->arrange('module_routing.file', $value);
-        $this->assertEquals($value, $config->routingFile());
+        $this->assertSame($value, $config->routingFile());
     }
 
     /** @test */
@@ -233,7 +233,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'factory/file.php';
         $config = $this->arrange('module_factories.file', $value);
-        $this->assertEquals($value, $config->factoryFile());
+        $this->assertSame($value, $config->factoryFile());
     }
 
     protected function arrange($configKey, $returnValue, $defaultConfigValue = null)

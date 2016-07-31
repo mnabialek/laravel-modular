@@ -84,7 +84,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->andReturn(true);
 
         $result = $creator->runVerifyStubGroup($stubGroup);
-        $this->assertEquals(null, $result);
+        $this->assertSame(null, $result);
     }
 
     /** @test */
@@ -128,7 +128,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->andReturn(true);
 
         $result = $creator->runVerifyConfigExistence();
-        $this->assertEquals(null, $result);
+        $this->assertSame(null, $result);
     }
 
     /** @test */
@@ -142,7 +142,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->andReturn('foo');
 
         $result = $creator->runGetStubGroup();
-        $this->assertEquals('foo', $result);
+        $this->assertSame('foo', $result);
     }
 
     /** @test */
@@ -162,7 +162,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->andReturn('bar');
 
         $result = $creator->runGetStubGroup();
-        $this->assertEquals('bar', $result);
+        $this->assertSame('bar', $result);
     }
 
     /** @test */
@@ -176,7 +176,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->andReturn('foo');
 
         $result = $creator->runGetFilesStubGroup();
-        $this->assertEquals('foo', $result);
+        $this->assertSame('foo', $result);
     }
 
     /** @test */
@@ -196,7 +196,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->andReturn('bar');
 
         $result = $creator->runGetFilesStubGroup();
-        $this->assertEquals('bar', $result);
+        $this->assertSame('bar', $result);
     }
 
     /** @test */
@@ -222,7 +222,7 @@ class ModuleCreatorTest extends UnitTestCase
             ->with("[Module {$moduleName}] No explicit directories created");
 
         $result = $creator->runCreateModuleDirectories($moduleA, $stubGroup);
-        $this->assertEquals(null, $result);
+        $this->assertSame(null, $result);
     }
 
     /** @test */
@@ -257,7 +257,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $result = $creator->runCreateModuleDirectories($moduleA, $stubGroup);
 
-        $this->assertEquals(null, $result);
+        $this->assertSame(null, $result);
     }
 
     /** @test */
@@ -308,7 +308,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $result = $creator->runCreateModuleFiles($moduleA, $stubGroup, null);
 
-        $this->assertEquals(true, $result);
+        $this->assertSame(true, $result);
     }
 
     /** @test */
@@ -351,7 +351,7 @@ class ModuleCreatorTest extends UnitTestCase
         $result =
             $creator->runCreateModuleFiles($moduleA, $stubGroup, $submodule);
 
-        $this->assertEquals(true, $result);
+        $this->assertSame(true, $result);
     }
 
     /** @test */
@@ -771,6 +771,6 @@ class ModuleCreatorTest extends UnitTestCase
         $result =
             $creator->runCreateModuleFiles($moduleA, $stubGroup, $subModule);
 
-        $this->assertEquals(false, $result);
+        $this->assertSame(false, $result);
     }
 }

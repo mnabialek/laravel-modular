@@ -22,7 +22,7 @@ class ModularServiceProviderTest extends UnitTestCase
         $modularProvider = m::mock(ModularServiceProvider::class)->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->assertEquals(['modular', 'modular.config'],
+        $this->assertSame(['modular', 'modular.config'],
             $modularProvider->provides());
     }
 
