@@ -38,8 +38,11 @@ class Module
      * @param Application $application
      * @param array $options
      */
-    public function __construct($name, Application $application, array $options = [])
-    {
+    public function __construct(
+        $name,
+        Application $application,
+        array $options = []
+    ) {
         $this->name = $name;
         $this->options = collect($options);
         $this->laravel = $application;
@@ -65,12 +68,37 @@ class Module
      */
     public function seederClass($class = null)
     {
-        $name = $this->name();
+        return $this->fileClass('seeder', $class);
+    }
 
-        $class = $class ?: basename($this->config->seederFilename(), '.php');
+    /**
+     * Get module service provider class
+     *
+     * @return string
+     */
+    public function serviceProviderClass()
+    {
+        return $this->fileClass('serviceProvider');
+    }
 
-        return $this->replace($this->config->modulesNamespace() . '\\' . $name .
-            '\\' . $this->config->seederNamespace() . '\\' . $class, $this);
+    /**
+     * Get file class
+     *
+     * @param string $type
+     * @param string|null $class
+     *
+     * @return string
+     */
+    protected function fileClass($type, $class = null)
+    {
+        $filename = $type . 'Filename';
+        $namespace = $type . 'Namespace';
+
+        $class = $class ?: basename($this->config->$filename(), '.php');
+
+        return $this->replace($this->config->modulesNamespace() . '\\' .
+            $this->name() . '\\' . $this->config->$namespace() . '\\' .
+            $class, $this);
     }
 
     /**
@@ -91,22 +119,8 @@ class Module
      */
     public function migrationsPath()
     {
-        return $this->normalizePath($this->directory()) . DIRECTORY_SEPARATOR .
+        return $this->directory() . DIRECTORY_SEPARATOR .
         $this->normalizePath($this->config->migrationsPath());
-    }
-
-    /**
-     * Get module service provider class
-     *
-     * @return string
-     */
-    public function serviceProviderClass()
-    {
-        $class = basename($this->config->serviceProviderFilename(), '.php');
-
-        return $this->replace($this->config->modulesNamespace() . '\\' .
-            $this->name() . '\\' . $this->config->serviceProviderNamespace() .
-            '\\' . $class, $this);
     }
 
     /**
@@ -116,7 +130,7 @@ class Module
      */
     public function hasProvider()
     {
-        return $this->hasFile('provider', 'serviceProviderClass');
+        return $this->hasFile('provider', 'serviceProviderFilePath');
     }
 
     /**
@@ -126,7 +140,7 @@ class Module
      */
     public function hasFactory()
     {
-        return $this->hasFile('factory', 'factoryClass');
+        return $this->hasFile('factory', 'factoryFilePath');
     }
 
     /**
@@ -155,15 +169,14 @@ class Module
     }
 
     /**
-     * Get controller namespace
+     * Get controller namespace for routing
      *
      * @return string
      */
-    public function routeControllerNamespace()
+    public function routingControllerNamespace()
     {
-        return $this->modules->config('namespace', '') . '\\' .
-        $this->getName() . '\\' .
-        $this->modules->config('module_routing.route_group_namespace', '');
+        return $this->config->modulesNamespace() . '\\' . $this->name() . '\\' .
+        $this->config->routingControllerNamespace();
     }
 
     /**
@@ -173,8 +186,7 @@ class Module
      */
     public function routesFilePath()
     {
-        return $this->getDirectory() .
-        DIRECTORY_SEPARATOR . $this->modules->config('module_routing.file');
+        return $this->getPath('routingFile');
     }
 
     /**
@@ -184,64 +196,39 @@ class Module
      */
     public function factoryFilePath()
     {
-        return $this->getDirectory() . DIRECTORY_SEPARATOR .
-        $this->replace($this->modules->config('module_factories.file'),
-            $this->getName());
+        return $this->getPath('factoryFile');
     }
 
     /**
-     * Get module service provider file (with path)
+     * Get module service provider file path
      *
      * @return string
      */
     public function serviceProviderFilePath()
     {
-        return $this->getDirectory() . DIRECTORY_SEPARATOR .
-        $this->normalizePath($this->modules->config('module_service_providers.path')) .
-        DIRECTORY_SEPARATOR .
-        $this->replace($this->modules->config('module_service_providers.filename'),
-            $this->getName());
+        return $this->getPath('serviceProviderFile');
     }
 
     /**
-     * Get seeder filename (with path) for module
+     * Get path
      *
-     * @param string $module
-     *
-     * @return string
-     */
-    protected function seederFile($module)
-    {
-        return $this->getSeederDirectory($module) . DIRECTORY_SEPARATOR .
-        $this->replace($this->config('module_seeding.filename'), $module);
-    }
-
-    /**
-     * Get full seeder directory for given module
-     *
-     * @param string $module
+     * @param string $configMethod
      *
      * @return string
      */
-    protected function getSeederDirectory($module)
+    protected function getPath($configMethod)
     {
-        return $this->getDirectory() . DIRECTORY_SEPARATOR .
-        $this->config('module_seeding.path');
+        return $this->directory() . DIRECTORY_SEPARATOR .
+        $this->replace($this->config->$configMethod(), $this);
     }
 
     /**
      * Verifies whether given module is active
      *
-     * @param string $module
-     * @param null $options
-     *
      * @return bool
      */
-    public function isActive($options = null)
+    public function active()
     {
-        if (is_array($options)) {
-            return array_key_exists('active', $options) ?
-                (bool)$options['active'] : true;
-        }
+        return $this->options->get('active', true);
     }
 }
