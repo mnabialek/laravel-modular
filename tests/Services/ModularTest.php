@@ -241,9 +241,12 @@ class ModularTest extends UnitTestCase
         $this->config->shouldReceive('modules')->once()->withNoArgs()
             ->andReturn($modulesConfig);
 
-        $moduleA = new Module('A', $this->config, $modulesConfig['A']);
-        $moduleB = new Module('b', $this->config, $modulesConfig['b']);
-        $moduleC = new Module('C', $this->config, $modulesConfig['C']);
+        $this->app->shouldReceive('offsetGet')->with('modular.config')
+            ->andReturn($this->config);
+
+        $moduleA = new Module('A', $this->app, $modulesConfig['A']);
+        $moduleB = new Module('b', $this->app, $modulesConfig['b']);
+        $moduleC = new Module('C', $this->app, $modulesConfig['C']);
 
         $this->assertEquals(collect([$moduleA, $moduleB, $moduleC]),
             $this->modular->all());

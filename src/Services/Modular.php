@@ -193,7 +193,7 @@ class Modular
         $this->modules = collect();
 
         collect($this->config->modules())->each(function ($options, $name) {
-            $this->modules->push(new Module($name, $this->config, $options));
+            $this->modules->push(new Module($name, $this->app, $options));
         });
     }
 

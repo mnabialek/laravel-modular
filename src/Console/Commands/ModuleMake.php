@@ -64,7 +64,7 @@ class ModuleMake extends BaseCommand
      */
     protected function createModuleObject($moduleName)
     {
-        return new Module($moduleName, $this->laravel['modular.config']);
+        return new Module($moduleName, $this->laravel);
     }
 
     /**
