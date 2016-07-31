@@ -33,20 +33,20 @@ class Config
      *
      * @return string
      */
-    public function getConfigName()
+    public function configName()
     {
         return $this->configName;
     }
 
     /**
-     * Get user configuration file path
+     * Get full path where configuration file should be placed
      *
      * @return string
      */
-    public function getConfigFilePath()
+    public function configPath()
     {
         return $this->app['config.path'] . DIRECTORY_SEPARATOR .
-        "{$this->getConfigName()}.php";
+        "{$this->configName()}.php";
     }
 
     /**
@@ -59,7 +59,7 @@ class Config
      */
     protected function get($key = null, $default = null)
     {
-        return $this->app['config']->get("{$this->getConfigName()}.{$key}",
+        return $this->app['config']->get("{$this->configName()}.{$key}",
             $default);
     }
 
