@@ -128,7 +128,7 @@ class Module
      *
      * @return bool
      */
-    public function hasProvider()
+    public function hasServiceProvider()
     {
         return $this->hasFile('provider', 'serviceProviderFilePath');
     }

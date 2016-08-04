@@ -152,10 +152,10 @@ class ModularServiceProviderTest extends UnitTestCase
         // load migrations path
         $modules = [];
         $modules[] = m::mock(Module::class);
-        $modules[0]->shouldReceive('getMigrationsPath')->once()
+        $modules[0]->shouldReceive('migrationsPath')->once()
             ->andReturn('sample/module1/path');
         $modules[] = m::mock(Module::class);
-        $modules[1]->shouldReceive('getMigrationsPath')->once()
+        $modules[1]->shouldReceive('migrationsPath')->once()
             ->andReturn('sample/module2/path');
 
         $modularProvider->shouldReceive('setModulesMigrationPaths')->once()

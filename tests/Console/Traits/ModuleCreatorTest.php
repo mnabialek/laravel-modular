@@ -98,7 +98,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $app->shouldReceive('offsetGet')->times(1)->with('modular.config')
             ->andReturn($modularConfig);
-        $modularConfig->shouldReceive('configFilePath')->once()
+        $modularConfig->shouldReceive('configPath')->once()
             ->andReturn('foo');
 
         $creator->shouldReceive('exists')->once()->with('foo')
@@ -121,7 +121,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $app->shouldReceive('offsetGet')->times(1)->with('modular.config')
             ->andReturn($modularConfig);
-        $modularConfig->shouldReceive('configFilePath')->once()
+        $modularConfig->shouldReceive('configPath')->once()
             ->andReturn('foo');
 
         $creator->shouldReceive('exists')->once()->with('foo')
@@ -368,6 +368,7 @@ class ModuleCreatorTest extends UnitTestCase
         $fullStubPath = $stubPath . DIRECTORY_SEPARATOR . $stubFile;
 
         $moduleA = m::mock(Module::class);
+        $moduleA->shouldReceive('foo')->andReturn('bar');
 
         $creator->shouldReceive('getStubGroupDirectory')->once()
             ->with($stubGroup)->andReturn($stubPath);
@@ -400,6 +401,10 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleA->shouldReceive('foo')->andReturn('bar');
         $moduleA->shouldReceive('name')->once()->withNoArgs()
             ->andReturn($moduleName);
+        
+        $moduleArg =  m::on(function ($arg) {
+            return $arg instanceof Module && $arg->foo() == 'bar';
+        });
 
         $creator->shouldReceive('getStubGroupDirectory')->once()
             ->with($stubGroup)->andReturn($stubPath);
@@ -412,7 +417,7 @@ class ModuleCreatorTest extends UnitTestCase
             }), $replacements)->andReturn($finalModuleFile);
 
         $creator->shouldReceive('exists')->once()
-            ->with($finalModuleFile)->andReturn(true);
+            ->with($finalModuleFile, $moduleArg)->andReturn(true);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("[Module {$moduleName}] File {$finalModuleFile} already exists");
@@ -438,21 +443,21 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
 
+        $moduleArgument = m::on(function ($arg) {
+            return $arg instanceof Module && $arg->foo() == 'bar';
+        });
+
         $creator->shouldReceive('getStubGroupDirectory')->once()
             ->with($stubGroup)->andReturn($stubPath);
         $creator->shouldReceive('exists')->once()
             ->with($fullStubPath)->andReturn(true);
-
-        $moduleArgument = m::on(function ($arg) {
-            return $arg instanceof Module && $arg->foo() == 'bar';
-        });
 
         $creator->shouldReceive('replace')->once()
             ->with($moduleFile, $moduleArgument, $replacements)
             ->andReturn($finalModuleFile);
 
         $creator->shouldReceive('exists')->once()
-            ->with($finalModuleFile)->andReturn(false);
+            ->with($finalModuleFile, $moduleArgument)->andReturn(false);
 
         $creator->shouldReceive('createMissingDirectory')->once()
             ->with($moduleArgument, $finalModuleFile);
@@ -474,9 +479,14 @@ class ModuleCreatorTest extends UnitTestCase
         $file = 'foo/bar/baz.txt';
 
         $moduleA = m::mock(Module::class);
+        $moduleA->shouldReceive('foo')->andReturn('bar');
+
+        $moduleArgument = m::on(function ($arg) {
+            return $arg instanceof Module && $arg->foo() == 'bar';
+        });
 
         $creator->shouldReceive('exists')->once()
-            ->with('foo/bar')->andReturn(true);
+            ->with('foo/bar', $moduleArgument)->andReturn(true);
 
         $creator->shouldNotReceive('createDirectory');
         $creator->runCreateMissingDirectory($moduleA, $file);
@@ -493,13 +503,15 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('foo')->andReturn('bar');
 
+        $moduleArgument = m::on(function ($arg) {
+            return $arg instanceof Module && $arg->foo() == 'bar';
+        });
+
         $creator->shouldReceive('exists')->once()
-            ->with('foo/bar')->andReturn(false);
+            ->with('foo/bar', $moduleArgument)->andReturn(false);
 
         $creator->shouldReceive('createDirectory')->once()
-            ->with(m::on(function ($arg) {
-                return $arg instanceof Module and $arg->foo() == 'bar';
-            }), 'foo/bar');
+            ->with($moduleArgument, 'foo/bar');
         $creator->runCreateMissingDirectory($moduleA, $file);
     }
 
@@ -681,8 +693,12 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
         $moduleA->shouldReceive('directory')->once()
             ->andReturn('module/dir');
+        $moduleA->shouldReceive('foo')->andReturn('bar');
 
-        $creator->shouldReceive('exists')->once()->with($path)
+        $creator->shouldReceive('exists')->once()
+            ->with($path, m::on(function ($arg) {
+                return $arg instanceof Module && $arg->foo() == 'bar';
+            }))
             ->andReturn(false);
 
         $app->shouldReceive('offsetGet')->once()->with('files')
@@ -695,7 +711,7 @@ class ModuleCreatorTest extends UnitTestCase
 
         $result = $creator->runCreateDirectory($moduleA, $path);
 
-        $this->assertSame(null, $result);
+        $this->assertSame(true, $result);
     }
 
     /** @test */
@@ -713,8 +729,12 @@ class ModuleCreatorTest extends UnitTestCase
         $moduleA = m::mock(Module::class);
         $moduleA->shouldReceive('name')->once()->andReturn($moduleName);
         $moduleA->shouldReceive('directory')->once()->andReturn('module/dir');
+        $moduleA->shouldReceive('foo')->andReturn('bar');
 
-        $creator->shouldReceive('exists')->once()->with($path)
+        $creator->shouldReceive('exists')->once()
+            ->with($path, m::on(function ($arg) {
+                return $arg instanceof Module && $arg->foo() == 'bar';
+            }))
             ->andReturn(false);
 
         $app->shouldReceive('offsetGet')->once()->with('files')
@@ -738,13 +758,17 @@ class ModuleCreatorTest extends UnitTestCase
         $path = 'sample-path';
 
         $moduleA = m::mock(Module::class);
+        $moduleA->shouldReceive('foo')->andReturn('bar');
 
-        $creator->shouldReceive('exists')->once()->with($path)
+        $creator->shouldReceive('exists')->once()
+            ->with($path, m::on(function ($arg) {
+                return $arg instanceof Module && $arg->foo() == 'bar';
+            }))
             ->andReturn(true);
 
         $result = $creator->runCreateDirectory($moduleA, $path);
 
-        $this->assertSame(null, $result);
+        $this->assertSame(false, $result);
     }
 
     protected function verifyWarningDisplayedForModule($subModule)

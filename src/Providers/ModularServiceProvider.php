@@ -8,6 +8,7 @@ use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
 use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
+use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\Services\Modular;
 
@@ -186,7 +187,8 @@ class ModularServiceProvider extends ServiceProvider
         // add to paths all migration directories from modules
         collect($this->app['modular']->active())
             ->each(function ($module) use ($paths) {
-                $paths->push($module->getMigrationsPath());
+                /* @var Module $module */
+                $paths->push($module->migrationsPath());
             });
 
         $this->loadMigrationsFrom($paths->all());

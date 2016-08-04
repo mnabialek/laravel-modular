@@ -145,14 +145,14 @@ class ModuleTest extends UnitTestCase
     public function it_returns_true_when_checking_provider_when_true_in_config()
     {
         $this->createModuleMock(['provider' => true]);
-        $this->assertSame(true, $this->module->hasProvider());
+        $this->assertSame(true, $this->module->hasServiceProvider());
     }
 
     /** @test */
     public function it_returns_false_when_checking_provider_when_false_in_config()
     {
         $this->createModuleMock(['provider' => false]);
-        $this->assertSame(false, $this->module->hasProvider());
+        $this->assertSame(false, $this->module->hasServiceProvider());
     }
 
     /** @test */
@@ -168,7 +168,7 @@ class ModuleTest extends UnitTestCase
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
 
-        $this->assertSame(true, $this->module->hasProvider());
+        $this->assertSame(true, $this->module->hasServiceProvider());
     }
 
     /** @test */
@@ -184,7 +184,7 @@ class ModuleTest extends UnitTestCase
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
 
-        $this->assertSame(false, $this->module->hasProvider());
+        $this->assertSame(false, $this->module->hasServiceProvider());
     }
 
     /** @test */

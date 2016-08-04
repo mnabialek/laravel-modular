@@ -53,7 +53,7 @@ trait ModuleCreator
      */
     protected function verifyConfigExistence()
     {
-        if (!$this->exists($this->laravel['modular.config']->configFilePath())) {
+        if (!$this->exists($this->laravel['modular.config']->configPath())) {
             throw new Exception('Config file does not exists. Please run php artisan vendor:publish (see docs for details)');
         }
     }
@@ -62,11 +62,16 @@ trait ModuleCreator
      * Verify whether given file or directory exists
      *
      * @param string $path
+     * @param Module $module
      *
      * @return bool
      */
-    protected function exists($path)
+    protected function exists($path, Module $module = null)
     {
+        if ($module !== null) {
+            $path = $module->directory() . DIRECTORY_SEPARATOR . $path;
+        }
+
         return $this->laravel['files']->exists($path);
     }
 
@@ -111,11 +116,12 @@ trait ModuleCreator
      * @param Module $module
      * @param string $directory
      *
+     * @return bool
      * @throws Exception
      */
     protected function createDirectory(Module $module, $directory)
     {
-        if (!$this->exists($directory)) {
+        if (!$this->exists($directory, $module)) {
             $result =
                 $this->laravel['files']->makeDirectory($module->directory() .
                     DIRECTORY_SEPARATOR . $directory, 0755, true);
@@ -124,7 +130,11 @@ trait ModuleCreator
             } else {
                 throw new Exception("[Module {$module->name()}] Cannot create directory {$directory}");
             }
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -186,7 +196,7 @@ trait ModuleCreator
         }
         $moduleFile = $this->replace($moduleFile, $module, $replacements);
 
-        if ($this->exists($moduleFile)) {
+        if ($this->exists($moduleFile, $module)) {
             throw new Exception("[Module {$module->name()}] File {$moduleFile} already exists");
         }
 
@@ -202,7 +212,7 @@ trait ModuleCreator
      */
     protected function createMissingDirectory(Module $module, $file)
     {
-        if (!$this->exists($dir = dirname($file))) {
+        if (!$this->exists(($dir = dirname($file)), $module)) {
             $this->createDirectory($module, $dir);
         }
     }
@@ -229,7 +239,7 @@ trait ModuleCreator
                 $replacements)
         );
 
-        if (!$result) {
+        if ($result === false) {
             throw new Exception("[Module {$module->name()}] Cannot create file {$destinationFile}");
         }
 
