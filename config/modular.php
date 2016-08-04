@@ -18,7 +18,7 @@ return [
         /**
          * Path where all stubs groups are located
          */
-        'path' => base_path('resources/stubs/simple-modules'),
+        'path' => base_path('resources/stubs/modular'),
 
         /**
          * Default stub groups used for module and files - they must match
