@@ -92,7 +92,7 @@ class ModuleMake extends BaseCommand
      */
     protected function addModuleToConfigurationFile(Module $module)
     {
-        $configFile = $this->laravel['modular.config']->getConfigFilePath();
+        $configFile = $this->laravel['modular.config']->configPath();
 
         if (!$this->laravel['modular.config']->autoAdd()) {
             $this->info("[Module {$module->name()}] - auto-adding to config file turned off\n" .

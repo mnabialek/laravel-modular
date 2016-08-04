@@ -146,7 +146,7 @@ class ModuleMakeTest extends UnitTestCase
             ->andReturn($config);
 
         $configFile = 'config name';
-        $config->shouldReceive('getConfigFilePath')->once()->withNoArgs()
+        $config->shouldReceive('configPath')->once()->withNoArgs()
             ->andReturn($configFile);
         $config->shouldReceive('autoAdd')->once()->andReturn(false);
 
@@ -173,7 +173,7 @@ class ModuleMakeTest extends UnitTestCase
             ->andReturn($config);
 
         $configFile = 'config name';
-        $config->shouldReceive('getConfigFilePath')->once()->withNoArgs()
+        $config->shouldReceive('configPath')->once()->withNoArgs()
             ->andReturn($configFile);
         $config->shouldReceive('autoAdd')->once()->andReturn(true);
 
@@ -217,7 +217,7 @@ class ModuleMakeTest extends UnitTestCase
             ->andReturn($config);
 
         $configFile = 'config name';
-        $config->shouldReceive('getConfigFilePath')->once()->withNoArgs()
+        $config->shouldReceive('configPath')->once()->withNoArgs()
             ->andReturn($configFile);
         $config->shouldReceive('autoAdd')->once()->andReturn(true);
 
