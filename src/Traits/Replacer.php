@@ -59,6 +59,6 @@ trait Replacer
      */
     private function configClass()
     {
-        return $this->laravel['config'];
+        return $this->laravel['modular.config'];
     }
 }

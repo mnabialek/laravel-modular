@@ -39,7 +39,7 @@ class ReplacerTest extends UnitTestCase
     /** @test */
     public function it_returns_valid_string_without_user_replacements()
     {
-        $this->app->shouldReceive('offsetGet')->with('config')->times(11)
+        $this->app->shouldReceive('offsetGet')->with('modular.config')->times(11)
             ->andReturn($this->config);
         $this->config->shouldReceive('startSeparator')->times(5)
             ->andReturn('{');
@@ -55,7 +55,7 @@ class ReplacerTest extends UnitTestCase
     /** @test */
     public function it_returns_valid_string_with_user_replacements()
     {
-        $this->app->shouldReceive('offsetGet')->with('config')->times(15)
+        $this->app->shouldReceive('offsetGet')->with('modular.config')->times(15)
             ->andReturn($this->config);
         $this->config->shouldReceive('startSeparator')->times(7)
             ->andReturn('{');
