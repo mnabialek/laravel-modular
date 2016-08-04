@@ -119,8 +119,8 @@ class ModularServiceProviderTest extends UnitTestCase
             'ServiceProvider.php.stub',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
             '.gitkeep.stub',
-            $publishedAppPath . 'Core/' . 'AbstractRepository.php',
-            $publishedAppPath . 'Core/' . 'Service.php',
+            $publishedAppPath . DIRECTORY_SEPARATOR . 'Core/' . 'AbstractRepository.php',
+            $publishedAppPath . DIRECTORY_SEPARATOR . 'Core/' . 'Service.php',
 
         ];
 

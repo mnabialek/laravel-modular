@@ -138,7 +138,8 @@ class ModularServiceProvider extends ServiceProvider
         $appPath = $this->getAppSamplePath();
         collect(glob($appPath . '/*/*'))->each(function ($file) use ($appPath) {
             $this->filesToPublish->put($file,
-                $this->app['path'] . mb_substr($file, mb_strlen($appPath) + 1));
+                $this->app['path'] . DIRECTORY_SEPARATOR .
+                mb_substr($file, mb_strlen($appPath) + 1));
 
         });
 
