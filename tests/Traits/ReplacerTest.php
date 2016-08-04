@@ -67,4 +67,20 @@ class ReplacerTest extends UnitTestCase
             'baz foo', $this->replacer->replace($this->string, $this->module,
             ['foo' => 'baz', 'bar' => 'foo']));
     }
+
+    /** @test */
+    public function it_returns_valid_string_with_user_replacements_overriding_defaults()
+    {
+        $this->app->shouldReceive('offsetGet')->with('modular.config')->times(11)
+            ->andReturn($this->config);
+        $this->config->shouldReceive('startSeparator')->times(5)
+            ->andReturn('{');
+        $this->config->shouldReceive('endSeparator')->times(5)
+            ->andReturn('}');
+
+        $this->assertSame($this->moduleName . ' ' . 'foo' . ' ' .
+            $this->moduleName . ' ' . 'SampleModules' . ' ' . 'cars' . ' ' .
+            '{foo} {bar}', $this->replacer->replace($this->string, $this->module,
+            ['class' => 'foo']));
+    }
 }

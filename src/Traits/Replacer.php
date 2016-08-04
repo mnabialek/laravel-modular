@@ -37,17 +37,18 @@ trait Replacer
     {
         $replacements = collect();
 
-        collect($definedReplacements)->merge([
+        collect([
             'module' => $module->name(),
             'class' => $module->name(),
             'moduleNamespace' => $module->name(),
             'namespace' =>
                 rtrim($this->configClass()->modulesNamespace(), '\\'),
             'plural|lower' => mb_strtolower(str_plural($module->name())),
-        ])->each(function ($value, $key) use ($replacements) {
-            $replacements->put($this->configClass()->startSeparator() .
-                $key . $this->configClass()->endSeparator(), $value);
-        });
+        ])->merge($definedReplacements)
+            ->each(function ($value, $key) use ($replacements) {
+                $replacements->put($this->configClass()->startSeparator() .
+                    $key . $this->configClass()->endSeparator(), $value);
+            });
 
         return $replacements;
     }
