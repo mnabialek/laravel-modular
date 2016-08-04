@@ -45,7 +45,7 @@ class Config
      */
     public function configPath()
     {
-        return $this->app['config.path'] . DIRECTORY_SEPARATOR .
+        return $this->app['path.config'] . DIRECTORY_SEPARATOR .
         "{$this->configName()}.php";
     }
 

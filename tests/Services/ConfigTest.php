@@ -21,7 +21,7 @@ class ConfigTest extends UnitTestCase
     public function it_returns_valid_config_file_path()
     {
         $app = m::mock(Application::class);
-        $app->shouldReceive('offsetGet')->once()->with('config.path')
+        $app->shouldReceive('offsetGet')->once()->with('path.config')
             ->andReturn('sample/path');
         $config = m::mock(Config::class, [$app])->makePartial();
 
