@@ -164,7 +164,7 @@ class ModuleTest extends UnitTestCase
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
         $this->module->shouldReceive('serviceProviderFilePath')->once()
-            ->withNoArgs()
+            ->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
 
@@ -180,7 +180,7 @@ class ModuleTest extends UnitTestCase
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
         $this->module->shouldReceive('serviceProviderFilePath')->once()
-            ->withNoArgs()
+            ->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
 
@@ -209,7 +209,7 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
-        $this->module->shouldReceive('factoryFilePath')->once()->withNoArgs()
+        $this->module->shouldReceive('factoryFilePath')->once()->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
 
@@ -224,7 +224,7 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
-        $this->module->shouldReceive('factoryFilePath')->once()->withNoArgs()
+        $this->module->shouldReceive('factoryFilePath')->once()->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
 
@@ -253,7 +253,7 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
-        $this->module->shouldReceive('routesPath')->once()->withNoArgs()
+        $this->module->shouldReceive('routesFilePath')->once()->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
 
@@ -268,7 +268,7 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
-        $this->module->shouldReceive('routesPath')->once()->withNoArgs()
+        $this->module->shouldReceive('routesFilePath')->once()->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
 
@@ -297,7 +297,7 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
-        $this->module->shouldReceive('seederFilePath')->once()->withNoArgs()
+        $this->module->shouldReceive('seederFilePath')->once()->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
 
@@ -312,7 +312,7 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
-        $this->module->shouldReceive('seederFilePath')->once()->withNoArgs()
+        $this->module->shouldReceive('seederFilePath')->once()->with([])
             ->andReturn('foo');
         $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
 
@@ -365,10 +365,15 @@ class ModuleTest extends UnitTestCase
     {
         $this->createModuleMock([]);
 
-        $this->module->shouldReceive('getPath')->once()->with($configMethod)
-            ->passthru();
+        if ($executionMethod == 'routesFilePath') {
+            $this->module->shouldReceive('getPath')->once()->with($configMethod, [])
+                ->passthru();
+        } else {
+            $this->module->shouldReceive('getPath')->once()->with($configMethod)
+                ->passthru();
+        }
 
-        $this->config->shouldReceive($configMethod)->once()->withNoArgs()
+        $this->config->shouldReceive($configMethod)->once()->with([])
             ->andReturn('routing/file.php');
 
         $this->module->shouldReceive('directory')->once()->withNoArgs()

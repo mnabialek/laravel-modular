@@ -81,6 +81,8 @@ class ModularServiceProviderTest extends UnitTestCase
             $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'Repository.php.stub',
             $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'Request.php.stub',
             $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'routes.php.stub',
+            $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'routes_web.php.stub',
+            $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'routes_api.php.stub',
             $stubsTemplatesPath . DIRECTORY_SEPARATOR . 'Service.php.stub',
             $stubsTemplatesPath . DIRECTORY_SEPARATOR .
             'ServiceProvider.php.stub',
@@ -113,6 +115,10 @@ class ModularServiceProviderTest extends UnitTestCase
             'Request.php.stub',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
             'routes.php.stub',
+            $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
+            'routes_web.php.stub',
+            $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
+            'routes_api.php.stub',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
             'Service.php.stub',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .

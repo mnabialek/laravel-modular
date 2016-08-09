@@ -1,5 +1,5 @@
 <?php
 
-Route::group([], function () {
+Route::group(['middleware' => ['web']], function () {
     Route::resource('{plural|lower}', '{class}Controller');
 });

@@ -146,11 +146,13 @@ class Module
     /**
      * Verifies whether module has routes file
      *
+     * @param array $data
+     *
      * @return bool
      */
-    public function hasRoutes()
+    public function hasRoutes(array $data = [])
     {
-        return $this->hasFile('routes', 'routesPath');
+        return $this->hasFile('routes', 'routesFilePath', $data);
     }
     
     /**
@@ -169,13 +171,14 @@ class Module
      *
      * @param string $option
      * @param string $pathFunction
+     * @param array $data
      *
      * @return bool
      */
-    protected function hasFile($option, $pathFunction)
+    protected function hasFile($option, $pathFunction, array $data = [])
     {
         return (bool)($this->options->has($option) ? $this->options->get($option) :
-            $this->laravel['files']->exists($this->$pathFunction()));
+            $this->laravel['files']->exists($this->$pathFunction($data)));
     }
 
     /**
@@ -192,11 +195,13 @@ class Module
     /**
      * Get module routes file (with path)
      *
+     * @param array $data
+     *
      * @return string
      */
-    public function routesFilePath()
+    public function routesFilePath(array $data = [])
     {
-        return $this->getPath('routingFile');
+        return $this->getPath('routingFile', $data);
     }
 
     /**
@@ -233,13 +238,14 @@ class Module
      * Get path
      *
      * @param string $configMethod
+     * @param array $data
      *
      * @return string
      */
-    protected function getPath($configMethod)
+    protected function getPath($configMethod, array $data = [])
     {
         return $this->directory() . DIRECTORY_SEPARATOR .
-        $this->replace($this->config->$configMethod(), $this);
+        $this->replace($this->config->$configMethod($data), $this);
     }
 
     /**

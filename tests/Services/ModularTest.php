@@ -51,7 +51,18 @@ class ModularTest extends UnitTestCase
     }
 
     /** @test */
-    public function it_loads_valid_routes()
+    public function it_loads_valid_routes_when_no_type_given()
+    {
+        $this->verifyCorrectLoadingRoutesForType(null);
+    }
+
+    /** @test */
+    public function it_loads_valid_routes_whenweb_type_given()
+    {
+        $this->verifyCorrectLoadingRoutesForType('web');
+    }
+
+    protected function verifyCorrectLoadingRoutesForType($type)
     {
         $basePath = 'base/path';
         $moduleARouteFile = 'moduleA/routes.php';
@@ -80,7 +91,8 @@ class ModularTest extends UnitTestCase
         );
 
         $this->app->shouldReceive('basePath')->times(2)->andReturn($basePath);
-        $moduleA->shouldReceive('routesFilePath')->once()->withNoArgs()
+        $moduleA->shouldReceive('routesFilePath')->once()
+            ->with(['type' => $type])
             ->andReturn($moduleARouteFile);
 
         $file = m::mock(stdClass::class);
@@ -99,13 +111,14 @@ class ModularTest extends UnitTestCase
                     return true;
                 }));
 
-        $moduleB->shouldReceive('routesFilePath')->once()->withNoArgs()
+        $moduleB->shouldReceive('routesFilePath')->once()
+            ->with(['type' => $type])
             ->andReturn($moduleBRouteFile);
 
         $file->shouldReceive('requireOnce')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleBRouteFile);
 
-        $this->assertSame(null, $this->modular->loadRoutes($router));
+        $this->assertSame(null, $this->modular->loadRoutes($router, $type));
     }
 
     /** @test */
@@ -168,7 +181,39 @@ class ModularTest extends UnitTestCase
     /** @test */
     public function it_gets_only_active_modules_with_routes_when_requested()
     {
-        $this->verifyValidFiltering('withRoutes', 'hasRoutes');
+        $moduleA = m::mock(stdClass::class);
+        $moduleB = m::mock(stdClass::class);
+        $moduleC = m::mock(stdClass::class);
+        $moduleD = m::mock(stdClass::class);
+        
+        $type = 'sample';
+
+        $this->modular->shouldReceive('filterActiveByMethod')->once()
+            ->with('hasRoutes', ['type' => $type])->passthru();
+
+        $this->modular->shouldReceive('modules')->once()->withNoArgs()
+            ->andReturn(collect([$moduleA, $moduleB, $moduleC, $moduleD]));
+
+        $moduleA->shouldReceive('active')->once()->withNoArgs()
+            ->andReturn(false);
+        $moduleA->shouldNotReceive('hasRoutes');
+
+        $moduleB->shouldReceive('active')->once()->withNoArgs()
+            ->andReturn(true);
+        $moduleB->shouldReceive('hasRoutes')->once()->andReturn(true);
+
+        $moduleC->shouldReceive('active')->once()->withNoArgs()
+            ->andReturn(true);
+        $moduleC->shouldReceive('hasRoutes')->once()->with(['type' => $type])
+            ->andReturn(false);
+
+        $moduleD->shouldReceive('active')->once()->withNoArgs()
+            ->andReturn(true);
+        $moduleD->shouldReceive('hasRoutes')->once()->with(['type' => $type])
+            ->andReturn(true);
+
+        $this->assertEquals(collect([$moduleB, $moduleD]),
+            $this->modular->withRoutes($type));
     }
 
     /** @test */

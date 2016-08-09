@@ -221,11 +221,27 @@ class ConfigTest extends UnitTestCase
     }
 
     /** @test */
-    public function it_returns_valid_routing_file()
+    public function it_returns_valid_routing_file_with_empty_settings()
     {
         $value = 'routing/file.php';
         $config = $this->arrange('module_routing.file', $value);
-        $this->assertSame($value, $config->routingFile());
+        $this->assertSame($value, $config->routingFile([]));
+    }
+
+    /** @test */
+    public function it_returns_valid_routing_file_with_web_settings()
+    {
+        $value = 'routing/file.php';
+        $config = $this->arrange('module_routing.web_file', $value);
+        $this->assertSame($value, $config->routingFile(['type' => 'web']));
+    }
+
+    /** @test */
+    public function it_returns_valid_routing_file_with_api_settings()
+    {
+        $value = 'routing/file.php';
+        $config = $this->arrange('module_routing.api_file', $value);
+        $this->assertSame($value, $config->routingFile(['type' => 'api']));
     }
 
     /** @test */

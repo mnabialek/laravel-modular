@@ -72,9 +72,19 @@ return [
      */
     'module_routing' => [
         /**
-         * Routing file path and name (inside module)
+         * General routing file path and name (inside module)
          */
-        'file' => 'Http/routes.php',
+        'file' => 'routes/routes.php',
+
+        /**
+         * API routing file path and name (inside module)
+         */
+        'api_file' => 'routes/api.php',
+
+        /**
+         * Web routing file path and name (inside module)
+         */
+        'web_file' => 'routes/web.php',
 
         /**
          * Routing group controller namespace (this namespace will be
@@ -179,7 +189,8 @@ return [
                 'Http/Controllers/{class}Controller.php' => 'Controller.php.stub',
                 'Http/Requests/{class}Request.php' => 'Request.php.stub',
                 'Models/{class}.php' => 'Model.php.stub',
-                'Http/routes.php' => 'routes.php.stub',
+                'routes/web.php' => 'routes_web.php.stub',
+                'routes/api.php' => 'routes_api.php.stub',
                 'Database/Seeds/{class}DatabaseSeeder.php' => 'DatabaseSeeder.php.stub',
                 'Database/Factories/{class}ModelFactory.php' => 'ModelFactory.php.stub',
                 'Repositories/{class}Repository.php' => 'Repository.php.stub',

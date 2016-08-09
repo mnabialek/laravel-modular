@@ -59,15 +59,17 @@ class Modular
      * Load routes for active modules
      *
      * @param Registrar $router
+     * @param string|null $type
      */
-    public function loadRoutes(Registrar $router)
+    public function loadRoutes(Registrar $router, $type = null)
     {
-        $this->withRoutes()->each(function ($module) use ($router) {
+        $this->withRoutes($type)->each(function ($module) use ($router, $type) {
             /** @var Module $module */
             $router->group(['namespace' => $module->routingControllerNamespace()],
-                function ($router) use ($module) {
+                function ($router) use ($module, $type) {
                     $this->app['files']->requireOnce($this->app->basePath() .
-                        DIRECTORY_SEPARATOR . $module->routesFilePath());
+                        DIRECTORY_SEPARATOR .
+                        $module->routesFilePath(compact('type')));
                 });
         });
     }
@@ -97,11 +99,13 @@ class Modular
     /**
      * Get all routable modules (active and having routes file)
      *
+     * @param string $type
+     *
      * @return array
      */
-    public function withRoutes()
+    public function withRoutes($type)
     {
-        return $this->filterActiveByMethod('hasRoutes');
+        return $this->filterActiveByMethod('hasRoutes', compact('type'));
     }
 
     /**
@@ -140,13 +144,16 @@ class Modular
      *
      * @param string $requirement
      *
+     * @param array $data
+     *
      * @return Collection
      */
-    protected function filterActiveByMethod($requirement)
+    protected function filterActiveByMethod($requirement, array $data = [])
     {
-        return $this->modules()->filter(function ($module) use ($requirement) {
-            return $module->active() && $module->$requirement();
-        })->values();
+        return $this->modules()
+            ->filter(function ($module) use ($requirement, $data) {
+                return $module->active() && $module->$requirement($data);
+            })->values();
     }
 
     /**
