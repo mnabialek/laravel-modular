@@ -20,22 +20,6 @@ class ModularServiceProvider extends ServiceProvider
     protected $filesToPublish = [];
 
     /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * Create a new service provider instance.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application $app
-     */
-    public function __construct($app)
-    {
-        parent::__construct($app);
-        $this->config = $app->make(Config::class);
-    }
-
-    /**
      * Register the service provider.
      *
      * @return void
@@ -43,13 +27,20 @@ class ModularServiceProvider extends ServiceProvider
     public function register()
     {
         // register module binding
-        $this->app->singleton('modular', function ($app) {
-            return new Modular($app, $this->config);
-        });
-
         $this->app->singleton('modular.config', function ($app) {
             return new Config($app);
         });
+
+        $this->app->singleton('modular', function ($app) {
+            return new Modular($app, $app['modular.config']);
+        });
+
+        // merge module default configuration in case of not created yet or
+        // used only some parts of it 
+        $configName = $this->app['modular.config']->configName();
+        $this->mergeConfigFrom(
+            $this->getDefaultConfigFilePath($configName), $configName
+        );
 
         // register new Artisan commands
         $this->commands([
@@ -100,9 +91,9 @@ class ModularServiceProvider extends ServiceProvider
      */
     protected function addConfigurationToPublished()
     {
-        $configName = $this->config->configName();
+        $configName = $this->app['modular.config']->configName();
         $this->filesToPublish->put($this->getDefaultConfigFilePath($configName),
-            $this->config->configPath());
+            $this->app['modular.config']->configPath());
 
         return $this;
     }
@@ -118,7 +109,8 @@ class ModularServiceProvider extends ServiceProvider
         $pathLength = mb_strlen($templatesPath);
 
         // here we get all stubs files from stubs templates directory
-        $publishedStubsPath = $this->config->stubsPath();
+        $publishedStubsPath = $this->app['modular.config']->stubsPath();
+
         collect(glob($templatesPath . '/*/{,.}*.stub', GLOB_BRACE))
             ->each(function ($file) use ($publishedStubsPath, $pathLength) {
                 $this->filesToPublish->put($file,

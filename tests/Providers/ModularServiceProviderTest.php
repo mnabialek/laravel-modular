@@ -32,9 +32,6 @@ class ModularServiceProviderTest extends UnitTestCase
         $app = m::mock(Application::class);
         $config = m::mock(Config::class);
 
-        $app->shouldReceive('make')->once()->with(Config::class)
-            ->andReturn($config);
-
         $modularProvider = m::mock(ModularServiceProvider::class, [$app])
             ->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -50,15 +47,6 @@ class ModularServiceProviderTest extends UnitTestCase
         $app->shouldReceive('singleton')->with('modular.config', $closure2)
             ->once();
 
-        // Artisan commands
-        $modularProvider->shouldReceive('commands')->once()->with([
-            ModuleMake::class,
-            ModuleSeed::class,
-            ModuleMakeMigration::class,
-            ModuleFiles::class,
-        ]);
-
-        // files to be published
         $stubsTemplatesPath =
             realpath(__DIR__ . '/../../stubs/templates/default');
         $stubsAppPath = realpath(__DIR__ . '/../../stubs/app/Core');
@@ -125,11 +113,28 @@ class ModularServiceProviderTest extends UnitTestCase
             'ServiceProvider.php.stub',
             $publishedStubsTemplatesPath . DIRECTORY_SEPARATOR . 'default/' .
             '.gitkeep.stub',
-            $publishedAppPath . DIRECTORY_SEPARATOR . 'Core/' . 'AbstractRepository.php',
+            $publishedAppPath . DIRECTORY_SEPARATOR . 'Core/' .
+            'AbstractRepository.php',
             $publishedAppPath . DIRECTORY_SEPARATOR . 'Core/' . 'Service.php',
-
         ];
 
+        // merging configuration
+        $app->shouldReceive('offsetGet')->with('modular.config')
+            ->andReturn($config);
+        $config->shouldReceive('configName')->times(2)
+            ->andReturn('modular');
+        $modularProvider->shouldReceive('mergeConfigFrom')->once()
+            ->with($from[0], 'modular');
+
+        // Artisan commands
+        $modularProvider->shouldReceive('commands')->once()->with([
+            ModuleMake::class,
+            ModuleSeed::class,
+            ModuleMakeMigration::class,
+            ModuleFiles::class,
+        ]);
+
+        // files to be published        
         $modularProvider->shouldReceive('getFilesToPublish')->once()
             ->passthru();
         $modularProvider->shouldReceive('publishes')->once()
@@ -138,8 +143,6 @@ class ModularServiceProviderTest extends UnitTestCase
         $modular = m::mock('stdClass');
 
         // configuration file
-        $config->shouldReceive('configName')->once()
-            ->andReturn('modular');
         $config->shouldReceive('configPath')->once()
             ->andReturn($to[0]);
 
