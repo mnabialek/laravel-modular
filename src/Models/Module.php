@@ -152,9 +152,11 @@ class Module
      */
     public function hasRoutes(array $data = [])
     {
-        return $this->hasFile('routes', 'routesFilePath', $data);
+        $prefix = $data ? $data['type'] . '_' : '';
+
+        return $this->hasFile('routes', 'routesFilePath', $prefix);
     }
-    
+
     /**
      * Verifies whether module has seeder file
      *
@@ -171,14 +173,15 @@ class Module
      *
      * @param string $option
      * @param string $pathFunction
-     * @param array $data
+     * @param string $prefix
      *
      * @return bool
      */
-    protected function hasFile($option, $pathFunction, array $data = [])
+    protected function hasFile($option, $pathFunction, $prefix = '')
     {
-        return (bool)($this->options->has($option) ? $this->options->get($option) :
-            $this->laravel['files']->exists($this->$pathFunction($data)));
+        return (bool)($this->options->has($prefix . $option) ?
+            $this->options->get($prefix . $option) :
+            $this->laravel['files']->exists($this->$pathFunction($prefix)));
     }
 
     /**
@@ -195,13 +198,13 @@ class Module
     /**
      * Get module routes file (with path)
      *
-     * @param array $data
+     * @param string $prefix
      *
      * @return string
      */
-    public function routesFilePath(array $data = [])
+    public function routesFilePath($prefix)
     {
-        return $this->getPath('routingFile', $data);
+        return $this->getPath('routingFile', $prefix);
     }
 
     /**
@@ -238,14 +241,14 @@ class Module
      * Get path
      *
      * @param string $configMethod
-     * @param array $data
+     * @param string $prefix
      *
      * @return string
      */
-    protected function getPath($configMethod, array $data = [])
+    protected function getPath($configMethod, $prefix = '')
     {
         return $this->directory() . DIRECTORY_SEPARATOR .
-        $this->replace($this->config->$configMethod($data), $this);
+        $this->replace($this->config->$configMethod($prefix), $this);
     }
 
     /**

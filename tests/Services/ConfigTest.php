@@ -225,7 +225,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'routing/file.php';
         $config = $this->arrange('module_routing.file', $value);
-        $this->assertSame($value, $config->routingFile([]));
+        $this->assertSame($value, $config->routingFile(''));
     }
 
     /** @test */
@@ -233,7 +233,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'routing/file.php';
         $config = $this->arrange('module_routing.web_file', $value);
-        $this->assertSame($value, $config->routingFile(['type' => 'web']));
+        $this->assertSame($value, $config->routingFile('web_'));
     }
 
     /** @test */
@@ -241,7 +241,7 @@ class ConfigTest extends UnitTestCase
     {
         $value = 'routing/file.php';
         $config = $this->arrange('module_routing.api_file', $value);
-        $this->assertSame($value, $config->routingFile(['type' => 'api']));
+        $this->assertSame($value, $config->routingFile('api_'));
     }
 
     /** @test */

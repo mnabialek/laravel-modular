@@ -136,14 +136,12 @@ class Config
     /**
      * Get routing file
      *
-     * @param array $settings
+     * @param string $prefix
      *
      * @return string
      */
-    public function routingFile(array $settings)
+    public function routingFile($prefix)
     {
-        $prefix = $settings ? $settings['type'].'_' : '';
-
         return $this->get("module_routing.{$prefix}file");
     }
 

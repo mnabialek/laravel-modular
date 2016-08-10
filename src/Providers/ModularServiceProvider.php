@@ -35,8 +35,8 @@ class ModularServiceProvider extends ServiceProvider
             return new Modular($app, $app['modular.config']);
         });
 
-        // merge module default configuration in case of not created yet or
-        // used only some parts of it 
+        // merge module default configuration in case of not created yet or used
+        // only some parts of it
         $configName = $this->app['modular.config']->configName();
         $this->mergeConfigFrom(
             $this->getDefaultConfigFilePath($configName), $configName
