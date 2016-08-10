@@ -71,9 +71,9 @@ class ModuleCreator extends Command
         return $this->getStubGroupDirectory($stubGroup);
     }
 
-    public function runExists($path)
+    public function runExists($path, $module)
     {
-        return $this->exists($path);
+        return $this->exists($path, $module);
     }
 
     public function runCreateDirectory(Module $module, $directory)
