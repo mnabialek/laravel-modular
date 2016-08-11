@@ -1,4 +1,4 @@
-Laravel Simple Modules
+Laravel Modular
 ===
 
 This module makes managing your Laravel 5 application much more easier. No more putting dozens or hundreds of files into single directory. 
@@ -13,7 +13,7 @@ This package was tested in **Laravel 5.2** but it should work also in **Laravel 
 
 1. Run
    ```php   
-   composer require mnabialek/laravel-simple-modules 0.1.*
+   composer require mnabialek/laravel-modular 0.1.*
    ```     
    in console to install this module
    
