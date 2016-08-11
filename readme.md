@@ -187,6 +187,10 @@ Example usage:
 php artisan db:seed
 ``` 
 
+### Release notes
+
+Please refer to **[Changelog](https://github.com/mnabialek/laravel-modular/blob/0.2/CHANGELOG.md)**
+
 ### Licence
 
 This package is licenced under the [MIT license](http://opensource.org/licenses/MIT)
