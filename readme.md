@@ -5,6 +5,10 @@ This module makes managing your Laravel 5 application much more easier. No more 
 
 Now you can create for your Laravel 5 application multiple modules and each of them will have its own structure (in the way you decide).
 
+## Supported Laravel versions
+
+This package was tested in **Laravel 5.2** but it should work also in **Laravel 5.0** and **Laravel 5.1**. Although it should work also in **Laravel 5.3** it's recommended to use **[version 0.2](https://github.com/mnabialek/laravel-modular/tree/0.2)** for **Laravel 5.3**.
+
 ## Installation
 
 1. Run
