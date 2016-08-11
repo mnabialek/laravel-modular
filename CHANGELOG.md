@@ -12,6 +12,11 @@
 - updated documentation with extra details about modules settings
 - fixed publishing stubs files into invalid directory when config file does not exist yet
 
+### v0.1.1 (2016-08-11)
+
+- change package name from `mnabialek/laravel-simple-modules` to `mnabialek/laravel-modular`
+- fixed publishing stubs files into invalid directory when config file does not exist yet
+
 ### v0.1 (2016-04-21)
 
 - initial release

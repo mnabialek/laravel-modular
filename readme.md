@@ -209,7 +209,7 @@ Be aware in case option set in configuration file won't be valid, some unexpecte
 
 ### Release notes
 
-Please refer to **[Changelog](https://github.com/mnabialek/laravel-modular)**
+Please refer to **[Changelog](https://github.com/mnabialek/laravel-modular/CHANGELOG.md)**
 
 #### Licence
 
