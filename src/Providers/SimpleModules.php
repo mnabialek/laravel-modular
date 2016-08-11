@@ -24,6 +24,13 @@ class SimpleModules extends ServiceProvider
             return new SimpleModule($app);
         }, true);
 
+        // merge module default configuration in case of not created yet or used
+        // only some parts of it
+        $configName = $this->app['simplemodule']->getConfigName();
+        $this->mergeConfigFrom(
+            $this->getDefaultConfigFilePath($configName), $configName
+        );
+
         // register new artisan commands
         $this->commands([
             ModuleMake::class,
