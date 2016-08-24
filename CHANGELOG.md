@@ -1,6 +1,6 @@
 ## Release notes
 
-### v0.2 (not released yet)
+### v0.2 (2016-08-24)
 
 - complete code rewrite
 - added unit tests

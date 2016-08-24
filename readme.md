@@ -1,5 +1,9 @@
 ## Laravel Modular
 
+[![Build Status](https://travis-ci.org/mnabialek/laravel-modular.svg?branch=master)](https://travis-ci.org/mnabialek/laravel-eloquent-filter)
+[![Coverage Status](https://coveralls.io/repos/github/mnabialek/laravel-modular/badge.svg?branch=master)](https://coveralls.io/github/mnabialek/laravel-modular?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mnabialek/laravel-modular/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mnabialek/laravel-eloquent-filter/?branch=master)
+
 This module makes managing your Laravel 5 application much more easier. No more putting dozens or hundreds of files into single directory. 
 
 Now you can create for your Laravel 5 application multiple modules and each of them will have its own structure (in the way you decide).
