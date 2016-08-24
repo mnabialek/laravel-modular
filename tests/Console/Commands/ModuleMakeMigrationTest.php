@@ -178,9 +178,9 @@ class ModuleMakeMigrationTest extends UnitTestCase
         $expectedMigrationFileNames = [
             $now->format('Y_m_d_His') . '_' . snake_case($userMigrationName) .
             '.php',
-            (clone $now)->subSecond(1)->format('Y_m_d_His') . '_' .
+            with(clone $now)->subSecond(1)->format('Y_m_d_His') . '_' .
             snake_case($userMigrationName) . '.php',
-            (clone $now)->addSecond(1)->format('Y_m_d_His') . '_' .
+            with(clone $now)->addSecond(1)->format('Y_m_d_His') . '_' .
             snake_case($userMigrationName) . '.php',
         ];
 
