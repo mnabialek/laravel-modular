@@ -1,6 +1,6 @@
 ## Laravel Modular
 
-[![Build Status](https://travis-ci.org/mnabialek/laravel-modular.svg?branch=master)](https://travis-ci.org/mnabialek/laravel-eloquent-filter)
+[![Build Status](https://travis-ci.org/mnabialek/laravel-modular.svg?branch=master)](https://travis-ci.org/mnabialek/laravel-modular)
 [![Coverage Status](https://coveralls.io/repos/github/mnabialek/laravel-modular/badge.svg?branch=master)](https://coveralls.io/github/mnabialek/laravel-modular?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mnabialek/laravel-modular/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mnabialek/laravel-modular/?branch=master)
 [![StyleCI](https://styleci.io/repos/48952569/shield)](https://styleci.io/repos/48952569)
