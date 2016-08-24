@@ -50,7 +50,7 @@ class Modular
     public function seed(Seeder $seeder)
     {
         $this->withSeeders()->each(function ($module) use ($seeder) {
-            /** @var Module $module */
+            /* @var Module $module */
             $seeder->call($module->seederClass());
         });
     }
@@ -64,7 +64,7 @@ class Modular
     public function loadRoutes(Registrar $router, $type = null)
     {
         $this->withRoutes($type)->each(function ($module) use ($router, $type) {
-            /** @var Module $module */
+            /* @var Module $module */
             $router->group(['namespace' => $module->routingControllerNamespace()],
                 function ($router) use ($module, $type) {
                     $this->app['files']->requireOnce($this->app->basePath() .
@@ -80,7 +80,7 @@ class Modular
     public function loadFactories()
     {
         $this->withFactories()->each(function ($module) {
-            /** @var Module $module */
+            /* @var Module $module */
             $this->app['files']->requireOnce($module->factoryFilePath());
         });
     }
@@ -91,7 +91,7 @@ class Modular
     public function loadServiceProviders()
     {
         $this->withServiceProviders()->each(function ($module) {
-            /** @var Module $module */
+            /* @var Module $module */
             $this->app->register($module->serviceProviderClass());
         });
     }
@@ -214,7 +214,7 @@ class Modular
     public function find($name)
     {
         return $this->modules()->first(function ($module) use ($name) {
-            /** @var Module $module */
+            /* @var Module $module */
             return $module->name() == $name;
         });
     }

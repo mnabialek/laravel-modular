@@ -41,7 +41,7 @@ class ModuleSeed extends BaseCommand
         $options = $this->getOptions();
 
         $modules->each(function ($module) use ($options) {
-            /** @var Module $module */
+            /* @var Module $module */
             $class = $module->seederClass($this->option('class'));
 
             $result = $this->call('db:seed',

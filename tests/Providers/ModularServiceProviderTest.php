@@ -134,7 +134,7 @@ class ModularServiceProviderTest extends UnitTestCase
             ModuleFiles::class,
         ]);
 
-        // files to be published        
+        // files to be published
         $modularProvider->shouldReceive('getFilesToPublish')->once()
             ->passthru();
         $modularProvider->shouldReceive('publishes')->once()

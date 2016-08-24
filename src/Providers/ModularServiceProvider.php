@@ -133,7 +133,6 @@ class ModularServiceProvider extends ServiceProvider
             $this->filesToPublish->put($file,
                 $this->app['path'] . DIRECTORY_SEPARATOR .
                 mb_substr($file, mb_strlen($appPath) + 1));
-
         });
 
         return $this;

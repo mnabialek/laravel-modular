@@ -1,26 +1,26 @@
 <?php
 
 return [
-    /**
+    /*
      * Directory where new modules will be created
      */
     'directory' => 'app/Modules',
 
-    /**
+    /*
      * Namespace for new modules
      */
     'namespace' => 'App\\Modules',
 
-    /**
+    /*
      * Stubs settings
      */
     'stubs' => [
-        /**
+        /*
          * Path where all stubs groups are located
          */
         'path' => base_path('resources/stubs/modular'),
 
-        /**
+        /*
          * Default stub groups used for module and files - they must match
          * keys from stub_groups
          */
@@ -28,19 +28,19 @@ return [
         'files_default_group' => 'submodule',
     ],
 
-    /**
+    /*
      * Creating migration settings
      */
     'module_migrations' => [
         /*
-         * Available types of migrations stubs to use         
+         * Available types of migrations stubs to use
          */
         'types' => [
             'default' => 'migration.php.stub',
             'create' => 'migration_create.php.stub',
             'edit' => 'migration_edit.php.stub',
         ],
-        /**
+        /*
          * Default migration type (if none specified)
          */
         'default_type' => 'default',
@@ -51,42 +51,42 @@ return [
         'path' => 'Database/Migrations',
     ],
 
-    /**
+    /*
      * Module seeding settings
      */
     'module_seeding' => [
-        /**
+        /*
          * Seeder filename
          */
         'file' => 'Database/Seeds/{class}DatabaseSeeder.php',
 
-        /**
+        /*
          * Seeder namespace (it will be automatically prefixed with modules
          * namespace)
          */
         'namespace' => 'Database\\Seeds',
     ],
 
-    /**
+    /*
      * Module routing settings
      */
     'module_routing' => [
-        /**
+        /*
          * General routing file path and name (inside module)
          */
         'file' => 'routes/routes.php',
 
-        /**
+        /*
          * API routing file path and name (inside module)
          */
         'api_file' => 'routes/api.php',
 
-        /**
+        /*
          * Web routing file path and name (inside module)
          */
         'web_file' => 'routes/web.php',
 
-        /**
+        /*
          * Routing group controller namespace (this namespace will be
          * automatically added to all controllers defined inside above routing
          * file)
@@ -94,57 +94,57 @@ return [
         'route_group_namespace' => 'Http\\Controllers',
     ],
 
-    /**
+    /*
      * Settings for module model factories
      */
     'module_factories' => [
-        /**
+        /*
          * Model factory file path and name (inside module)
          */
         'file' => 'Database/Factories/{class}ModelFactory.php',
     ],
 
-    /**
+    /*
      * Settings for module service providers
      */
     'module_service_providers' => [
 
-        /**
+        /*
          * Service provider file path and name (inside module)
          */
         'file' => 'Providers/{class}ServiceProvider.php',
 
-        /**
+        /*
          * Service provider namespace (it will be automatically prefixed with modules
          * namespace)
          */
         'namespace' => 'Providers',
     ],
 
-    /**
+    /*
      * Settings for module creation
      */
     'module_make' => [
-        /**
+        /*
          * Whether after creating new module this file should be filled with new
          * module name
          */
         'auto_add' => true,
 
-        /**
+        /*
          * Pattern what should be searched in this file to add here new module
          * (don't change it unless you know what you are doing)
          */
         'pattern' => "#(modules'\s*=>\s*\[\s*)(.*)(^\s*\/\/\s* end of modules \(don't remove this comment\)\s*])#sm",
 
-        /**
+        /*
          * Module template - what will be added in this file when new module
          * is created
          */
         'module_template' => "        '{class}' => ['active' => true, 'routes' => true,],\n",
     ],
 
-    /**
+    /*
      * List of available modules in format:
      * 'moduleName' => ['active' => true, 'routes' => true, 'factories' => true, 'provider' => true],
      * ('active', `routes' `factories`, `provider` are optional but when
@@ -158,7 +158,7 @@ return [
         // end of modules (don't remove this comment)
     ],
 
-    /**
+    /*
      * Here we define what directories and what files should be created for
      * each stub groups. By default directory is the same as stub group, however
      * we could define another using stub_directory (see submodule group)
@@ -251,7 +251,7 @@ return [
         ],
     ],
 
-    /**
+    /*
      * Separators for replacements
      */
     'separators' => [

@@ -9,7 +9,6 @@ use Mockery as m;
 
 class ModuleSeedTest extends UnitTestCase
 {
-
     /** @test */
     public function it_does_nothing_when_there_were_errors()
     {
@@ -69,7 +68,7 @@ class ModuleSeedTest extends UnitTestCase
         $command->shouldReceive('proceed')->once()->withNoArgs()->passthru();
 
         $modules = ['A', 'B', 'C', 'D'];
-        
+
         $command->shouldReceive('argument')->once()->with('module')
             ->andReturn($modules);
 

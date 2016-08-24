@@ -145,6 +145,6 @@ abstract class AbstractRepository
      */
     protected function getWorkingModel()
     {
-        return ($this->workingModel ?: $this->model);
+        return $this->workingModel ?: $this->model;
     }
 }
