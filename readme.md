@@ -7,7 +7,7 @@ Now you can create for your Laravel 5 application multiple modules and each of t
 
 ## Supported Laravel versions
 
-This package was tested in **Laravel 5.2** but it should work also in **Laravel 5.0** and **Laravel 5.1**. Although it should work also in **Laravel 5.3** it's recommended to use **[version 0.2](https://github.com/mnabialek/laravel-modular/tree/0.2)** for **Laravel 5.3**.
+This package was tested in **Laravel 5.2** but it should work also in **Laravel 5.0** and **Laravel 5.1**. Although it should work also in **Laravel 5.3** it's recommended to use **[version 0.2](https://github.com/mnabialek/laravel-modular/tree/master)** for **Laravel 5.3**.
 
 ## Installation
 
@@ -189,7 +189,7 @@ php artisan db:seed
 
 ### Release notes
 
-Please refer to **[Changelog](https://github.com/mnabialek/laravel-modular/blob/0.2/CHANGELOG.md)**
+Please refer to **[Changelog](https://github.com/mnabialek/laravel-modular/blob/master/CHANGELOG.md)**
 
 ### Licence
 
