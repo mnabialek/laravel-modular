@@ -27,7 +27,7 @@ class ModuleVerificationTest extends UnitTestCase
             ->andReturn($modular);
         $moduleA = m::mock(Module::class);
         $moduleC = m::mock(Module::class);
-        
+
         $modular->shouldReceive('find')->with($modules[0])->andReturn($moduleA);
         $modular->shouldReceive('find')->with($modules[1])->andReturn(null);
         $modular->shouldReceive('find')->with($modules[2])->andReturn($moduleC);
@@ -73,7 +73,7 @@ class ModuleVerificationTest extends UnitTestCase
         $verification->shouldNotReceive('error');
 
         $result = $verification->runVerifyActive($modules);
-        
+
         $this->assertEquals(collect([$moduleA, $moduleC]), $result);
     }
 

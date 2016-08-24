@@ -185,7 +185,7 @@ class ModularTest extends UnitTestCase
         $moduleB = m::mock(stdClass::class);
         $moduleC = m::mock(stdClass::class);
         $moduleD = m::mock(stdClass::class);
-        
+
         $type = 'sample';
 
         $this->modular->shouldReceive('filterActiveByMethod')->once()

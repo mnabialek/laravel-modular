@@ -7,7 +7,6 @@ use Illuminate\Foundation\Application as BaseApplication;
 
 class Application extends BaseApplication implements ArrayAccess
 {
-
     public function offsetExists($offset)
     {
     }

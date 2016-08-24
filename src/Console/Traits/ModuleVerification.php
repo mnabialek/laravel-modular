@@ -70,7 +70,7 @@ trait ModuleVerification
                 $this->error("Module {$name} is not active");
 
                 return;
-            };
+            }
 
             $modules->push($module);
         });

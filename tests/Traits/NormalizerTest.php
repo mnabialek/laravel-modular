@@ -12,7 +12,7 @@ class NormalizerTest extends UnitTestCase
         parent::setUp();
         $this->normalizer = new Normalizer();
     }
-    
+
     /** @test */
     public function it_removes_slashes_from_end_of_path()
     {

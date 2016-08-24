@@ -13,7 +13,6 @@ use Mockery as m;
 
 class ModuleMakeTest extends UnitTestCase
 {
-
     protected $command;
 
     protected $app;
@@ -134,7 +133,7 @@ class ModuleMakeTest extends UnitTestCase
     public function it_creates_module_without_adding_to_config()
     {
         $modules = ['A', 'A'];
-        list($moduleAName, ) =
+        list($moduleAName) =
             $this->verifySuccessModuleCreationWithoutConfig($modules, 3);
 
         $this->command->shouldReceive('info')->once()

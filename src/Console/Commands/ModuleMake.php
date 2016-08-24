@@ -2,7 +2,6 @@
 
 namespace Mnabialek\LaravelModular\Console\Commands;
 
-use Exception;
 use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Traits\Replacer;
@@ -81,7 +80,7 @@ class ModuleMake extends BaseCommand
         // now create files
         $this->createModuleFiles($module, $stubGroup);
 
-        // finally add module to configuration (if not disabled in config) 
+        // finally add module to configuration (if not disabled in config)
         $this->addModuleToConfigurationFile($module);
     }
 

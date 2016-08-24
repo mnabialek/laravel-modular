@@ -28,7 +28,7 @@ class ReplacerTest extends UnitTestCase
         $this->config = m::mock(Config::class);
 
         $this->replacer->setLaravel($this->app);
-        $this->module = m::mock(Module::Class);
+        $this->module = m::mock(Module::class);
         $this->module->shouldReceive('name')->times(4)
             ->andReturn($this->moduleName);
 

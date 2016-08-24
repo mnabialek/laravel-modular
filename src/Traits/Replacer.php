@@ -41,8 +41,7 @@ trait Replacer
             'module' => $module->name(),
             'class' => $module->name(),
             'moduleNamespace' => $module->name(),
-            'namespace' =>
-                rtrim($this->configClass()->modulesNamespace(), '\\'),
+            'namespace' => rtrim($this->configClass()->modulesNamespace(), '\\'),
             'plural|lower' => mb_strtolower(str_plural($module->name())),
         ])->merge($definedReplacements)
             ->each(function ($value, $key) use ($replacements) {
