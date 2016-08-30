@@ -98,7 +98,7 @@ class ModularTest extends UnitTestCase
         $moduleA->shouldReceive('routesFilePath')->once()
             ->with($moduleARoutePrefix)
             ->andReturn($moduleARouteFile);
-  
+
 
         $file = m::mock(stdClass::class);
 
@@ -121,7 +121,7 @@ class ModularTest extends UnitTestCase
         $moduleB->shouldReceive('routesFilePath')->once()
             ->with($moduleBRoutePrefix)
             ->andReturn($moduleBRouteFile);
-     
+
 
         $file->shouldReceive('requireOnce')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleBRouteFile);
