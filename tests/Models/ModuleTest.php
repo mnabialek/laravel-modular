@@ -135,8 +135,8 @@ class ModuleTest extends UnitTestCase
             ->with('modules/namespace' .
                 '\\' . $this->name . '\\' . 'provider/namespace' . '\\' .
                 'ServiceProvider', m::on(function ($arg) {
-                    return $arg instanceof Module && $arg->foo() == 'bar';
-                }))->andReturn('result');
+                return $arg instanceof Module && $arg->foo() == 'bar';
+            }))->andReturn('result');
 
         $this->assertSame('result', $this->module->serviceProviderClass());
     }
@@ -366,7 +366,8 @@ class ModuleTest extends UnitTestCase
         $this->createModuleMock([]);
 
         if ($executionMethod == 'routesFilePath') {
-            $this->module->shouldReceive('getPath')->once()->with($configMethod, '')
+            $this->module->shouldReceive('getPath')->once()
+                ->with($configMethod, '')
                 ->passthru();
         } else {
             $this->module->shouldReceive('getPath')->once()->with($configMethod)
@@ -407,6 +408,21 @@ class ModuleTest extends UnitTestCase
     {
         $this->createModuleMock([]);
         $this->assertSame(true, $this->module->active());
+    }
+
+    /** @test */
+    public function it_returns_valid_prefix_when_empty_data()
+    {
+        $this->createModuleMock([]);
+        $this->assertSame('', $this->module->routePrefix([]));
+    }
+
+    /** @test */
+    public function it_returns_valid_prefix_when_not_empty_data()
+    {
+        $this->createModuleMock([]);
+        $this->assertSame('sample_',
+            $this->module->routePrefix(['type' => 'sample']));
     }
 
     protected function createModuleMock($options = [])

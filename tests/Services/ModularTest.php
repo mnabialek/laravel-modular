@@ -57,7 +57,7 @@ class ModularTest extends UnitTestCase
     }
 
     /** @test */
-    public function it_loads_valid_routes_whenweb_type_given()
+    public function it_loads_valid_routes_when_web_type_given()
     {
         $this->verifyCorrectLoadingRoutesForType('web');
     }
@@ -65,6 +65,8 @@ class ModularTest extends UnitTestCase
     protected function verifyCorrectLoadingRoutesForType($type)
     {
         $basePath = 'base/path';
+        $moduleARoutePrefix = 'sample-prefix-module-a';
+        $moduleBRoutePrefix = 'sample-prefix-module-b';
         $moduleARouteFile = 'moduleA/routes.php';
         $moduleBRouteFile = 'moduleB/routes.php';
 
@@ -91,9 +93,12 @@ class ModularTest extends UnitTestCase
         );
 
         $this->app->shouldReceive('basePath')->times(2)->andReturn($basePath);
+        $moduleA->shouldReceive('routePrefix')->once()->with(compact('type'))
+            ->andReturn($moduleARoutePrefix);
         $moduleA->shouldReceive('routesFilePath')->once()
-            ->with(['type' => $type])
+            ->with($moduleARoutePrefix)
             ->andReturn($moduleARouteFile);
+  
 
         $file = m::mock(stdClass::class);
 
@@ -111,9 +116,12 @@ class ModularTest extends UnitTestCase
                     return true;
                 }));
 
+        $moduleB->shouldReceive('routePrefix')->once()->with(compact('type'))
+            ->andReturn($moduleBRoutePrefix);
         $moduleB->shouldReceive('routesFilePath')->once()
-            ->with(['type' => $type])
+            ->with($moduleBRoutePrefix)
             ->andReturn($moduleBRouteFile);
+     
 
         $file->shouldReceive('requireOnce')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleBRouteFile);

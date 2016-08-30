@@ -69,7 +69,7 @@ class Modular
                 function ($router) use ($module, $type) {
                     $this->app['files']->requireOnce($this->app->basePath() .
                         DIRECTORY_SEPARATOR .
-                        $module->routesFilePath(compact('type')));
+                        $module->routesFilePath($module->routePrefix(compact('type'))));
                 });
         });
     }

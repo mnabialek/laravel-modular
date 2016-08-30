@@ -152,7 +152,7 @@ class Module
      */
     public function hasRoutes(array $data = [])
     {
-        $prefix = $data ? $data['type'] . '_' : '';
+        $prefix = $this->routePrefix($data);
 
         return $this->hasFile('routes', 'routesFilePath', $prefix);
     }
@@ -205,6 +205,18 @@ class Module
     public function routesFilePath($prefix)
     {
         return $this->getPath('routingFile', $prefix);
+    }
+
+    /**
+     * Get route prefix
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    public function routePrefix(array $data)
+    {
+        return $data ? $data['type'] . '_' : '';
     }
 
     /**
