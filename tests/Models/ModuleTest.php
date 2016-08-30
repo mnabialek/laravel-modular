@@ -135,8 +135,8 @@ class ModuleTest extends UnitTestCase
             ->with('modules/namespace' .
                 '\\' . $this->name . '\\' . 'provider/namespace' . '\\' .
                 'ServiceProvider', m::on(function ($arg) {
-                return $arg instanceof Module && $arg->foo() == 'bar';
-            }))->andReturn('result');
+                    return $arg instanceof Module && $arg->foo() == 'bar';
+                }))->andReturn('result');
 
         $this->assertSame('result', $this->module->serviceProviderClass());
     }
