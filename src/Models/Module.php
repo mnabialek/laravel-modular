@@ -122,7 +122,7 @@ class Module
     public function migrationsPath($relative = false)
     {
         $path = $this->normalizePath($this->config->migrationsPath());
-        
+
         return $relative ? $path : $this->directory() . DIRECTORY_SEPARATOR . $path;
     }
 
