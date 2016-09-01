@@ -115,12 +115,15 @@ class Module
     /**
      * Get module migrations path
      *
+     * @param bool $relative
+     *
      * @return string
      */
-    public function migrationsPath()
+    public function migrationsPath($relative = false)
     {
-        return $this->directory() . DIRECTORY_SEPARATOR .
-        $this->normalizePath($this->config->migrationsPath());
+        $path = $this->normalizePath($this->config->migrationsPath());
+        
+        return $relative ? $path : $this->directory() . DIRECTORY_SEPARATOR . $path;
     }
 
     /**

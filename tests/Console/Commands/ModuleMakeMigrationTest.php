@@ -160,7 +160,7 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $stubGroupName = 'sample stub group';
         $migrationStubFileName = 'sample stub file';
-        $modulePath = 'sample A path';
+        $migrationsPath = 'db/migrations';
 
         $command->shouldReceive('getStubGroup')->once()
             ->andReturn($stubGroupName);
@@ -185,11 +185,11 @@ class ModuleMakeMigrationTest extends UnitTestCase
         ];
 
         $fullMigrationName = m::anyOf(
-            $modulePath . DIRECTORY_SEPARATOR .
+            $migrationsPath . DIRECTORY_SEPARATOR .
             $expectedMigrationFileNames[0],
-            $modulePath . DIRECTORY_SEPARATOR .
+            $migrationsPath . DIRECTORY_SEPARATOR .
             $expectedMigrationFileNames[1],
-            $modulePath . DIRECTORY_SEPARATOR .
+            $migrationsPath . DIRECTORY_SEPARATOR .
             $expectedMigrationFileNames[2]
         );
         $command->shouldReceive('getMigrationFileName')->once()
@@ -197,8 +197,8 @@ class ModuleMakeMigrationTest extends UnitTestCase
 
         $migrationClass = studly_case($userMigrationName);
 
-        $moduleAMock->shouldReceive('migrationsPath')->once()->withNoArgs()
-            ->andReturn($modulePath);
+        $moduleAMock->shouldReceive('migrationsPath')->once()->with(true)
+            ->andReturn($migrationsPath);
 
         $command->shouldReceive('copyStubFileIntoModule')->once()
             ->with($moduleAMock, $migrationStubFileName, $stubGroupName,

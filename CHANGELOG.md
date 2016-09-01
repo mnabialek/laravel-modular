@@ -1,5 +1,9 @@
 ## Release notes
 
+### v0.2.2 (2016-09-01)
+
+- fix invalid path for created migrations
+
 ### v0.2.1 (2016-08-30)
 
 - fix invalid route prefix usage
