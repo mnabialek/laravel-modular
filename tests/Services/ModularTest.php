@@ -105,7 +105,7 @@ class ModularTest extends UnitTestCase
         $this->app->shouldReceive('offsetGet')->times(2)->with('files')
             ->andReturn($file);
 
-        $file->shouldReceive('requireOnce')->once()->with($basePath .
+        $file->shouldReceive('getRequire')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleARouteFile);
 
         $router->shouldReceive('group')->once()
@@ -123,7 +123,7 @@ class ModularTest extends UnitTestCase
             ->andReturn($moduleBRouteFile);
 
 
-        $file->shouldReceive('requireOnce')->once()->with($basePath .
+        $file->shouldReceive('getRequire')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleBRouteFile);
 
         $this->assertSame(null, $this->modular->loadRoutes($router, $type));
@@ -149,12 +149,12 @@ class ModularTest extends UnitTestCase
         $moduleA->shouldReceive('factoryFilePath')->once()
             ->withNoArgs()->andReturn($moduleAFactoryFile);
 
-        $file->shouldReceive('requireOnce')->once()->with($moduleAFactoryFile);
+        $file->shouldReceive('getRequire')->once()->with($moduleAFactoryFile);
 
         $moduleB->shouldReceive('factoryFilePath')->once()
             ->withNoArgs()->andReturn($moduleBFactoryFile);
 
-        $file->shouldReceive('requireOnce')->once()->with($moduleBFactoryFile);
+        $file->shouldReceive('getRequire')->once()->with($moduleBFactoryFile);
 
         $this->assertSame(null, $this->modular->loadFactories());
     }

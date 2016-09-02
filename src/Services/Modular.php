@@ -67,7 +67,7 @@ class Modular
             /* @var Module $module */
             $router->group(['namespace' => $module->routingControllerNamespace()],
                 function ($router) use ($module, $type) {
-                    $this->app['files']->requireOnce($this->app->basePath() .
+                    $this->app['files']->getRequire($this->app->basePath() .
                         DIRECTORY_SEPARATOR .
                         $module->routesFilePath($module->routePrefix(compact('type'))));
                 });
@@ -81,7 +81,7 @@ class Modular
     {
         $this->withFactories()->each(function ($module) {
             /* @var Module $module */
-            $this->app['files']->requireOnce($module->factoryFilePath());
+            $this->app['files']->getRequire($module->factoryFilePath());
         });
     }
 
