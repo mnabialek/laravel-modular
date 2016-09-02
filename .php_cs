@@ -18,6 +18,7 @@ return Symfony\CS\Config\Config::create()
         'blankline_after_open_tag',
         'single_blank_line_before_namespace',
         'trailing_spaces',
+        'whitespacy_lines',
         '-psr0',
     ])
     ->setUsingCache(true)

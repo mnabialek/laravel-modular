@@ -184,7 +184,8 @@ class Module
     {
         return (bool)($this->options->has($prefix . $option) ?
             $this->options->get($prefix . $option) :
-            $this->laravel['files']->exists($this->$pathFunction($prefix)));
+            $this->laravel['files']->exists($this->laravel['path.base'] .
+                DIRECTORY_SEPARATOR . $this->$pathFunction($prefix)));
     }
 
     /**

@@ -27,6 +27,11 @@ class ModuleTest extends UnitTestCase
     protected $name = 'Foo';
 
     /**
+     * @var string
+     */
+    protected $basePath = '/sample/path';
+
+    /**
      * @var Application
      */
     protected $app;
@@ -135,8 +140,8 @@ class ModuleTest extends UnitTestCase
             ->with('modules/namespace' .
                 '\\' . $this->name . '\\' . 'provider/namespace' . '\\' .
                 'ServiceProvider', m::on(function ($arg) {
-                    return $arg instanceof Module && $arg->foo() == 'bar';
-                }))->andReturn('result');
+                return $arg instanceof Module && $arg->foo() == 'bar';
+            }))->andReturn('result');
 
         $this->assertSame('result', $this->module->serviceProviderClass());
     }
@@ -163,10 +168,15 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
+
         $this->module->shouldReceive('serviceProviderFilePath')->once()
             ->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(true);
 
         $this->assertSame(true, $this->module->hasServiceProvider());
     }
@@ -179,10 +189,14 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
+
         $this->module->shouldReceive('serviceProviderFilePath')->once()
             ->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(false);
 
         $this->assertSame(false, $this->module->hasServiceProvider());
     }
@@ -209,9 +223,12 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
         $this->module->shouldReceive('factoryFilePath')->once()->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(true);
 
         $this->assertSame(true, $this->module->hasFactory());
     }
@@ -224,9 +241,12 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
         $this->module->shouldReceive('factoryFilePath')->once()->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(false);
 
         $this->assertSame(false, $this->module->hasFactory());
     }
@@ -253,9 +273,12 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
         $this->module->shouldReceive('routesFilePath')->once()->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(true);
 
         $this->assertSame(true, $this->module->hasRoutes());
     }
@@ -268,9 +291,12 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
         $this->module->shouldReceive('routesFilePath')->once()->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(false);
 
         $this->assertSame(false, $this->module->hasRoutes());
     }
@@ -297,9 +323,12 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
         $this->module->shouldReceive('seederFilePath')->once()->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(true);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(true);
 
         $this->assertSame(true, $this->module->hasSeeder());
     }
@@ -312,9 +341,12 @@ class ModuleTest extends UnitTestCase
 
         $this->app->shouldReceive('offsetGet')->once()->with('files')
             ->andReturn($file);
+        $this->app->shouldReceive('offsetGet')->once()->with('path.base')
+            ->andReturn($this->basePath);
         $this->module->shouldReceive('seederFilePath')->once()->with('')
             ->andReturn('foo');
-        $file->shouldReceive('exists')->once()->with('foo')->andReturn(false);
+        $file->shouldReceive('exists')->once()->with($this->basePath .
+            DIRECTORY_SEPARATOR . 'foo')->andReturn(false);
 
         $this->assertSame(false, $this->module->hasSeeder());
     }
