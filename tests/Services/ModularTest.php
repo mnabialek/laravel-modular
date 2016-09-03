@@ -2,6 +2,8 @@
 
 namespace Test\Services;
 
+use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Database\Seeder;
 use Illuminate\Routing\Router;
 use Mnabialek\LaravelModular\Models\Module;
@@ -99,7 +101,6 @@ class ModularTest extends UnitTestCase
             ->with($moduleARoutePrefix)
             ->andReturn($moduleARouteFile);
 
-
         $file = m::mock(stdClass::class);
 
         $this->app->shouldReceive('offsetGet')->times(2)->with('files')
@@ -122,7 +123,6 @@ class ModularTest extends UnitTestCase
             ->with($moduleBRoutePrefix)
             ->andReturn($moduleBRouteFile);
 
-
         $file->shouldReceive('getRequire')->once()->with($basePath .
             DIRECTORY_SEPARATOR . $moduleBRouteFile);
 
@@ -138,25 +138,24 @@ class ModularTest extends UnitTestCase
         $moduleA = m::mock(stdClass::class);
         $moduleB = m::mock(stdClass::class);
 
+        $factory = new Factory(new Faker());
+
         $this->modular->shouldReceive('withFactories')->once()
             ->andReturn(collect([$moduleA, $moduleB]));
-
-        $file = m::mock(stdClass::class);
-
-        $this->app->shouldReceive('offsetGet')->times(2)->with('files')
-            ->andReturn($file);
 
         $moduleA->shouldReceive('factoryFilePath')->once()
             ->withNoArgs()->andReturn($moduleAFactoryFile);
 
-        $file->shouldReceive('getRequire')->once()->with($moduleAFactoryFile);
+        $this->modular->shouldReceive('loadFactoryFile')->once()
+            ->with($moduleAFactoryFile, $factory);
 
         $moduleB->shouldReceive('factoryFilePath')->once()
             ->withNoArgs()->andReturn($moduleBFactoryFile);
 
-        $file->shouldReceive('getRequire')->once()->with($moduleBFactoryFile);
+        $this->modular->shouldReceive('loadFactoryFile')->once()
+            ->with($moduleBFactoryFile, $factory);
 
-        $this->assertSame(null, $this->modular->loadFactories());
+        $this->assertSame(null, $this->modular->loadFactories($factory));
     }
 
     /** @test */

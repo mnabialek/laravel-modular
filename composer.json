@@ -25,6 +25,7 @@
     "require-dev": {
         "phpunit/phpunit": "^5.4",
         "mockery/mockery": "^0.9.5",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "fzaninotto/faker": "~1.4"
     }
 }

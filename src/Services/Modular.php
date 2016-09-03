@@ -76,13 +76,26 @@ class Modular
 
     /**
      * Load factories for active modules
+     *
+     * @param $factory
      */
-    public function loadFactories()
+    public function loadFactories($factory)
     {
-        $this->withFactories()->each(function ($module) {
+        $this->withFactories()->each(function ($module) use ($factory) {
             /* @var Module $module */
-            $this->app['files']->getRequire($module->factoryFilePath());
+            $this->loadFactoryFile($module->factoryFilePath(), $factory);
         });
+    }
+
+    /**
+     * Load file
+     *
+     * @param string $file
+     * @param $factory
+     */
+    protected function loadFactoryFile($file, $factory)
+    {
+        require $file; // @codeCoverageIgnore
     }
 
     /**
