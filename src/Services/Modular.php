@@ -92,10 +92,12 @@ class Modular
      *
      * @param string $file
      * @param $factory
+     *
+     * @codeCoverageIgnore
      */
     protected function loadFactoryFile($file, $factory)
     {
-        require $file; // @codeCoverageIgnore
+        require $file;
     }
 
     /**
