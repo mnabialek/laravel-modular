@@ -1,5 +1,11 @@
 ## Release notes
 
+### v0.2.3 (2016-09-04)
+
+- fix using absolute paths to verify whether files exists
+- use require instead of require_once to allow usage in PhpUnit tests
+- fix in loading factories
+
 ### v0.2.2 (2016-09-01)
 
 - fix invalid path for created migrations
