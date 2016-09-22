@@ -1,5 +1,9 @@
 ## Release notes
 
+### v0.2.4 (2016-09-22)
+
+- fix using absolute paths when loading factories
+
 ### v0.2.3 (2016-09-04)
 
 - fix using absolute paths to verify whether files exists

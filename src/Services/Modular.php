@@ -83,7 +83,8 @@ class Modular
     {
         $this->withFactories()->each(function ($module) use ($factory) {
             /* @var Module $module */
-            $this->loadFactoryFile($module->factoryFilePath(), $factory);
+            $this->loadFactoryFile($this->app->basePath() . DIRECTORY_SEPARATOR .
+                $module->factoryFilePath(), $factory);
         });
     }
 

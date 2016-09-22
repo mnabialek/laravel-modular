@@ -132,11 +132,14 @@ class ModularTest extends UnitTestCase
     /** @test */
     public function it_loads_valid_factories()
     {
+        $basePath = 'base/path';
         $moduleAFactoryFile = 'moduleA/factory.php';
         $moduleBFactoryFile = 'moduleB/factory.php';
 
         $moduleA = m::mock(stdClass::class);
         $moduleB = m::mock(stdClass::class);
+
+        $this->app->shouldReceive('basePath')->times(2)->andReturn($basePath);
 
         $factory = new Factory(new Faker());
 
@@ -147,13 +150,13 @@ class ModularTest extends UnitTestCase
             ->withNoArgs()->andReturn($moduleAFactoryFile);
 
         $this->modular->shouldReceive('loadFactoryFile')->once()
-            ->with($moduleAFactoryFile, $factory);
+            ->with($basePath . DIRECTORY_SEPARATOR . $moduleAFactoryFile, $factory);
 
         $moduleB->shouldReceive('factoryFilePath')->once()
             ->withNoArgs()->andReturn($moduleBFactoryFile);
 
         $this->modular->shouldReceive('loadFactoryFile')->once()
-            ->with($moduleBFactoryFile, $factory);
+            ->with($basePath . DIRECTORY_SEPARATOR .$moduleBFactoryFile, $factory);
 
         $this->assertSame(null, $this->modular->loadFactories($factory));
     }
