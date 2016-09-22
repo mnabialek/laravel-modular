@@ -156,7 +156,7 @@ class ModularTest extends UnitTestCase
             ->withNoArgs()->andReturn($moduleBFactoryFile);
 
         $this->modular->shouldReceive('loadFactoryFile')->once()
-            ->with($basePath . DIRECTORY_SEPARATOR .$moduleBFactoryFile, $factory);
+            ->with($basePath . DIRECTORY_SEPARATOR . $moduleBFactoryFile, $factory);
 
         $this->assertSame(null, $this->modular->loadFactories($factory));
     }
