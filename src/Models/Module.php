@@ -220,7 +220,7 @@ class Module
      */
     public function routePrefix(array $data)
     {
-        return $data ? $data['type'] . '_' : '';
+        return isset($data['type']) ? $data['type'] . '_' : '';
     }
 
     /**

@@ -450,6 +450,13 @@ class ModuleTest extends UnitTestCase
     }
 
     /** @test */
+    public function it_returns_valid_prefix_when_nullable_type()
+    {
+        $this->createModuleMock([]);
+        $this->assertSame('', $this->module->routePrefix(['type' => null]));
+    }
+
+    /** @test */
     public function it_returns_valid_prefix_when_not_empty_data()
     {
         $this->createModuleMock([]);

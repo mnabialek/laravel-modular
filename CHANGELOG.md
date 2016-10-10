@@ -1,5 +1,9 @@
 ## Release notes
 
+### v0.2.5 (2016-10-10)
+
+- fix loading routes with single files
+
 ### v0.2.4 (2016-09-22)
 
 - fix using absolute paths when loading factories
