@@ -4,13 +4,13 @@ namespace Mnabialek\LaravelModular\Providers;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
-use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
-use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
-use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
-use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\Services\Modular;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
+use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
+use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 
 class ModularServiceProvider extends ServiceProvider
 {

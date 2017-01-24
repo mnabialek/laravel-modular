@@ -2,17 +2,17 @@
 
 namespace Tests\Providers;
 
-use Illuminate\Foundation\Application;
-use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
-use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
-use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
-use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
-use Mnabialek\LaravelModular\Models\Module;
-use Mnabialek\LaravelModular\Providers\ModularServiceProvider;
-use Mnabialek\LaravelModular\Services\Config;
-use Mnabialek\LaravelModular\Services\Modular;
 use Mockery as m;
 use Tests\UnitTestCase;
+use Illuminate\Foundation\Application;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Services\Config;
+use Mnabialek\LaravelModular\Services\Modular;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
+use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
+use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
+use Mnabialek\LaravelModular\Providers\ModularServiceProvider;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 
 class ModularServiceProviderTest extends UnitTestCase
 {

@@ -3,8 +3,8 @@
 namespace Tests\Helpers;
 
 use Illuminate\Console\Command;
-use Mnabialek\LaravelModular\Console\Traits\ModuleCreator as ModuleCreatorTrait;
 use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Console\Traits\ModuleCreator as ModuleCreatorTrait;
 
 class ModuleCreator extends Command
 {

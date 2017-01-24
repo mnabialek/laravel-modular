@@ -2,14 +2,14 @@
 
 namespace Tests\Console\Traits;
 
-use Exception;
-use Mnabialek\LaravelModular\Models\Module;
-use Mnabialek\LaravelModular\Services\Config;
 use stdClass;
-use Tests\Helpers\Application;
-use Tests\Helpers\ModuleCreator;
+use Exception;
 use Mockery as m;
 use Tests\UnitTestCase;
+use Tests\Helpers\Application;
+use Tests\Helpers\ModuleCreator;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Services\Config;
 
 class ModuleCreatorTest extends UnitTestCase
 {

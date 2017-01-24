@@ -2,9 +2,9 @@
 
 namespace Mnabialek\LaravelModular\Console\Commands;
 
-use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Traits\Replacer;
+use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
 
 class ModuleFiles extends BaseCommand
 {

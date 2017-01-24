@@ -2,14 +2,14 @@
 
 namespace Tests\Console\Commands;
 
-use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
+use stdClass;
+use Mockery as m;
+use Tests\UnitTestCase;
+use Tests\Helpers\Application;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\Services\Modular;
-use stdClass;
-use Tests\Helpers\Application;
-use Tests\UnitTestCase;
-use Mockery as m;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMake;
 
 class ModuleMakeTest extends UnitTestCase
 {

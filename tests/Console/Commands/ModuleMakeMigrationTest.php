@@ -2,13 +2,13 @@
 
 namespace Tests\Console\Commands;
 
+use Mockery as m;
 use Carbon\Carbon;
-use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
+use Tests\UnitTestCase;
+use Tests\Helpers\Application;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
-use Tests\Helpers\Application;
-use Tests\UnitTestCase;
-use Mockery as m;
+use Mnabialek\LaravelModular\Console\Commands\ModuleMakeMigration;
 
 class ModuleMakeMigrationTest extends UnitTestCase
 {
