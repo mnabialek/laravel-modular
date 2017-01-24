@@ -2,10 +2,10 @@
 
 namespace Tests\Console\Facades;
 
-use Mnabialek\LaravelModular\Facades\Modular;
-use Tests\Helpers\Application;
-use Tests\UnitTestCase;
 use Mockery as m;
+use Tests\UnitTestCase;
+use Tests\Helpers\Application;
+use Mnabialek\LaravelModular\Facades\Modular;
 
 class ModularTest extends UnitTestCase
 {

@@ -3,12 +3,12 @@
 namespace Tests\Console\Traits;
 
 use Exception;
-use Mnabialek\LaravelModular\Models\Module;
-use Mnabialek\LaravelModular\Services\Modular;
-use Tests\Helpers\Application;
-use Tests\Helpers\ModuleVerification;
 use Mockery as m;
 use Tests\UnitTestCase;
+use Tests\Helpers\Application;
+use Tests\Helpers\ModuleVerification;
+use Mnabialek\LaravelModular\Models\Module;
+use Mnabialek\LaravelModular\Services\Modular;
 
 class ModuleVerificationTest extends UnitTestCase
 {

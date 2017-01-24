@@ -2,9 +2,9 @@
 
 namespace Mnabialek\LaravelModular\Console\Traits;
 
+use Exception;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Traits\Normalizer;
-use Exception;
 
 trait ModuleCreator
 {

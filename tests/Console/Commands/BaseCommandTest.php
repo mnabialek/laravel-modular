@@ -3,10 +3,10 @@
 namespace Tests\Console\Commands;
 
 use Exception;
-use Illuminate\Foundation\Application;
-use Mnabialek\LaravelModular\Console\Commands\BaseCommand;
 use Mockery as m;
 use Tests\UnitTestCase;
+use Illuminate\Foundation\Application;
+use Mnabialek\LaravelModular\Console\Commands\BaseCommand;
 
 class BaseCommandTest extends UnitTestCase
 {

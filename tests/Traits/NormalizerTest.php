@@ -2,8 +2,8 @@
 
 namespace Tests\Traits;
 
-use Tests\Helpers\Normalizer;
 use Tests\UnitTestCase;
+use Tests\Helpers\Normalizer;
 
 class NormalizerTest extends UnitTestCase
 {

@@ -2,11 +2,11 @@
 
 namespace Tests\Traits;
 
-use Mnabialek\LaravelModular\Models\Module;
-use Tests\Helpers\Application;
-use Tests\Helpers\Replacer;
-use Tests\UnitTestCase;
 use Mockery as m;
+use Tests\UnitTestCase;
+use Tests\Helpers\Replacer;
+use Tests\Helpers\Application;
+use Mnabialek\LaravelModular\Models\Module;
 
 class ReplacerTest extends UnitTestCase
 {

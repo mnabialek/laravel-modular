@@ -2,10 +2,10 @@
 
 namespace Mnabialek\LaravelModular\Models;
 
-use Illuminate\Contracts\Foundation\Application;
 use Mnabialek\LaravelModular\Services\Config;
-use Mnabialek\LaravelModular\Traits\Normalizer;
 use Mnabialek\LaravelModular\Traits\Replacer;
+use Mnabialek\LaravelModular\Traits\Normalizer;
+use Illuminate\Contracts\Foundation\Application;
 
 class Module
 {

@@ -2,12 +2,12 @@
 
 namespace Tests\Console\Commands;
 
-use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
+use Mockery as m;
+use Tests\UnitTestCase;
+use Tests\Helpers\Application;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Modular;
-use Tests\Helpers\Application;
-use Tests\UnitTestCase;
-use Mockery as m;
+use Mnabialek\LaravelModular\Console\Commands\ModuleFiles;
 
 class ModuleFilesTest extends UnitTestCase
 {

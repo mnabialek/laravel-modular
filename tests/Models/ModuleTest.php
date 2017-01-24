@@ -2,12 +2,12 @@
 
 namespace Tests\Models;
 
+use stdClass;
+use Mockery as m;
+use Tests\UnitTestCase;
+use Tests\Helpers\Application;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
-use stdClass;
-use Tests\Helpers\Application;
-use Tests\UnitTestCase;
-use Mockery as m;
 
 class ModuleTest extends UnitTestCase
 {

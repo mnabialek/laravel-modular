@@ -2,17 +2,17 @@
 
 namespace Test\Services;
 
+use stdClass;
+use Mockery as m;
+use Tests\UnitTestCase;
 use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Database\Seeder;
 use Illuminate\Routing\Router;
+use Tests\Helpers\Application;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factory;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Services\Config;
 use Mnabialek\LaravelModular\Services\Modular;
-use stdClass;
-use Tests\Helpers\Application;
-use Tests\UnitTestCase;
-use Mockery as m;
 
 class ModularTest extends UnitTestCase
 {

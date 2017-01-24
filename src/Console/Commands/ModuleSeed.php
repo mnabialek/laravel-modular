@@ -2,9 +2,9 @@
 
 namespace Mnabialek\LaravelModular\Console\Commands;
 
+use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
 use Mnabialek\LaravelModular\Console\Traits\ModuleVerification;
-use Mnabialek\LaravelModular\Models\Module;
 
 class ModuleSeed extends BaseCommand
 {

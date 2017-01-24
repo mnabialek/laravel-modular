@@ -3,10 +3,10 @@
 namespace Mnabialek\LaravelModular\Console\Commands;
 
 use Exception;
-use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
-use Mnabialek\LaravelModular\Console\Traits\ModuleVerification;
 use Mnabialek\LaravelModular\Models\Module;
 use Mnabialek\LaravelModular\Traits\Replacer;
+use Mnabialek\LaravelModular\Console\Traits\ModuleCreator;
+use Mnabialek\LaravelModular\Console\Traits\ModuleVerification;
 
 class ModuleMakeMigration extends BaseCommand
 {

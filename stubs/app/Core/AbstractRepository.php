@@ -2,10 +2,10 @@
 
 namespace App\Core;
 
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Container\Container;
 
 abstract class AbstractRepository
 {

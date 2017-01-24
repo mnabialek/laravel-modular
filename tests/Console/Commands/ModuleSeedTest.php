@@ -2,10 +2,10 @@
 
 namespace Tests\Console\Commands;
 
-use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
 use stdClass;
-use Tests\UnitTestCase;
 use Mockery as m;
+use Tests\UnitTestCase;
+use Mnabialek\LaravelModular\Console\Commands\ModuleSeed;
 
 class ModuleSeedTest extends UnitTestCase
 {
